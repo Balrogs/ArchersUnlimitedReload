@@ -10,16 +10,23 @@
 
 class WeaponSelector : public cocos2d::Node {
 private:
-    static const float POSITION_X;
-    static const float POSITION_Y;
+    cocos2d::Size _SIZE;
+
     Hero *_hero;
+
+    cocos2d::Rect *_box;
+
+    void _goNext(int dest);
+
+    bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event);
+
+    bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
 
 public:
 
-    WeaponSelector(Hero* hero);
+    WeaponSelector(Hero *hero);
 
     ~WeaponSelector();
 };
-
 
 #endif //ARCUNLIM_WEAPONSELECTOR_H

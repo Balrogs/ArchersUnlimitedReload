@@ -20,9 +20,7 @@ public:
 
     float getGlobalHeight(std::string name);
 
-    void cleanTransform();
-
-    float getNormalScale();
+    void addDOChild(cocos2d::Node* target);
 
     virtual void update();
 
@@ -33,7 +31,6 @@ protected:
     dragonBones::CCArmatureDisplay *_armatureDisplay;
     float _x_pos;
     float _y_pos;
-    float _normalScale;
 
     virtual void _updateAnimation();
 };

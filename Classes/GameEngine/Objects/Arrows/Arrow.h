@@ -62,6 +62,7 @@ public:
     bool processContact(cocos2d::Node *bone) override;
 
     ~FrozenArrow();
+
 };
 
 class FireArrow : public Arrow {

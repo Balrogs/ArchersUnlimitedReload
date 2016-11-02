@@ -3,6 +3,7 @@
 //
 
 #include <GameEngine/Objects/Arrows/Arrow.h>
+#include <Scenes/PlayLayers/AppleBattle.h>
 #include "Target.h"
 
 
@@ -15,5 +16,8 @@ float Target::getHP() {
 }
 
 void Target::dealDamage(float hit) {
+    if (AppleBattle *scene = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
+        scene->setHit();
+    }
     _hp -= hit;
 }

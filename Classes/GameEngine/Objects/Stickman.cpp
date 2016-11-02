@@ -34,7 +34,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     this->setPosition(_x_pos, _y_pos);
-    this->setScale(_normalScale * BattleScene::instance->getGlobalScale());
+    this->setScale(BattleScene::instance->getGlobalScale());
     _updateAnimation();
 
 
@@ -88,14 +88,42 @@ void Stickman::aim() {
 }
 
 void Stickman::_updateAnimation() {
-    if (_state == IDLE) {
-        return;
+    switch (_state) {
+        case HITTED:
+            _armature->getAnimation().stop(_armature->getAnimation().getLastAnimationName());
+            break;
+        case IDLE:
+            _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
+            break;
+        case MOVING:
+            _armature->getAnimation().fadeIn(Variables::STICKMAN_WALK_ANIMATION);
+            break;
+        case ATTACKING:
+            _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
+            break;
+        case JUMPING:
+            _armature->getAnimation().fadeIn(Variables::STICKMAN_UP_ANIMATION);
+            break;
+        case SITTING:
+            _armature->getAnimation().fadeIn(Variables::STICKMAN_SIT_ANIMATION);
+            break;
     }
-    if (_moveDir == 0) {
-        _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
-    } else {
-        _armature->getAnimation().fadeIn(Variables::STICKMAN_WALK_ANIMATION);
-    }
+}
+
+void Stickman::hit(cocos2d::Vec2 velocity) {
+
+    setState(State::HITTED);
+
+    this->runAction(Sequence::create(
+            MoveBy::create(1.f, cocos2d::Vec3(velocity.x, 0.f, 0.f)),
+            RotateTo::create(0.5f, 0.f),
+            CallFunc::create(
+                    [&]() {
+                        setState(IDLE);
+                    }
+            ),
+            NULL)
+    );
 }
 
 
@@ -108,7 +136,6 @@ Body::Body(float x_pos, float y_pos, float scale, float hp) :
     _x_pos = x_pos;
     _y_pos = y_pos;
     _hp = hp;
-    _normalScale = scale;
 }
 
 void Body::setSpeed(float move_speed) {
@@ -121,10 +148,12 @@ void Body::setJumpSpeed(float jump_speed) {
 
 void Body::move(int dir) {
 
+    setState(MOVING);
+
     if (_moveDir == dir) {
         return;
     }
-    _state = MOVING;
+
     _moveDir = dir;
     _speedX = _move_speed * _moveDir;
     if (_moveDir) {
@@ -132,12 +161,13 @@ void Body::move(int dir) {
             _faceDir = _moveDir;
             this->setScaleX(-this->getScaleX());
         }
+    } else {
+        setState(IDLE);
     }
-
-    _updateAnimation();
 }
 
 void Body::_updatePosition() {
+
     const auto &position = this->getPosition();
     if (_speedX != 0.f) {
         this->setPosition(position.x + _speedX, position.y);
@@ -151,12 +181,10 @@ void Body::_updatePosition() {
         _speedY += BattleScene::G;
 
         this->setPosition(position.x, position.y + _speedY);
-        if (position.y < BattleScene::GROUND) {
-            this->setPosition(position.x, BattleScene::GROUND);
-            _state = IDLE;
+        if (position.y < BattleScene::instance->GROUND) {
+            this->setPosition(position.x, BattleScene::instance->GROUND);
             _speedY = 0.f;
             _speedX = 0.f;
-            _updateAnimation();
         }
     }
 }
@@ -172,5 +200,9 @@ State Body::getState() {
 }
 
 void Body::setState(State state) {
-    _state = state;
+    if (_state != state) {
+        auto str = StringUtils::toString(state);
+        _state = state;
+        _updateAnimation();
+    }
 }

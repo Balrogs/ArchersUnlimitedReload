@@ -1,6 +1,7 @@
 #include <GameEngine/Objects/Stickman.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
+#include <GameEngine/Objects/Environment/Ground.h>
 #include "Battle.h"
 #include "AppleBattle.h"
 #include "DuelScene.h"
@@ -36,13 +37,12 @@ Scene *BattleScene::createScene(int type) {
     return scene;
 }
 
-const float  BattleScene::MAX_ARROW_POWER = 50.f;
+const float  BattleScene::MAX_ARROW_POWER = 40.f;
 const float  BattleScene::MIN_ARROW_POWER = 5.f;
 
 const float  BattleScene::MAX_ARROW_ANGLE = 1.5f;
 const float  BattleScene::MIN_ARROW_ANGLE = -1.5f;
 
-const float  BattleScene::GROUND = 100.f;
 const float  BattleScene::G = -0.6f;
 BattleScene *BattleScene::instance = nullptr;
 
@@ -51,7 +51,7 @@ bool BattleScene::init() {
         return false;
     }
     BattleScene::instance = this;
-
+    GROUND = Director::getInstance()->getVisibleSize().height / 8;
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
@@ -61,8 +61,14 @@ bool BattleScene::init() {
     _bullet_pull = Node::create();
     _isPaused = false;
     this->addChild(_bullet_pull);
-    const auto dragonBonesData = factory.loadDragonBonesData("Animation/5oct/ArcUnlim_2/ArcUnlim_2.json");
-    factory.loadTextureAtlasData("Animation/5oct/ArcUnlim_2/texture.json");
+
+
+    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
+    factory.loadTextureAtlasData("texture.json");
+
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
+
+
 
     if (dragonBonesData) {
         cocos2d::Director::getInstance()->getScheduler()->schedule(
@@ -106,11 +112,11 @@ void BattleScene::addBrain(Brain *brain) {
     _brains.push_back(brain);
 }
 
-void BattleScene::addTarget(DragonObject *target) {
+void BattleScene::addTarget(cocos2d::Node *target) {
     _targets.push_back(target);
 }
 
-void BattleScene::removeTarget(DragonObject *target) {
+void BattleScene::removeTarget(cocos2d::Node *target) {
     if (!_targets.empty())
         _targets.erase(std::find(_targets.begin(), _targets.end(), target));
 }
@@ -198,31 +204,21 @@ bool BattleScene::onContactBegin(cocos2d::PhysicsContact &contact) {
 
 void BattleScene::initWorld() {
 
-    Node *ground = Node::create();
-    ground->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(0.f, BattleScene::GROUND + origin.y),
-                                                          Vec2(visibleSize.width, BattleScene::GROUND + origin.y)));
-    ground->getPhysicsBody()->setContactTestBitmask(true);
-    this->addChild(ground);
+    Ground *ground = new Ground(GROUND, visibleSize.width);
 
+    this->addChild(ground);
 
     _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f, new Player(1, "hero"));
 
     ui->initBattle(visibleSize, _player);
 
     Producer *prod = new Producer("cre");
+
     prod->startLevel(1);
 }
 
 float BattleScene::getGlobalScale() {
     return this->GLOBAL_SCALE;
-}
-
-void BattleScene::_changeGlobalScale(float scale) {
-    GLOBAL_SCALE = scale;
-    _player->getDisplay()->setScale(_player->getNormalScale() * scale);
-    for (auto target : _targets) {
-        target->getDisplay()->setScale(target->getNormalScale() * scale);
-    }
 }
 
 void BattleScene::moveScene(float x) {

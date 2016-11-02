@@ -1,18 +1,18 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Global/WeaponSelector.h>
+#include <GameEngine/Objects/Environment/Ground.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;
 
 void AppleBattle::initWorld() {
 
-    GLOBAL_SCALE = 1.5f;
+    GLOBAL_SCALE = 1.f;
 
+    _isTargetHitted = false;
 
-    Node *ground = Node::create();
-    ground->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(0.f, BattleScene::GROUND + origin.y),
-                                                          Vec2(visibleSize.width, BattleScene::GROUND + origin.y)));
-    ground->getPhysicsBody()->setContactTestBitmask(true);
+    Ground *ground = new Ground(GROUND, visibleSize.width);
+
     this->addChild(ground);
 
     initObjects();
@@ -22,7 +22,7 @@ void AppleBattle::initWorld() {
 
 void AppleBattle::initObjects() {
 
-    _player = new Hero(50.f * this->GLOBAL_SCALE + origin.x, AppleBattle::GROUND + origin.y, new Player(1, "hero"));
+    _player = new Hero(50.f * this->GLOBAL_SCALE + origin.x, AppleBattle::GROUND, new Player(1, "hero"));
 
     auto target = new Stickman(visibleSize.width - 100.f * this->GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
@@ -40,43 +40,54 @@ void AppleBattle::nextLevelAction() {
 
     this->runAction(
             Sequence::create(
-            Spawn::createWithTwoActions(
+                    Spawn::createWithTwoActions(
+                            CallFunc::create(
+                                    [&]() {
+                                        _player->runAction(Spawn::createWithTwoActions(
+                                                MoveTo::create(1.f, Vec2(50.f * GLOBAL_SCALE, AppleBattle::GROUND)),
+                                                ScaleTo::create(1.f, GLOBAL_SCALE)));
+                                    }
+                            ),
+                            CallFunc::create(
+                                    [&]() {
+
+                                        _targets[0]->runAction(Spawn::createWithTwoActions(MoveTo::create(1.f,
+                                                                                                          Vec2(visibleSize.width -
+                                                                                                               100.f *
+                                                                                                               GLOBAL_SCALE,
+                                                                                                               AppleBattle::GROUND)),
+                                                                                           ScaleTo::create(1.f,
+                                                                                                           GLOBAL_SCALE)));
+                                    }
+                            )
+
+                    ),
+                    DelayTime::create(1),
                     CallFunc::create(
                             [&]() {
-                                _player->runAction(Spawn::createWithTwoActions(MoveTo::create(1.f, Vec2(50.f * GLOBAL_SCALE, AppleBattle::GROUND)),
-                                                                               ScaleTo::create(1.f, _player->getNormalScale() * GLOBAL_SCALE)));
+                                auto apple = _targets[1];
+                                this->removeTarget(apple);
+                                this->removeChild(apple);
+                                this->addApple();
                             }
                     ),
-                    CallFunc::create(
-                            [&]() {
-
-                                _targets[0]->runAction(Spawn::createWithTwoActions(MoveTo::create(1.f, Vec2(visibleSize.width - 100.f * GLOBAL_SCALE, AppleBattle::GROUND)),
-                                                                                   ScaleTo::create(1.f, _targets[0]->getNormalScale() * GLOBAL_SCALE)));
-                            }
-                    )
-
-            ),
-            DelayTime::create(1),
-            //TODO add spawn effect
-            CallFunc::create(
-                    [&]() {
-                        auto apple = _targets[1];
-                        this->removeTarget(apple);
-                        this->removeChild(apple);
-                        this->addApple();
-                    }
-            ),
-            NULL)
+                    NULL)
 
     );
 
 }
 
 bool AppleBattle::isGameOver() {
-    return false;
+    return _isTargetHitted;
 }
 
 void AppleBattle::addApple() {
-    auto apple = new Apple(_targets[0]->getPositionX(), _targets[0]->getGlobalHeight("Head"));
-    _targets.push_back(apple);
+    if (Target *target = dynamic_cast<Target *>(_targets[0])) {
+        auto apple = new Apple(_targets[0]->getPositionX(), target->getGlobalHeight("Head"));
+        _targets.push_back(apple);
+    }
+}
+
+void AppleBattle::setHit() {
+    _isTargetHitted = true;
 }

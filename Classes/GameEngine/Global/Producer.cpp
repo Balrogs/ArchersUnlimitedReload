@@ -44,34 +44,34 @@ void Producer::startLevel(int id) {
                 switch (le->_type) {
                     case 0:
                         target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::GROUND,
+                                              BattleScene::instance->GROUND,
                                               0.3f,
                                               100.f);
                         brain = new PassiveBrain(target);
                         break;
                     case 1:
                         target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::GROUND,
+                                              BattleScene::instance->GROUND,
                                               0.3f,
                                               100.f);
                         brain = new Brain(target);
                         break;
                     case 2:
                         target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::GROUND,
+                                              BattleScene::instance->GROUND,
                                               0.25f,
                                               50.f);
                         brain = new FastBrain(target);
                         break;
                     case 3:
                         target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::GROUND,
+                                              BattleScene::instance->GROUND,
                                               0.5f,
                                               300.f);
                         brain = new StrengthBrain(target);
                         break;
                     case 4:
-                        target = new DuelHero(BattleScene::instance->visibleSize.width + 150.f, BattleScene::GROUND);
+                        target = new DuelHero(BattleScene::instance->visibleSize.width + 150.f, BattleScene::instance->GROUND);
                         brain = new HeroBrain(target, 0.f);
                         break;
                     default:

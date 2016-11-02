@@ -23,7 +23,7 @@ public:
     static const float MIN_ARROW_POWER;
     static const float MAX_ARROW_ANGLE;
     static const float MIN_ARROW_ANGLE;
-    static const float GROUND;
+    float GROUND;
     static const float G;
     static BattleScene *instance;
 
@@ -38,9 +38,9 @@ public:
 
     void removeBrain(Brain *brain);
 
-    void addTarget(DragonObject *target);
+    void addTarget(cocos2d::Node *target);
 
-    void removeTarget(DragonObject *target);
+    void removeTarget(cocos2d::Node *target);
 
     float getGlobalScale();
 
@@ -63,7 +63,7 @@ protected:
 
     Hero *_player;
     std::vector<Brain *> _brains;
-    std::vector<DragonObject *> _targets;
+    std::vector<cocos2d::Node *> _targets;
     cocos2d::Node *_bullet_pull;
 
 
@@ -82,8 +82,6 @@ protected:
     virtual bool _touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event *event);
 
     virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
-
-    void _changeGlobalScale(float scale);
 
     void _onPopScene();
 

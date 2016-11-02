@@ -1,10 +1,15 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Global/WeaponSelector.h>
+#include <GameEngine/Objects/Environment/Ground.h>
 #include "DuelScene.h"
 
 USING_NS_CC;
 
 void DuelScene::initWorld() {
+
+    Ground *ground = new Ground(GROUND, visibleSize.width * 4);
+    this->addChild(ground);
+
     _player1 = new Player(1, "hero");
     _player2 = new Player(2, "bot");
     _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, _player1);
@@ -29,7 +34,7 @@ bool DuelScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *ev
 }
 
 void DuelScene::makeTurn(int id) {
-    if(id == -1 || this->_turnId == 0){
+    if (id == -1 || this->_turnId == 0) {
         this->_turnId = id;
         return;
     }
@@ -37,7 +42,7 @@ void DuelScene::makeTurn(int id) {
     if (this->_turnId != id) {
         float delay = 2.f;
         if (id == _player1->getId()) {
-            if(this->getPosition().x -_targets.at(0)->getPosition().x <= visibleSize.width / 2){
+            if (this->getPosition().x - _targets.at(0)->getPosition().x <= visibleSize.width / 2) {
                 delay = 0.5f;
             }
             auto action = Sequence::create(
@@ -48,7 +53,7 @@ void DuelScene::makeTurn(int id) {
                     ),
                     MoveTo::create(delay,
                                    Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f)),
-                                        DelayTime::create(1),
+                    DelayTime::create(1),
                     CallFunc::create(
                             [&]() {
                                 _brains[0]->update();
@@ -57,9 +62,9 @@ void DuelScene::makeTurn(int id) {
                     NULL
             );
             this->runAction(action);
-        } else if(id == _player2->getId()){
+        } else if (id == _player2->getId()) {
 
-            if(this->getPosition().x >= visibleSize.width / 2){
+            if (this->getPosition().x >= visibleSize.width / 2) {
                 delay = 0.5f;
             }
             auto action = Sequence::create(

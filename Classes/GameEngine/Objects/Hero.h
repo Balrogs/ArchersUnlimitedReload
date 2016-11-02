@@ -24,7 +24,7 @@ public:
 
     void setAim(float angle, float power);
 
-    virtual void switchWeapon();
+    virtual void switchWeapon(int dest);
 
     void update() override;
 
@@ -35,6 +35,9 @@ public:
     void aim() override;
 
     Player *getPlayer() const;
+
+    unsigned weaponIndex();
+    std::vector<std::string> getWeaponList();
 
 protected:
     bool _isAttacking;
@@ -68,7 +71,7 @@ public:
 
     DuelHero(float x_pos, float y_pos, Player *player);
 
-    void switchWeapon() override;
+    void switchWeapon(int dest) override;
 };
 
 #endif //DRAGONBONES_HERO_H

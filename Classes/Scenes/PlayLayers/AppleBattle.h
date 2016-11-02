@@ -9,10 +9,13 @@
 #include "Battle.h"
 
 class AppleBattle : public BattleScene {
+
 public:
     CREATE_FUNC(AppleBattle);
 
     void nextLevelAction();
+
+    void setHit();
 
 protected:
 
@@ -23,6 +26,8 @@ protected:
     void initObjects();
 
     bool isGameOver() override;
+
+    bool _isTargetHitted;
 };
 
 

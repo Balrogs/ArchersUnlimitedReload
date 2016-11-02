@@ -21,7 +21,7 @@ bool UI::init() {
 }
 
 void UI::initBattle(Size visibleSize, Hero *player) {
-    auto b = Sprite::create("Background/background.png");
+    auto b = Sprite::create("0.png");
     b->setScale(1);
     b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
     this->addChild(b);
@@ -38,7 +38,7 @@ void UI::initBattle(Size visibleSize, Hero *player) {
 }
 
 void UI::initDuel(Size visibleSize, Hero *player) {
-    auto b = Sprite::create("Background/background.png");
+    auto b = Sprite::create("1.png");
     b->setScale(1);
     b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
     this->addChild(b);
@@ -53,7 +53,7 @@ void UI::initDuel(Size visibleSize, Hero *player) {
 }
 
 void UI::initApple(Size visibleSize, Hero *player) {
-    auto b = Sprite::create("Background/background.png");
+    auto b = Sprite::create("2.png");
     b->setScale(1);
     b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
     this->addChild(b);

@@ -157,7 +157,6 @@ set(GAME_SRC
 
         Classes/dragonBones/textures/TextureData.cpp
 
-        Classes/GameEngine/Objects/Environment/Butt.cpp
         Classes/GameEngine/Objects/Environment/Apple.cpp
         Classes/Scenes/PlayLayers/AppleBattle.cpp
         Classes/Scenes/PlayLayers/DuelScene.cpp
@@ -182,6 +181,7 @@ set(GAME_SRC
         Classes/GameEngine/Objects/Brains/Brain.cpp
         Classes/GameEngine/Global/WeaponSelector.cpp
         Classes/GameEngine/Objects/Target.cpp
+        Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Objects/DragonObject.cpp
 
@@ -285,7 +285,6 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Target.h
         Classes/GameEngine/Global/Variables.h
         Classes/GameEngine/Objects/Aim/AimPreview.h
-        Classes/GameEngine/Objects/Environment/Butt.h
         Classes/GameEngine/Objects/Environment/Apple.h
         Classes/Scenes/PlayLayers/AppleBattle.h
         Classes/Scenes/PlayLayers/DuelScene.h
@@ -302,7 +301,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Settings.h
         Classes/GameEngine/Objects/DragonObject.h
   ${PLATFORM_SPECIFIC_HEADERS}
-)
+        Classes/GameEngine/Objects/Environment/Ground.cpp Classes/GameEngine/Objects/Environment/Ground.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

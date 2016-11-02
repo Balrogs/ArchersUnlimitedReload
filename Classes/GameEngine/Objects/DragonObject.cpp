@@ -2,23 +2,22 @@
 // Created by igor on 17.10.16.
 //
 
+#include <GameEngine/Global/Variables.h>
 #include "DragonObject.h"
 
+USING_NS_CC;
 
-DragonObject::DragonObject(){
+DragonObject::DragonObject() {
 
-    if (this->init())
-    {
+    if (this->init()) {
         this->autorelease();
     }
 }
 
-DragonObject* DragonObject::create()
-{
-    DragonObject* pSprite = new DragonObject();
+DragonObject *DragonObject::create() {
+    DragonObject *pSprite = new DragonObject();
 
-    if (pSprite->init())
-    {
+    if (pSprite->init()) {
         pSprite->autorelease();
 
         return pSprite;
@@ -53,19 +52,34 @@ float DragonObject::getGlobalHeight(std::string name) {
         return 0.f;
 }
 
-void DragonObject::cleanTransform() {
-    this->setScale(1.f);
-    this->setPosition(0.f, 0.f);
-}
-
-float DragonObject::getNormalScale() {
-    return _normalScale;
-}
-
 void DragonObject::update() {
 
 }
 
 void DragonObject::_updateAnimation() {
 
+}
+
+
+void DragonObject::addDOChild(cocos2d::Node *target) {
+    if (target->getPhysicsBody()) {
+        target->removeComponent(target->getPhysicsBody());
+    }
+
+    target->retain();
+    target->removeFromParentAndCleanup(true);
+    //position
+    auto globalPoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), target, this->getDisplay());
+    target->setPosition(globalPoint);
+    //scale
+    target->setScale(target->getScale() / this->getScale());
+    target->setScaleX(
+            (getScaleX() > 0) ? target->getScaleX() : ((getScaleX() < 0)
+                                                       ? -target->getScaleX() : 0));
+    //rotation
+
+//       target->setRotation( * dragonBones::RADIAN_TO_ANGLE);
+
+    this->addChild(target, 1);
+    target->release();
 }

@@ -57,6 +57,9 @@ void Brain::update() {
 
             break;
         }
+        case HITTED :{
+            return;
+        }
         case SITTING: {
 
             break;

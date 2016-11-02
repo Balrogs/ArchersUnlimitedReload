@@ -15,8 +15,8 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("Arrow");
-    WEAPON_LIST.push_back("PowerArrow");
-    WEAPON_LIST.push_back("FrozenArrow");
+    WEAPON_LIST.push_back("Arrow");
+    WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("BombArrow");
     WEAPON_LIST.push_back("Arrow");
@@ -99,7 +99,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
     this->setPosition(_x_pos, _y_pos);
-    this->setScale(_normalScale * BattleScene::instance->getGlobalScale());
+    this->setScale(BattleScene::instance->getGlobalScale());
     BattleScene::instance->addChild(this);
 
 }
@@ -171,43 +171,43 @@ void Hero::attack(float angle, float power, float x, float y) {
 
     switch (_weaponIndex) {
         case 0:
-            _fire(new Arrow("Arrow", radian, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 1:
-            _fire(new Arrow("Arrow", radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
-            _fire(new Arrow("Arrow", radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
             break;
 
         case 2:
-            _fire(new Arrow("Arrow", radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
-            _fire(new Arrow("Arrow", radian, power, globalPoint, id));
-            _fire(new Arrow("Arrow", radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
             break;
         case 3:
-            _fire(new PowerArrow("PowerArrow", radian, power, globalPoint, id));
+            _fire(new PowerArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 4:
-            _fire(new FrozenArrow("FrozenArrow", radian, power, globalPoint, id));
+            _fire(new FrozenArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 5:
-            _fire(new FireArrow("Arrow", radian, power, globalPoint, id));
+            _fire(new FireArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 6:
-            _fire(new BombArrow("BombArrow", radian, power, globalPoint, id));
+            _fire(new BombArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 7:
-            _fire(new MineArrow("Arrow", radian, power, globalPoint, id));
+            _fire(new MineArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 8:
-            _fire(new DuelArrow("Arrow", radian, power, globalPoint, id));
+            _fire(new DuelArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
     }
     _shoulders->getAnimation().fadeIn(Variables::SHOT_ANIMATION, 0.f, 1);
     _isAttacking = false;
 }
 
-void Hero::switchWeapon() {
-    _weaponIndex++;
+void Hero::switchWeapon(int dest) {
+    _weaponIndex+=dest;
     if (_weaponIndex >= WEAPON_LIST.size()) {
         _weaponIndex = 0;
     }
@@ -320,6 +320,14 @@ Player *Hero::getPlayer() const {
     return _player;
 }
 
+unsigned Hero::weaponIndex() {
+    return _weaponIndex;
+}
+
+std::vector<std::string> Hero::getWeaponList() {
+    return WEAPON_LIST;
+}
+
 DuelHero::DuelHero(float x_pos, float y_pos) : DuelHero(x_pos, y_pos, new Player(1, "BOT")) {
 
 }
@@ -329,7 +337,6 @@ DuelHero::DuelHero(float x_pos, float y_pos, Player *player) : Hero(x_pos, y_pos
     WEAPON_LIST.push_back("Arrow");
 }
 
-void DuelHero::switchWeapon() {
+void DuelHero::switchWeapon(int dest) {
+    Hero::switchWeapon(dest);
 }
-
-

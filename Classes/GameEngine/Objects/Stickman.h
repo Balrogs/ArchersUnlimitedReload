@@ -11,7 +11,7 @@
 
 
 enum State {
-    JUMPING, SITTING, ATTACKING, IDLE, MOVING
+    JUMPING, SITTING, ATTACKING, IDLE, MOVING, HITTED
 };
 
 class Body : public Target {
@@ -61,6 +61,8 @@ public:
     void jump();
 
     void sit();
+
+    void hit(cocos2d::Vec2 velocity);
 
     void attack() override;
 

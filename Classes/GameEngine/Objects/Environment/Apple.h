@@ -3,17 +3,15 @@
 
 #include <GameEngine/Objects/Target.h>
 
-class Apple : public DragonObject {
+class Apple : public cocos2d::Node {
 
 public:
     Apple(float x_pos, float y_pos);
 
     ~Apple();
 
-    void update() override;
+    void hit();
 
-protected:
-    void _updateAnimation() override;
 };
 
 #endif //ARCUNLIM_APPLE_H

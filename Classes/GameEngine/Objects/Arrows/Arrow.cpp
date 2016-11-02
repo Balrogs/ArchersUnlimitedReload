@@ -9,7 +9,6 @@ USING_NS_CC;
 Arrow::Arrow(const std::string &armatureName, float radian, float power, const cocos2d::Vec2 &position,
              int player_id) {
 
-    _normalScale = 0.4f;
 
     _speedX = std::cos(radian) * power;
     _speedY = -std::sin(radian) * power;
@@ -37,7 +36,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
 
     this->setPosition(position);
     this->setRotation(radian * dragonBones::RADIAN_TO_ANGLE);
-    this->setScale(_normalScale * BattleScene::instance->getGlobalScale());
+    this->setScale(BattleScene::instance->getGlobalScale());
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
@@ -71,7 +70,7 @@ void Arrow::update(float dt) {
 
     auto head = Variables::translatePoint(Vec3(_head.x, _head.y, 0.f), _armatureDisplay);
 
-    if (position.y < BattleScene::GROUND + random || (_x_limit && head.x >= _x_limit - 3.f)) {
+    if (position.y < BattleScene::instance->GROUND + random || (_x_limit && head.x >= _x_limit - 3.f)) {
         _disableArrow();
         return;
     }
@@ -88,6 +87,17 @@ void Arrow::_disableArrow() {
     this->unscheduleAllCallbacks();
 
     this->removeComponent(this->getPhysicsBody());
+
+    this->runAction(
+            Sequence::create(
+                    DelayTime::create(10),
+                    CallFunc::create(
+                            [&]() {
+                                this->retain();
+                                this->removeFromParent();
+                            }
+                    ),
+                    NULL));
 }
 
 bool Arrow::processContact(Node *bone) {
@@ -96,9 +106,9 @@ bool Arrow::processContact(Node *bone) {
     }
     if (Apple *apple = dynamic_cast<Apple *>(bone)) {
 
-        if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
-            appleb->nextLevelAction();
-        }
+        this->addDOChild(apple);
+
+        apple->hit();
 
         return true;
     }
@@ -109,6 +119,8 @@ bool Arrow::processContact(Node *bone) {
         }
 
         _disableArrow();
+
+        target->dealDamage(10.f);
 
         addToNode(bone);
 
@@ -125,6 +137,7 @@ void Arrow::_updateAnimation() {
 void Arrow::update() {
 
 }
+
 
 void Arrow::addToNode(cocos2d::Node *bone) {
     if (Target *target = dynamic_cast<Target *>(bone->getParent()->getParent())) {
@@ -168,9 +181,9 @@ void Arrow::addToNode(cocos2d::Node *bone) {
 
         this->setRotation(-angle * dragonBones::RADIAN_TO_ANGLE);
 
-        target->dealDamage(10.f);
         bone->addChild(this, -1);
         this->release();
+
     }
 }
 
@@ -183,29 +196,25 @@ PowerArrow::PowerArrow(const std::string &armatureName, float radian, float powe
                                                                              player_id) {
 }
 
-bool PowerArrow::processContact(cocos2d::Node *bone) {
 
+bool PowerArrow::processContact(Node *bone) {
     if (bone == nullptr) {
         return false;
     }
-    if (Apple *apple = dynamic_cast<Apple *>(bone->getParent())) {
-        this->retain();
-        this->removeFromParentAndCleanup(true);
-        _armatureDisplay->setScale(1.2f);
-        apple->getDisplay()->addChild(this, 5);
-        apple->getDisplay()->getPhysicsBody()->setVelocity(Vec2(_speedX, _speedY));
-        this->release();
+    if (Stickman *target = dynamic_cast<Stickman *>(bone->getParent()->getParent())) {
+        if (Hero *hero = dynamic_cast<Hero *>(bone->getParent()->getParent())) {
+            if (hero->getPlayer()->getId() == _player_id)
+                return false;
+        }
+
         _disableArrow();
-        return true;
-    }
-    if (Target *target = dynamic_cast<Target *>(bone->getParent()->getParent())) {
-        auto display = target->getDisplay();
-        display->retain();
-        display->removeFromParentAndCleanup(true);
-        display->setScale(0.9f);
+
         target->dealDamage(25.f);
-        _armatureDisplay->addChild(display);
-        display->release();
+
+        target->hit(cocos2d::Vec2(_speedX, _speedY));
+
+        addToNode(bone);
+
         return true;
     }
     return false;
@@ -258,8 +267,15 @@ BombArrow::BombArrow(const std::string &armatureName, float radian, float power,
 }
 
 bool BombArrow::processContact(cocos2d::Node *bone) {
+    if (Stickman *target = dynamic_cast<Stickman *>(bone->getParent()->getParent())) {
+        if (Hero *hero = dynamic_cast<Hero *>(bone->getParent()->getParent())) {
+            if (hero->getPlayer()->getId() == _player_id)
+                return false;
+        }
+        _disableArrow();
+        return true;
+    }
 
-    _disableArrow();
 
     return false;
 }
@@ -270,13 +286,15 @@ void BombArrow::afterAction() {
 
     _emitter->retain();
 
-    _emitter->setTexture(Director::getInstance()->getTextureCache()->addImage("stars.png"));
+    auto particle = cocos2d::Sprite::createWithSpriteFrameName("part1.png");
+
+    _emitter->setTotalParticles(1000);
+    _emitter->setSpeed(1000.f);
+    _emitter->setTexture(particle->getTexture());
 
     _emitter->setAutoRemoveOnFinish(true);
 
     _emitter->setPosition(this->getPosition());
-
-    _emitter->setSpeed(500.f);
 
     BattleScene::instance->addChild(_emitter);
 }
@@ -333,7 +351,7 @@ void DuelArrow::update(float dt) {
 
     auto random = RandomHelper::random_real(0.f, 20.f);
 
-    if (position.y < BattleScene::GROUND + random) {
+    if (position.y < BattleScene::instance->GROUND + random) {
         _disableArrow();
         if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
             duel->makeTurn(_player_id);
