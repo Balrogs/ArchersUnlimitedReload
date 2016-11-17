@@ -22,7 +22,7 @@ void AppleBattle::initWorld() {
 
 void AppleBattle::initObjects() {
 
-    _player = new Hero(50.f * this->GLOBAL_SCALE + origin.x, AppleBattle::GROUND, new Player(1, "hero"));
+    _player = new AppleHero(50.f * this->GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO");
 
     auto target = new Stickman(visibleSize.width - 100.f * this->GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
@@ -82,7 +82,7 @@ bool AppleBattle::isGameOver() {
 }
 
 void AppleBattle::addApple() {
-    if (Target *target = dynamic_cast<Target *>(_targets[0])) {
+    if (DragonObject *target = dynamic_cast<DragonObject *>(_targets[0])) {
         auto apple = new Apple(_targets[0]->getPositionX(), target->getGlobalHeight("Head"));
         _targets.push_back(apple);
     }

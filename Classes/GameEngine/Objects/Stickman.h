@@ -5,16 +5,17 @@
 #ifndef DRAGONBONES_STICKMAN_H
 #define DRAGONBONES_STICKMAN_H
 
+#include <GameEngine/Player.h>
 #include "cocos2d.h"
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
-#include "Target.h"
+#include "DragonObject.h"
 
 
 enum State {
     JUMPING, SITTING, ATTACKING, IDLE, MOVING, HITTED
 };
 
-class Body : public Target {
+class Body : public DragonObject {
 
 protected:
     State _state;
@@ -24,10 +25,11 @@ protected:
     float _speedY;
     float _move_speed;
     float _jump_speed;
+    Player *_player;
 
 public:
 
-    Body(float x_pos, float y_pos, float scale, float hp);
+    Body(float x_pos, float y_pos, float scale, float facedir);
 
     void setSpeed(float move_speed);
 
@@ -46,6 +48,12 @@ public:
     State getState();
 
     void setState(State state);
+
+    virtual void changeFacedir(int facedir);
+
+    bool getHP();
+
+    void dealDamage(float d);
 };
 
 class Stickman : public Body {

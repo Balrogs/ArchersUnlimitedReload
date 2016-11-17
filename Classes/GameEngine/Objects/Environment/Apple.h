@@ -1,7 +1,7 @@
 #ifndef ARCUNLIM_APPLE_H
 #define ARCUNLIM_APPLE_H
 
-#include <GameEngine/Objects/Target.h>
+#include "cocos2d.h"
 
 class Apple : public cocos2d::Node {
 

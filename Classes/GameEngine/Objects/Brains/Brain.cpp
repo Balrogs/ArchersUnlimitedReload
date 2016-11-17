@@ -57,7 +57,7 @@ void Brain::update() {
 
             break;
         }
-        case HITTED :{
+        case HITTED : {
             return;
         }
         case SITTING: {
@@ -137,11 +137,6 @@ void HeroBrain::update() {
         case MOVING: {
             if (isTargetNear()) {
                 _body->move(0);
-                DelayTime *pDelayTime = DelayTime::create(RandomHelper::random_real(2.f, 5.f));
-                CallFunc *addtarg = CallFunc::create(CC_CALLBACK_0(HeroBrain::attack, this));
-                CallFunc *aimtarg = CallFunc::create(CC_CALLBACK_0(HeroBrain::aim, this));
-                _body->setState(ATTACKING);
-                this->runAction(RepeatForever::create(Sequence::create(aimtarg, pDelayTime, addtarg, NULL)));
             } else {
                 _body->move(chooseDir());
             }
@@ -154,7 +149,7 @@ void HeroBrain::update() {
             break;
         case IDLE: {
             if (isTargetNear()) {
-                DelayTime *pDelayTime = DelayTime::create(RandomHelper::random_real(2.f, 5.f));
+                DelayTime *pDelayTime = DelayTime::create(1.f);
                 CallFunc *addtarg = CallFunc::create(CC_CALLBACK_0(HeroBrain::attack, this));
                 CallFunc *aimtarg = CallFunc::create(CC_CALLBACK_0(HeroBrain::aim, this));
                 _body->setState(ATTACKING);
@@ -183,8 +178,8 @@ void HeroBrain::attack() {
     _body->attack();
 }
 
-HeroBrainDuel::HeroBrainDuel(Body *body, float upd) : Brain(body, 20.f, 2.f, upd){
-
+HeroBrainDuel::HeroBrainDuel(DuelHero *body, float upd) : Brain(body, 20.f, 2.f, upd) {
+    body->changeFacedir(-1);
 }
 
 bool HeroBrainDuel::isTargetNear() {

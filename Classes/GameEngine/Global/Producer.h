@@ -6,7 +6,6 @@
 #define ARCUNLIM_PRODUCER_H
 
 #include <GameEngine/Objects/Brains/Brain.h>
-#include <GameEngine/Objects/Target.h>
 #include "cocos2d.h"
 
 class LevelElement {

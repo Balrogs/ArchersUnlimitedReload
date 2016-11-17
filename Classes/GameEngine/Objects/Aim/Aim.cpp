@@ -14,8 +14,7 @@ Aim::Aim() : _aimDir(10),
              _aimRadian(0),
              _aiming(false),
              _aimPower(5.f),
-             _aimPreviewCount(10){
-    BattleScene::instance->addChild(this);
+             _aimPreviewCount(10) {
 }
 
 Aim::~Aim() {
@@ -25,16 +24,21 @@ void Aim::_update() {
     int i = 0;
     auto children = this->getChildren();
     for (auto child : children) {
-        if (AimPreview *aimP = dynamic_cast<AimPreview *>(child)) {
-            aimP->update(setScale(i), setPosition(i));
+        if (DrawNode *aimP = dynamic_cast<DrawNode *>(child)) {
+            aimP->setPosition(setPosition(i));
+            aimP->setScale( setScale(i) * BattleScene::instance->getGlobalScale());
             i++;
-        }
+        };
     }
 }
 
 
-void Aim::_addAimPreview(float scale, const cocos2d::Vec2 &position) {
-    this->addChild(new AimPreview(scale, position));
+void Aim::_addAimPreview(float scale, const cocos2d::Vec2 &position, cocos2d::Color4F color) {
+    auto circle = DrawNode::create();
+    circle->drawSolidCircle(Vec2(0, 0), 5.f, 10, 10, color);
+    circle->setPosition(position);
+    circle->setScale(scale * BattleScene::instance->getGlobalScale());
+    this->addChild(circle);
 }
 
 bool Aim::is_aiming() const {
@@ -61,13 +65,13 @@ void Aim::set_aiming(bool _aiming) {
         _aimRadian = 0.f;
         auto children = this->getChildren();
         for (auto child : children) {
-            if (AimPreview *aimP = dynamic_cast<AimPreview *>(child)) {
-                aimP->remove();
+            if (DrawNode *aimP = dynamic_cast<DrawNode *>(child)) {
+                aimP->removeFromParent();
             }
         }
     } else {
         for (int i = 0; i < _aimPreviewCount; i++) {
-            _addAimPreview(setScale(i), setPosition(i));
+            _addAimPreview(setScale(i), setPosition(i), Color4F::BLACK);
         }
 
     }
@@ -111,6 +115,14 @@ cocos2d::Vec2 Aim::setPosition(int i) {
         }
         rotation = std::atan2(-speedY, speedX) * dragonBones::RADIAN_TO_ANGLE;
     }
-    return Vec2(position.x + (i * speedX ), position.y + (i * speedY ));
+    return Vec2(position.x + (i * speedX), position.y + (i * speedY));
+}
+
+void Aim::disable() {
+    auto children = this->getChildren();
+    for (auto child : children) {
+        _addAimPreview(child->getScale(), child->getPosition(), Color4F::GRAY);
+        child->removeFromParent();
+    }
 }
 

@@ -16,7 +16,7 @@ Ground::Ground(float y_pos, float width) {
     float curr_width = 0;
 
     while(curr_width < width){
-        auto random = RandomHelper::random_int(1,3);
+        auto random = RandomHelper::random_int(4,6);
         auto path = StringUtils::format("Grass%d.png", random);
         auto grass = cocos2d::Sprite::createWithSpriteFrameName(path);
         grass->setScaleX(RandomHelper::random_int(0,1) == 0?-1:1);

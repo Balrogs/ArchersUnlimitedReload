@@ -5,7 +5,7 @@
 
 USING_NS_CC;
 
-Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, hp) {
+Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, 1) {
 
     _armature = BattleScene::instance->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
@@ -39,8 +39,12 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
 
 
     dragonBones::WorldClock::clock.add(_armature);
+
     this->addChild(_armatureDisplay);
+
     BattleScene::instance->addChild(this, 2);
+
+    BattleScene::instance->addStickman();
 }
 
 Stickman::~Stickman() {
@@ -127,15 +131,14 @@ void Stickman::hit(cocos2d::Vec2 velocity) {
 }
 
 
-Body::Body(float x_pos, float y_pos, float scale, float hp) :
-        _faceDir(1),
+Body::Body(float x_pos, float y_pos, float scale, float facedir) :
+        _faceDir(facedir),
         _moveDir(0),
         _speedX(0.f),
         _speedY(0.f),
         _state(IDLE) {
     _x_pos = x_pos;
     _y_pos = y_pos;
-    _hp = hp;
 }
 
 void Body::setSpeed(float move_speed) {
@@ -158,12 +161,16 @@ void Body::move(int dir) {
     _speedX = _move_speed * _moveDir;
     if (_moveDir) {
         if (_faceDir != _moveDir) {
-            _faceDir = _moveDir;
-            this->setScaleX(-this->getScaleX());
+            changeFacedir(_moveDir);
         }
     } else {
         setState(IDLE);
     }
+}
+
+void Body::changeFacedir(int facedir) {
+    _faceDir = facedir;
+    this->setScaleX(-this->getScaleX());
 }
 
 void Body::_updatePosition() {
@@ -205,4 +212,12 @@ void Body::setState(State state) {
         _state = state;
         _updateAnimation();
     }
+}
+
+bool Body::getHP() {
+    return _player->getHp() > 0;
+}
+
+void Body::dealDamage(float d) {
+    _player->setHp((int)d);
 }

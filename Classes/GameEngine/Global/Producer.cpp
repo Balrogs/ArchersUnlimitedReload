@@ -18,7 +18,7 @@ Level::Level() {
     _elements.push_back(new LevelElement(1, 1));
     _elements.push_back(new LevelElement(1.2f, 2));
     _elements.push_back(new LevelElement(1.3f, 3));
-   // _elements.push_back(new LevelElement(2.f, 4));
+    _elements.push_back(new LevelElement(2.f, 4));
 }
 
 LevelElement *Level::next() {
@@ -71,7 +71,7 @@ void Producer::startLevel(int id) {
                         brain = new StrengthBrain(target);
                         break;
                     case 4:
-                        target = new DuelHero(BattleScene::instance->visibleSize.width + 150.f, BattleScene::instance->GROUND);
+                        target = new Hero(BattleScene::instance->visibleSize.width + 150.f, BattleScene::instance->GROUND, new Player(100, "B"));
                         brain = new HeroBrain(target, 0.f);
                         break;
                     default:

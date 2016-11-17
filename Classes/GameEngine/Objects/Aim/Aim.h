@@ -21,9 +21,6 @@ private:
     float _aimPower;
     float _aimPreviewCount;
 
-
-    void _addAimPreview(float scale, const cocos2d::Vec2 &position);
-
     void _update();
 
     float setScale(int i);
@@ -48,9 +45,13 @@ public:
 
     void set_aimPower(float _aimPower);
 
+    void disable();
+
     Aim();
 
     ~Aim();
+
+    void _addAimPreview(float scale, const cocos2d::Vec2 &position, cocos2d::Color4F color);
 };
 
 

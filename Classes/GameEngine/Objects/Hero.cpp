@@ -2,14 +2,22 @@
 #include "Scenes/PlayLayers/Battle.h"
 #include "GameEngine/Global/Variables.h"
 
-Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 100),
+Hero::Hero(float x_pos, float y_pos) : Hero(x_pos, y_pos, new Player(100, "HERO")) {
+}
+
+Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 1),
                                                        _isAttacking(false),
                                                        _weaponIndex(0),
                                                        _weaponName(""),
                                                        _aimPowerState(nullptr),
                                                        _shoulders(nullptr) {
+    _move_speed = 20.f;
 
     _aim = new Aim();
+    _prevAim = nullptr;
+
+    this->addChild(_aim);
+
     _player = player;
 
     WEAPON_LIST.push_back("Arrow");
@@ -55,14 +63,19 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     _shoulders = _armature->getSlot("Shoulders")->getChildArmature();
     _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
 
+
     const auto firePointBone = _armature->getBone("shoulders");
     cocos2d::Vec2 globalPoint;
     globalPoint.set(firePointBone->global.x, -firePointBone->global.y);
     _shouldersDisplay->setPosition(globalPoint);
+    _shouldersDisplay->setAnchorPoint(globalPoint);
 
     _armature->removeBone(_armature->getBone("shoulders"));
 
-    _shoulders->getAnimation().fadeIn("setup");
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            "setup", 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
+    );
     for (auto child : _shouldersDisplay->getChildren()) {
         auto bone = _shoulders->getBoneByDisplay(child);
         if (bone == nullptr) {
@@ -81,8 +94,10 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
         child->setPhysicsBody(physicsBody);
     }
 
-    _shoulders->getAnimation().fadeIn("idle");
-
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            Variables::AIM_IDLE_ANIMATION, 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
+    );
 
     _bowArmature = _shoulders->getSlot("Bow")->getChildArmature();
     _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bowArmature->getDisplay();
@@ -101,6 +116,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     this->setPosition(_x_pos, _y_pos);
     this->setScale(BattleScene::instance->getGlobalScale());
     BattleScene::instance->addChild(this);
+    BattleScene::instance->addStickman();
 
 }
 
@@ -112,17 +128,16 @@ void Hero::update() {
 }
 
 void Hero::attack() {
-    const auto firePointBone = _shoulders->getSlot("Bow");
-    auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
-                                                 _shouldersDisplay);
-    _fire(new DuelArrow("Arrow", _aim->get_aimRadian(), _aim->get_aimPower(),
-                        cocos2d::Vec2(this->getPosition().x, globalPoint.y), this->getPlayer()->getId()));
-    _shoulders->getAnimation().fadeIn(Variables::SHOT_ANIMATION, 0.f, 1);
+    CCLOG("Attacking: angle %f power %f",_aim->get_aimRadian(), _aim->get_aimPower());
+    attack(_aim->get_aimRadian(), _aim->get_aimPower());
 }
 
 void Hero::aim() {
     _aim->set_aiming(true);
-    _aimPowerState = _shoulders->getAnimation().fadeIn(Variables::AIM_ANIMATION, 0.f, 1);
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            Variables::AIM_ANIMATION, 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
+    );
     _arrowDisplay->setVisible(true);
     auto hero_pos = BattleScene::instance->getPlayerPos();
 
@@ -131,57 +146,53 @@ void Hero::aim() {
             cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
             _shouldersDisplay).y);
 
-    float x = hero_pos.x - globalPoint.x;
-    float y = hero_pos.y - globalPoint.y;
-    auto power = std::sqrt(x * x + y * y);
+    float x = globalPoint.x - hero_pos.x;
 
-    CCLOG("Pow %f x %f y %f", power, x, y);
+    int period = (int) round(x / cocos2d::RandomHelper::random_real(16.f, 17.5f));
 
-    if (power / 10 > BattleScene::MAX_ARROW_POWER) {
-        auto npower = BattleScene::MAX_ARROW_POWER * 10;
-        auto del = npower / power;
-        x = x * del;
-        y = std::sqrt(npower * npower - x * x);
-        power = npower / 10;
+    //auto power = cocos2d::RandomHelper::random_real(BattleScene::MIN_ARROW_POWER + 20.f ,BattleScene::MAX_ARROW_POWER);
 
-    } else if (power / 10 < BattleScene::MIN_ARROW_POWER) {
-        power = BattleScene::MIN_ARROW_POWER;
-    }
+    auto power = BattleScene::MAX_ARROW_POWER;
 
-    auto angle = 360 - std::atan2(y, x) * dragonBones::RADIAN_TO_ANGLE;
-    angle = angle * dragonBones::ANGLE_TO_RADIAN;
-    CCLOG("Rad %f Pow %f x %f y %f", angle, power, x, y);
+    auto angle = -x / (power * period);
+    CCLOG("AIMING: period %d x %f", period, x);
+    angle = (float) acos(angle);
+    angle = 360 * dragonBones::ANGLE_TO_RADIAN - angle;
     _aim->set_aimRadian(angle);
     _aim->set_aimPower(power);
     _updateAim();
 }
 
-void Hero::attack(float angle, float power, float x, float y) {
+void Hero::attack(float radian, float power) {
     if (_isAttacking) {
         return;
     }
+    radian *= -_faceDir;
     _isAttacking = true;
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay);
-
-
-    auto radian = -angle;
+    if (getPosition().x > BattleScene::instance->visibleSize.width)
+        globalPoint.x = getPosition().x;
+    CCLOG("Hero Position : x %f  y : %f", getPosition().x, getPosition().y);
     int id = _player->getId();
-
     switch (_weaponIndex) {
         case 0:
             _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
         case 1:
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+                            id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+                            id));
             break;
 
         case 2:
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+                            id));
             _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint, id));
+            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+                            id));
             break;
         case 3:
             _fire(new PowerArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
@@ -201,16 +212,25 @@ void Hero::attack(float angle, float power, float x, float y) {
         case 8:
             _fire(new DuelArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
             break;
+        default:
+            break;
     }
-    _shoulders->getAnimation().fadeIn(Variables::SHOT_ANIMATION, 0.f, 1);
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            Variables::SHOT_ANIMATION, 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
+    );
     _isAttacking = false;
 }
 
 void Hero::switchWeapon(int dest) {
-    _weaponIndex+=dest;
+
+    _weaponIndex += dest;
+
     if (_weaponIndex >= WEAPON_LIST.size()) {
         _weaponIndex = 0;
-    }
+    } else if (_weaponIndex <= 0)
+        _weaponIndex = (unsigned int) WEAPON_LIST.size() - 1;
+
     _shoulders->getSlot("Arrow")->setChildArmature(
             BattleScene::instance->factory.buildArmature(WEAPON_LIST[_weaponIndex]));
     _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
@@ -220,12 +240,14 @@ void Hero::switchWeapon(int dest) {
 
 void Hero::_fire(Arrow *arrow) {
     this->getPlayer()->addShotsCount();
-    _aim->set_aiming(false);
+    _saveAim();
     BattleScene::instance->getBulletPull()->addChild(arrow);
     _arrowDisplay->setVisible(false);
     _state = IDLE;
-    _aimPowerState = _shoulders->getAnimation().fadeIn(Variables::AIM_IDLE_ANIMATION);
-    _aimPowerState->weight = 0;
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            Variables::AIM_IDLE_ANIMATION, 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::All
+    );
     _shouldersDisplay->setRotation(0.f);
 
     _updateString();
@@ -238,19 +260,22 @@ void Hero::_updateAim() {
 
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
-                                                 _shouldersDisplay);
-
-
+                                                 _shouldersDisplay, this);
     _aim->set_aimPoint(globalPoint);
 
     _faceDir = _aim->get_aimRadian() > 1.5f || _aim->get_aimRadian() < -1.5f ? -1 : 1;
 
-    _shouldersDisplay->getAnimation().gotoAndStopByTime(Variables::AIM_ANIMATION, _aim->get_aimPower() / 50);
+    _aim->set_aimDir(_faceDir);
 
-//    if (_faceDir > 0)
-//        _shouldersDisplay->setRotation(_aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
-//    else
-//        _shouldersDisplay->setRotation(180 - _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
+    _aimPowerState = _shoulders->getAnimation().gotoAndStopByTime(Variables::AIM_ANIMATION, _aim->get_aimPower() / 50);
+
+    float angle = _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
+    if (_faceDir <= 0)
+        angle = 180 - _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
+
+    _shouldersDisplay->setRotation(angle);
+
+    _shoulders->invalidUpdate("", true);
 
     _updateString();
 }
@@ -258,23 +283,23 @@ void Hero::_updateAim() {
 void Hero::setAim(float angle, float power) {
     _aim->set_aimRadian(-angle);
     _aim->set_aimPower(power);
-
     _updateAim();
 }
 
 void Hero::startAim() {
     _aim->set_aiming(true);
-    _aimPowerState = _shoulders->getAnimation().fadeIn(Variables::AIM_ANIMATION, -1.f, 1);
+    _aimPowerState = _shoulders->getAnimation().fadeIn(
+            Variables::AIM_ANIMATION, 0.f, 1,
+            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
+    );
     _arrowDisplay->setVisible(true);
 
     _updateAim();
 }
 
+
 void Hero::_updateAnimation() {
-    if (_state == IDLE) {
-        return;
-    }
-    if (_moveDir == 0) {
+    if (!_moveDir) {
         _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     } else {
         _armature->getAnimation().fadeIn(Variables::STICKMAN_WALK_ANIMATION);
@@ -306,13 +331,13 @@ void Hero::_updateString() {
                         cocos2d::Vec2(bottom->global.x, -bottom->global.y),
                         cocos2d::Color4F::BLACK);
 
-        _string->addChild(line1);
-        _string->addChild(line2);
+        _string->addChild(line1, 1);
+        _string->addChild(line2, 1);
     } else {
         auto line = cocos2d::DrawNode::create();
         line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
                        cocos2d::Color4F::BLACK);
-        _string->addChild(line);
+        _string->addChild(line, 1);
     }
 }
 
@@ -320,23 +345,65 @@ Player *Hero::getPlayer() const {
     return _player;
 }
 
-unsigned Hero::weaponIndex() {
-    return _weaponIndex;
-}
-
 std::vector<std::string> Hero::getWeaponList() {
     return WEAPON_LIST;
 }
 
-DuelHero::DuelHero(float x_pos, float y_pos) : DuelHero(x_pos, y_pos, new Player(1, "BOT")) {
-
+void Hero::_saveAim() {
+    if (_prevAim != nullptr) {
+        this->removeChild((cocos2d::Node *) _prevAim, true);
+    }
+    _prevAim = _aim;
+    _prevAim->disable();
+    _aim = new Aim();
+    this->addChild(_aim);
 }
 
-DuelHero::DuelHero(float x_pos, float y_pos, Player *player) : Hero(x_pos, y_pos, player) {
+DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
 }
 
-void DuelHero::switchWeapon(int dest) {
-    Hero::switchWeapon(dest);
+void DuelHero::switchWeapon(int i) {
+    Hero::switchWeapon(i);
 }
+
+void DuelHero::move(int dir) {
+    Hero::move(dir);
+    _updateAnimation();
+    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + dir * 150.f, this->getPosition().y, 0.f);
+    if (pos.x < 100.f) {
+        pos.x = 100.f;
+    }
+
+    if (pos.x > BattleScene::instance->visibleSize.width - 100.f) {
+        pos.x = BattleScene::instance->visibleSize.width - 100.f;
+    }
+
+    this->runAction(cocos2d::Sequence::create(
+            cocos2d::CallFunc::create([&]() {
+                if (_prevAim != nullptr)
+                    _prevAim->setVisible(false);
+            }),
+            cocos2d::MoveTo::create(1.5f, pos),
+            cocos2d::CallFunc::create([&]() {
+                Body::move(1);
+                Body::move(0);
+                _updateAnimation();
+                if (_prevAim != nullptr)
+                    _prevAim->setVisible(true);
+            }),
+            NULL)
+    );
+}
+
+
+AppleHero::AppleHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
+    _weaponIndex = 0;
+    WEAPON_LIST.push_back("Arrow");
+}
+
+void AppleHero::_saveAim() {
+    _aim->set_aiming(false);
+}
+

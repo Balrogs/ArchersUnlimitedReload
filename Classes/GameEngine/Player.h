@@ -6,16 +6,28 @@
 #define ARCUNLIM_PLAYER_H
 
 
+#include <cocos2d.h>
+
 class Player {
 public:
-    Player(int id, const char *name);
+    Player(int hp, const char *name);
 
 private:
+
     int _id;
     const char *_name;
-    int _score;
     int _shotsCount;
+    int _hp;
+
+    cocos2d::Node* _view;
+    cocos2d::Label* _name_view;
+    cocos2d::Label* _hp_view ;
+    cocos2d::Label* _shots_view;
+
+    void updateView();
 public:
+
+    void setHAlignment(cocos2d::TextHAlignment alignment);
 
     int getShotsCount() const;
 
@@ -25,10 +37,11 @@ public:
 
     const char * getName() const;
 
-    int getScore() const;
+    cocos2d::Node* getView();
 
-    void addScore(int _score);
+    int getHp() const;
 
+    void setHp(int diff);
 };
 
 

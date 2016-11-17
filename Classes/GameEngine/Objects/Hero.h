@@ -16,11 +16,13 @@ class Hero : public Body {
 
 public:
 
+    Hero(float x_pos, float y_pos);
+
     Hero(float x_pos, float y_pos, Player *player);
 
     ~Hero();
 
-    void attack(float angle, float power, float x, float y);
+    void attack(float angle, float power);
 
     void setAim(float angle, float power);
 
@@ -34,9 +36,9 @@ public:
 
     void aim() override;
 
+
     Player *getPlayer() const;
 
-    unsigned weaponIndex();
     std::vector<std::string> getWeaponList();
 
 protected:
@@ -45,7 +47,7 @@ protected:
     std::string _weaponName;
     std::vector<std::string> WEAPON_LIST;
     Aim *_aim;
-    Player *_player;
+    Aim *_prevAim;
     dragonBones::AnimationState *_aimPowerState;
     dragonBones::Armature *_shoulders;
     dragonBones::Armature *_arrowArmature;
@@ -62,16 +64,26 @@ protected:
     void _updateAim();
 
     void _updateString();
+
+    virtual void _saveAim();
 };
 
 
 class DuelHero : public Hero {
 public:
-    DuelHero(float x_pos, float y_pos);
 
-    DuelHero(float x_pos, float y_pos, Player *player);
+    DuelHero(float x_pos, float y_pos, const char *name);
 
-    void switchWeapon(int dest) override;
+    void switchWeapon(int i) override;
+
+    void move(int dir) override;
 };
+
+class AppleHero : public Hero {
+public:
+    AppleHero(float x_pos, float y_pos, const char *name);
+    void _saveAim() override;
+};
+
 
 #endif //DRAGONBONES_HERO_H

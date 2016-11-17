@@ -2,7 +2,7 @@
 #ifndef ARCUNLIM_BRAIN_H
 #define ARCUNLIM_BRAIN_H
 
-#include <GameEngine/Objects/Stickman.h>
+#include <GameEngine/Objects/Hero.h>
 #include "cocos2d.h"
 
 
@@ -71,7 +71,7 @@ protected:
 
 class HeroBrainDuel : public Brain {
 public:
-    HeroBrainDuel(Body *body, float upd);
+    HeroBrainDuel(DuelHero *body, float upd);
 
     bool isTargetNear() override;
 

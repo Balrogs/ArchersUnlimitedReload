@@ -20,7 +20,13 @@ protected:
     void initWorld() override;
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;
+
     bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
+
+    void _keyBoardPressedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) override;
+
+    void _keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) override;
+
     bool isGameOver() override;
 
 private:

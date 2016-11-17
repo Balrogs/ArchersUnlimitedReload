@@ -5,11 +5,9 @@
 
 USING_NS_CC;
 
-
 Arrow::Arrow(const std::string &armatureName, float radian, float power, const cocos2d::Vec2 &position,
              int player_id) {
-
-
+    _damage = 10.f;
     _speedX = std::cos(radian) * power;
     _speedY = -std::sin(radian) * power;
 
@@ -82,6 +80,8 @@ void Arrow::update(float dt) {
 
 void Arrow::_disableArrow() {
 
+    CCLOG("Disable Position : x %f  y : %f", getPosition().x, getPosition().y);
+
     afterAction();
 
     this->unscheduleAllCallbacks();
@@ -112,7 +112,7 @@ bool Arrow::processContact(Node *bone) {
 
         return true;
     }
-    if (Target *target = dynamic_cast<Target *>(bone->getParent()->getParent())) {
+    if (Body *target = dynamic_cast<Body *>(bone->getParent()->getParent())) {
         if (Hero *hero = dynamic_cast<Hero *>(bone->getParent()->getParent())) {
             if (hero->getPlayer()->getId() == _player_id)
                 return false;
@@ -120,7 +120,7 @@ bool Arrow::processContact(Node *bone) {
 
         _disableArrow();
 
-        target->dealDamage(10.f);
+        target->dealDamage(_damage);
 
         addToNode(bone);
 
@@ -140,7 +140,7 @@ void Arrow::update() {
 
 
 void Arrow::addToNode(cocos2d::Node *bone) {
-    if (Target *target = dynamic_cast<Target *>(bone->getParent()->getParent())) {
+    if (DragonObject *target = dynamic_cast<DragonObject *>(bone->getParent()->getParent())) {
 
         const auto &position = this->getPosition();
         const auto &rotation = this->getRotation();
@@ -158,8 +158,15 @@ void Arrow::addToNode(cocos2d::Node *bone) {
         this->retain();
         this->removeFromParentAndCleanup(true);
         //position
-        auto globalPoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay,
-                                                     bone);
+        auto scenePoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay);
+        if(target->getPosition().x > BattleScene::instance->visibleSize.width){
+            auto player_pos = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), bone);
+            scenePoint.x = player_pos.x;
+        }
+        auto globalPoint3= new Vec3(scenePoint.x, scenePoint.y, 0.f);
+        bone->getWorldToNodeTransform().transformPoint(globalPoint3);
+        auto globalPoint = Vec2(globalPoint3->x, globalPoint3->y);
+
         this->setPosition(globalPoint);
         //scale
         this->setScale(getScale() / target->getScale());
@@ -194,6 +201,7 @@ void Arrow::afterAction() {
 PowerArrow::PowerArrow(const std::string &armatureName, float radian, float power,
                        const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                              player_id) {
+    _damage=40.f;
 }
 
 
@@ -209,7 +217,7 @@ bool PowerArrow::processContact(Node *bone) {
 
         _disableArrow();
 
-        target->dealDamage(25.f);
+      //  target->dealDamage(_damage);
 
         target->hit(cocos2d::Vec2(_speedX, _speedY));
 
@@ -227,6 +235,7 @@ PowerArrow::~PowerArrow() {
 FrozenArrow::FrozenArrow(const std::string &armatureName, float radian, float power,
                          const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                                player_id) {
+    _damage=20.f;
 
 }
 
@@ -245,6 +254,7 @@ void FrozenArrow::update(float dt) {
 FireArrow::FireArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
+    _damage = 35.f;
 
 }
 
@@ -263,6 +273,7 @@ void FireArrow::update(float dt) {
 BombArrow::BombArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
+    _damage = 50.f;
 
 }
 
@@ -275,8 +286,6 @@ bool BombArrow::processContact(cocos2d::Node *bone) {
         _disableArrow();
         return true;
     }
-
-
     return false;
 }
 
@@ -312,6 +321,7 @@ void BombArrow::_disableArrow() {
 MineArrow::MineArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
+    _damage = 50.f;
 
 }
 
@@ -324,6 +334,7 @@ MineArrow::~MineArrow() {
 }
 
 void MineArrow::update(float dt) {
+
     Arrow::update(dt);
 }
 
@@ -332,7 +343,7 @@ void DuelArrow::update(float dt) {
     if (!_isActive) {
         return;
     }
-
+    lifePeriod++;
     const auto &position = this->getPosition();
     const auto &rotation = this->getRotation();
 
@@ -342,12 +353,11 @@ void DuelArrow::update(float dt) {
         _speedY += BattleScene::G;
 
     }
+
     this->setPosition(position.x + _speedX, position.y + _speedY);
     this->setRotation(std::atan2(-_speedY, _speedX) * dragonBones::RADIAN_TO_ANGLE);
 
-
     DuelScene::instance->moveScene(_speedX);
-
 
     auto random = RandomHelper::random_real(0.f, 20.f);
 
@@ -363,6 +373,10 @@ void DuelArrow::update(float dt) {
 DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
+    CCLOG("Power : %f radian : %f", power, radian);
+    CCLOG("Position : x %f  y : %f", position.x, position.y);
+    _damage = 10.f;
+    lifePeriod = 0;
     if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
         duel->makeTurn(-1);
     }
@@ -372,6 +386,7 @@ DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
 bool DuelArrow::processContact(cocos2d::Node *bone) {
     if (Arrow::processContact(bone))
         if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
+            CCLOG("PERIOD: %d SPEEDX : %f", lifePeriod, _speedX);
             duel->makeTurn(_player_id);
             return true;
         }

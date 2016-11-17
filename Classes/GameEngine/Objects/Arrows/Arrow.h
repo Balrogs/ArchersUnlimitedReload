@@ -5,13 +5,14 @@
 #ifndef DRAGONBONES_ARROW_H
 #define DRAGONBONES_ARROW_H
 
-#include <GameEngine/Objects/Target.h>
+#include <GameEngine/Objects/DragonObject.h>
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
 #include "cocos2d.h"
 
 class Arrow : public DragonObject {
 protected:
     float _speedX;
+    float _damage;
     float _offset;
     float _speedY;
     bool _isActive;
@@ -119,6 +120,8 @@ public:
     bool processContact(cocos2d::Node *bone) override;
 
     ~DuelArrow();
+
+    int lifePeriod;
 };
 
 

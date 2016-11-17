@@ -180,7 +180,6 @@ set(GAME_SRC
         Classes/GameEngine/Objects/Aim/Aim.cpp
         Classes/GameEngine/Objects/Brains/Brain.cpp
         Classes/GameEngine/Global/WeaponSelector.cpp
-        Classes/GameEngine/Objects/Target.cpp
         Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Objects/DragonObject.cpp
@@ -282,7 +281,6 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Aim/Aim.h
         Classes/GameEngine/Objects/Brains/Brain.h
         Classes/GameEngine/Global/WeaponSelector.h
-        Classes/GameEngine/Objects/Target.h
         Classes/GameEngine/Global/Variables.h
         Classes/GameEngine/Objects/Aim/AimPreview.h
         Classes/GameEngine/Objects/Environment/Apple.h

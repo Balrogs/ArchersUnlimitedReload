@@ -43,7 +43,7 @@ const float  BattleScene::MIN_ARROW_POWER = 5.f;
 const float  BattleScene::MAX_ARROW_ANGLE = 1.5f;
 const float  BattleScene::MIN_ARROW_ANGLE = -1.5f;
 
-const float  BattleScene::G = -0.6f;
+const float  BattleScene::G = -0.5f;
 BattleScene *BattleScene::instance = nullptr;
 
 bool BattleScene::init() {
@@ -67,7 +67,6 @@ bool BattleScene::init() {
     factory.loadTextureAtlasData("texture.json");
 
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
-
 
 
     if (dragonBonesData) {
@@ -134,6 +133,10 @@ void BattleScene::_onPopScene() {
 }
 
 bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    const auto start = touch->getStartLocation();
+    if (this->ui->checkTouch(start)) {
+        return false;
+    }
     _player->startAim();
     return true;
 }
@@ -169,7 +172,7 @@ bool BattleScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *
     auto angle = std::atan2(y, x);
     angle = (angle > MAX_ARROW_ANGLE) ? MAX_ARROW_ANGLE : angle;
     angle = (angle < MIN_ARROW_ANGLE) ? MIN_ARROW_ANGLE : angle;
-    _player->attack(angle, power, x, y);
+    _player->attack(angle, power);
     return true;
 }
 
@@ -208,7 +211,7 @@ void BattleScene::initWorld() {
 
     this->addChild(ground);
 
-    _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f, new Player(1, "hero"));
+    _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f);
 
     ui->initBattle(visibleSize, _player);
 
@@ -262,4 +265,12 @@ bool BattleScene::isGameOver() {
 
 cocos2d::Vec2 BattleScene::getPlayerPos() {
     return Vec2(_player->getPosition().x, _player->getGlobalHeight("Head"));
+}
+
+int BattleScene::getStickmanCount() {
+    return _stickmansCount;
+}
+
+void BattleScene::addStickman() {
+    _stickmansCount++;
 }

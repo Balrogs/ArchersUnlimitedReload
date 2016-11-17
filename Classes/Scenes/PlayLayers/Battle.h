@@ -42,6 +42,10 @@ public:
 
     void removeTarget(cocos2d::Node *target);
 
+    void addStickman();
+
+    int getStickmanCount();
+
     float getGlobalScale();
 
     void moveScene(float x);
@@ -54,14 +58,16 @@ public:
 
     virtual void _unPause();
 
+    Hero *_player;
 
 protected:
+
+    int _stickmansCount;
+
     float GLOBAL_SCALE;
     UI *ui;
     bool _isPaused;
 
-
-    Hero *_player;
     std::vector<Brain *> _brains;
     std::vector<cocos2d::Node *> _targets;
     cocos2d::Node *_bullet_pull;

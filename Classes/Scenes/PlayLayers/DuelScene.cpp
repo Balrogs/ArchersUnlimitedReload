@@ -10,15 +10,19 @@ void DuelScene::initWorld() {
     Ground *ground = new Ground(GROUND, visibleSize.width * 4);
     this->addChild(ground);
 
-    _player1 = new Player(1, "hero");
-    _player2 = new Player(2, "bot");
-    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, _player1);
-    auto target = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, _player2);
+    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, "HEROOOOOOOOOO");
+
+    auto target = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, "BOT");
+
+    _player1 = _player->getPlayer();
+    _player2 = target->getPlayer();
+    _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
     _targets.push_back(target);
     _brains.push_back(new HeroBrainDuel(target, 0.f));
 
-    ui->initDuel(visibleSize, _player);
-    makeTurn(2);
+    ui->initDuel(visibleSize, _player, target);
+
+    makeTurn(_player2->getId());
 }
 
 bool DuelScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
@@ -71,6 +75,7 @@ void DuelScene::makeTurn(int id) {
                     MoveTo::create(delay, Vec2::ZERO),
                     CallFunc::create(
                             [&]() {
+                                UI::enableArrows(_player, true);
                                 this->_turnId = _player2->getId();
                             }
                     ),
@@ -82,5 +87,23 @@ void DuelScene::makeTurn(int id) {
 }
 
 bool DuelScene::isGameOver() {
-    return _player1->getShotsCount() == _player2->getShotsCount() && _player1->getShotsCount() >= 10;
+    return (_player1->getShotsCount() == _player2->getShotsCount() && _player1->getShotsCount() >= 15) ||
+           _player1->getHp() <= 0 || _player2->getHp() <= 0;
+}
+
+void DuelScene::_keyBoardPressedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    BattleScene::_keyBoardPressedHandler(keyCode, event);
+
+}
+
+void DuelScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    BattleScene::_keyBoardReleasedHandler(keyCode, event);
+    switch (keyCode) {
+        case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+            _player->move(-1);
+            break;
+        case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+            _player->move(1);
+            break;
+    }
 }

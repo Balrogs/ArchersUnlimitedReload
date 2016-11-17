@@ -23,24 +23,23 @@ Apple::Apple(float x_pos, float y_pos) {
     this->setPhysicsBody(physicsBody);
 
     this->addChild(texture, 0);
+    this->setScale(1.5f);
 
-    //effect
-    auto particle = cocos2d::Sprite::createWithSpriteFrameName("part1.png");
+    auto _emitter = cocos2d::ParticleExplosion::create();
 
-    auto _emitter = cocos2d::ParticleFlower::create();
+    _emitter->setTexture(cocos2d::Director::getInstance()->getTextureCache()->addImage("fire.png"));
     _emitter->retain();
 
     _emitter->setDuration(0.5f);
-
-    _emitter->setTexture(particle->getTexture());
-    _emitter->setLife(1);
+    _emitter->setColor(cocos2d::Color3B::YELLOW);
+    _emitter->setLife(0.5f);
     _emitter->setSpeed(100);
     _emitter->setEmissionRate(100000);
 
     _emitter->setAutoRemoveOnFinish(true);
     _emitter->setPosition(this->getPosition());
 
-    BattleScene::instance->addChild(_emitter);
+    BattleScene::instance->addChild(_emitter, 1);
 
     BattleScene::instance->addChild(this, 1);
 }
@@ -51,6 +50,18 @@ Apple::~Apple() {
 
 
 void Apple::hit() {
+
+    auto _emitter = cocos2d::ParticleSmoke::create();
+    _emitter->retain();
+    _emitter->setLife(0.1f);
+    _emitter->setDuration(0.1f);
+    _emitter->setTexture(cocos2d::Director::getInstance()->getTextureCache()->addImage("fire.png"));
+    auto pos = new cocos2d::Vec3(this->getPosition().x, this->getPosition().y, 0.f);
+    this->getNodeToWorldTransform().transformPoint(pos);
+    _emitter->setPosition(pos->x, pos->y);
+
+    BattleScene::instance->addChild(_emitter, 10);
+
     this->runAction(
             cocos2d::Sequence::create(
                     cocos2d::DelayTime::create(1.f),
@@ -58,6 +69,7 @@ void Apple::hit() {
                             [&]() {
                                 if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
                                     appleb->nextLevelAction();
+                                    BattleScene::instance->removeChild(_emitter);
                                 }
                             }
                     ),

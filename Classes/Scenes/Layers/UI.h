@@ -17,10 +17,19 @@ public:
 
     CREATE_FUNC(UI);
 
-    void initDuel(cocos2d::Size visibleSize, Hero *player);
+    void initDuel(cocos2d::Size visibleSize, Hero *player1, Hero *player2);
+
     void initApple(cocos2d::Size visibleSize, Hero *player);
 
     void initBattle(cocos2d::Size visibleSize, Hero *player);
+
+    bool checkTouch(cocos2d::Vec2 touch);
+
+    static void enableArrows(Hero *player, bool enable);
+
+protected:
+
+    std::vector<cocos2d::Rect> bounds;
 };
 
 
