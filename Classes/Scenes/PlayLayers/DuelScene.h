@@ -14,9 +14,15 @@ class DuelScene : public BattleScene {
 public:
     CREATE_FUNC(DuelScene);
 
-    void makeTurn(int id);
+    virtual void makeTurn(int id);
 
 protected:
+
+    int _turnId;
+    Player *_player1;
+    Player *_player2;
+
+
     void initWorld() override;
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;
@@ -29,10 +35,6 @@ protected:
 
     bool isGameOver() override;
 
-private:
-    int _turnId;
-    Player *_player1;
-    Player *_player2;
 };
 
 

@@ -5,6 +5,8 @@
 #include "Battle.h"
 #include "AppleBattle.h"
 #include "DuelScene.h"
+#include "DuelScene2P.h"
+#include "DuelSceneMultiplayer.h"
 
 USING_NS_CC;
 
@@ -20,6 +22,12 @@ Scene *BattleScene::createScene(int type) {
             break;
         case 2:
             layer = DuelScene::create();
+            break;
+        case 3:
+            layer = DuelScene2P::create();
+            break;
+        case 4:
+            layer = DuelSceneMultiplayer::create();
             break;
         default:
             layer = BattleScene::create();
@@ -39,9 +47,6 @@ Scene *BattleScene::createScene(int type) {
 
 const float  BattleScene::MAX_ARROW_POWER = 40.f;
 const float  BattleScene::MIN_ARROW_POWER = 5.f;
-
-const float  BattleScene::MAX_ARROW_ANGLE = 1.5f;
-const float  BattleScene::MIN_ARROW_ANGLE = -1.5f;
 
 const float  BattleScene::G = -0.5f;
 BattleScene *BattleScene::instance = nullptr;
@@ -152,8 +157,6 @@ bool BattleScene::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event 
     power = power / 10;
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
-    angle = (angle > MAX_ARROW_ANGLE) ? MAX_ARROW_ANGLE : angle;
-    angle = (angle < MIN_ARROW_ANGLE) ? MIN_ARROW_ANGLE : angle;
     _player->setAim(angle, power);
     return true;
 }
@@ -170,8 +173,6 @@ bool BattleScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
     auto angle = std::atan2(y, x);
-    angle = (angle > MAX_ARROW_ANGLE) ? MAX_ARROW_ANGLE : angle;
-    angle = (angle < MIN_ARROW_ANGLE) ? MIN_ARROW_ANGLE : angle;
     _player->attack(angle, power);
     return true;
 }
@@ -263,8 +264,8 @@ bool BattleScene::isGameOver() {
     return false;
 }
 
-cocos2d::Vec2 BattleScene::getPlayerPos() {
-    return Vec2(_player->getPosition().x, _player->getGlobalHeight("Head"));
+cocos2d::Vec2 BattleScene::getHeroPos(Hero *player) {
+    return Vec2(player->getPosition().x, player->getGlobalHeight("Head"));
 }
 
 int BattleScene::getStickmanCount() {
@@ -273,4 +274,8 @@ int BattleScene::getStickmanCount() {
 
 void BattleScene::addStickman() {
     _stickmansCount++;
+}
+
+Vec2 BattleScene::getPlayerPos() {
+    return Vec2(_player->getPosition().x, _player->getGlobalHeight("Head"));
 }

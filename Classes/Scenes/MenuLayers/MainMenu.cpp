@@ -15,12 +15,14 @@ Scene *MainMenu::createScene() {
 }
 
 MainMenu::MainMenu() {
-    auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
+   // auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
     auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
-    auto item3 = MenuItemFont::create("Duel", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
-    auto item4 = MenuItemFont::create("Quit", CC_CALLBACK_1(MainMenu::onQuit, this));
+    auto item3 = MenuItemFont::create("Duel with bot", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
+    auto item4 = MenuItemFont::create("Duel 2P", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
+    auto item5 = MenuItemFont::create("Duel Multiplayer", CC_CALLBACK_0(MainMenu::onPushScene, this, 4));
+    auto item6 = MenuItemFont::create("Quit", CC_CALLBACK_1(MainMenu::onQuit, this));
 
-    auto menu = Menu::create(item1, item2, item3, item4, nullptr);
+    auto menu = Menu::create(item2, item3, item4, item5, item6, nullptr);
     menu->alignItemsVertically();
 
     this->addChild(menu);

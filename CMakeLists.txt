@@ -299,7 +299,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Settings.h
         Classes/GameEngine/Objects/DragonObject.h
   ${PLATFORM_SPECIFIC_HEADERS}
-        Classes/GameEngine/Objects/Environment/Ground.cpp Classes/GameEngine/Objects/Environment/Ground.h)
+        Classes/GameEngine/Objects/Environment/Ground.cpp Classes/GameEngine/Objects/Environment/Ground.h Classes/Scenes/PlayLayers/DuelScene2P.cpp Classes/Scenes/PlayLayers/DuelScene2P.h Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp Classes/Scenes/PlayLayers/DuelSceneMultiplayer.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

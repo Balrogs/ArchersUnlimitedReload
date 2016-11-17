@@ -27,6 +27,8 @@ public:
 
     static void enableArrows(Hero *player, bool enable);
 
+    void addMoveArrows(Hero *player);
+
 protected:
 
     std::vector<cocos2d::Rect> bounds;

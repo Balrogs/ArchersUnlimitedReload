@@ -1,3 +1,5 @@
+#include <Scenes/PlayLayers/DuelScene.h>
+#include <Scenes/PlayLayers/DuelScene2P.h>
 #include "Hero.h"
 #include "Scenes/PlayLayers/Battle.h"
 #include "GameEngine/Global/Variables.h"
@@ -263,17 +265,11 @@ void Hero::_updateAim() {
                                                  _shouldersDisplay, this);
     _aim->set_aimPoint(globalPoint);
 
-    _faceDir = _aim->get_aimRadian() > 1.5f || _aim->get_aimRadian() < -1.5f ? -1 : 1;
-
-    _aim->set_aimDir(_faceDir);
-
     _aimPowerState = _shoulders->getAnimation().gotoAndStopByTime(Variables::AIM_ANIMATION, _aim->get_aimPower() / 50);
 
     float angle = _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
-    if (_faceDir <= 0)
-        angle = 180 - _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
 
-    _shouldersDisplay->setRotation(angle);
+    _shouldersDisplay->setRotation(_faceDir * angle);
 
     _shoulders->invalidUpdate("", true);
 
@@ -299,10 +295,10 @@ void Hero::startAim() {
 
 
 void Hero::_updateAnimation() {
-    if (!_moveDir) {
-        _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
-    } else {
+    if (_state == MOVING) {
         _armature->getAnimation().fadeIn(Variables::STICKMAN_WALK_ANIMATION);
+    } else {
+        _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     }
 }
 
@@ -369,16 +365,10 @@ void DuelHero::switchWeapon(int i) {
 }
 
 void DuelHero::move(int dir) {
-    Hero::move(dir);
-    _updateAnimation();
-    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + dir * 150.f, this->getPosition().y, 0.f);
-    if (pos.x < 100.f) {
-        pos.x = 100.f;
-    }
-
-    if (pos.x > BattleScene::instance->visibleSize.width - 100.f) {
-        pos.x = BattleScene::instance->visibleSize.width - 100.f;
-    }
+    setState(MOVING);
+    auto movedir = dir * _faceDir;
+    changeFacedir(movedir);
+    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + movedir * 150.f, this->getPosition().y, 0.f);
 
     this->runAction(cocos2d::Sequence::create(
             cocos2d::CallFunc::create([&]() {
@@ -387,9 +377,14 @@ void DuelHero::move(int dir) {
             }),
             cocos2d::MoveTo::create(1.5f, pos),
             cocos2d::CallFunc::create([&]() {
-                Body::move(1);
-                Body::move(0);
-                _updateAnimation();
+                setState(IDLE);
+                int facedir = 1;
+                if(DuelScene2P* scene = dynamic_cast<DuelScene2P*>(BattleScene::instance)) {
+                    if(scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x){
+                        facedir = -1;
+                    }
+                }
+                changeFacedir(facedir);
                 if (_prevAim != nullptr)
                     _prevAim->setVisible(true);
             }),

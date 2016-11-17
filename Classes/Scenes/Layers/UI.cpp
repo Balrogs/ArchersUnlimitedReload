@@ -54,47 +54,11 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     this->addChild(player2_view);
     this->bounds.push_back(player2_view->getBoundingBox());
 
-    auto left_arrow = cocos2d::ui::Button::create();
-    left_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
-
-    auto right_arrow = cocos2d::ui::Button::create();
-    right_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
-
-
-    left_arrow->setScaleX(-1);
-    left_arrow->setPosition(cocos2d::Vec2(- 150.f, 100.f));
-    right_arrow->setPosition(cocos2d::Vec2(150.f, 100.f));
-
-    right_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-            BattleScene::instance->_player->move(1);
-            enableArrows(BattleScene::instance->_player, false);
-                break;
-            default:
-                break;
-        }
-    });
-
-    left_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->_player->move(-1);
-                enableArrows(BattleScene::instance->_player, false);
-                break;
-            default:
-                break;
-        }
-    });
-
-
-    this->bounds.push_back(left_arrow->getBoundingBox());
-    this->bounds.push_back(right_arrow->getBoundingBox());
-
-    player1->addChild(left_arrow, 1, "left arrow");
-    player1->addChild(right_arrow, 1, "right arrow");
-
+    addMoveArrows(player1);
+    addMoveArrows(player2);
 }
+
+
 
 void UI::initApple(Size visibleSize, Hero *player) {
     auto b = Sprite::create("0.png");
@@ -131,4 +95,46 @@ void UI::enableArrows(Hero *player, bool enable){
         right_arrow->setEnabled(enable);
         right_arrow->setVisible(enable);
     }
+}
+
+void UI::addMoveArrows(Hero *player) {
+    auto left_arrow = cocos2d::ui::Button::create();
+    left_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
+
+    auto right_arrow = cocos2d::ui::Button::create();
+    right_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
+
+
+    left_arrow->setScaleX(-1);
+    left_arrow->setPosition(cocos2d::Vec2(- 150.f, 100.f));
+    right_arrow->setPosition(cocos2d::Vec2(150.f, 100.f));
+
+    right_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED:
+            BattleScene::instance->_player->move(1);
+               // enableArrows(BattleScene::instance->_player, false);
+                break;
+            default:
+                break;
+        }
+    });
+
+    left_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED:
+                BattleScene::instance->_player->move(-1);
+              //  enableArrows(BattleScene::instance->_player, false);
+                break;
+            default:
+                break;
+        }
+    });
+
+
+    this->bounds.push_back(left_arrow->getBoundingBox());
+    this->bounds.push_back(right_arrow->getBoundingBox());
+
+    player->addChild(left_arrow, 1, "left arrow");
+    player->addChild(right_arrow, 1, "right arrow");
 }

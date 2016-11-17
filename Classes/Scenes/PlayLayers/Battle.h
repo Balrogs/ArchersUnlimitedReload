@@ -52,13 +52,15 @@ public:
 
     bool isIsPaused() const;
 
-    cocos2d::Vec2 getPlayerPos();
+    cocos2d::Vec2 getHeroPos(Hero *player);
 
     virtual void _pause();
 
     virtual void _unPause();
 
     Hero *_player;
+
+    cocos2d::Vec2 getPlayerPos();
 
 protected:
 

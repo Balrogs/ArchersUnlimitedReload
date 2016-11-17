@@ -170,7 +170,10 @@ void Body::move(int dir) {
 
 void Body::changeFacedir(int facedir) {
     _faceDir = facedir;
-    this->setScaleX(-this->getScaleX());
+    if(getScaleX() > 0)
+        this->setScaleX(facedir * this->getScaleX());
+    else
+        this->setScaleX(-facedir * this->getScaleX());
 }
 
 void Body::_updatePosition() {
@@ -208,7 +211,6 @@ State Body::getState() {
 
 void Body::setState(State state) {
     if (_state != state) {
-        auto str = StringUtils::toString(state);
         _state = state;
         _updateAnimation();
     }
