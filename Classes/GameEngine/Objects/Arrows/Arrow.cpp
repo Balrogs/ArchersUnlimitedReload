@@ -373,7 +373,7 @@ void DuelArrow::update(float dt) {
 DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
-    CCLOG("Power : %f radian : %f", power, radian);
+    CCLOG("Power : %f radian : %f", power, radian * dragonBones::RADIAN_TO_ANGLE);
     CCLOG("Position : x %f  y : %f", position.x, position.y);
     _damage = 10.f;
     lifePeriod = 0;

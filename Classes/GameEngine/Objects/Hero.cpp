@@ -169,14 +169,12 @@ void Hero::attack(float radian, float power) {
     if (_isAttacking) {
         return;
     }
-    radian *= -_faceDir;
     _isAttacking = true;
+    radian = - radian;
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay);
-    if (getPosition().x > BattleScene::instance->visibleSize.width)
-        globalPoint.x = getPosition().x;
-    CCLOG("Hero Position : x %f  y : %f", getPosition().x, getPosition().y);
+    globalPoint.x = getPosition().x;
     int id = _player->getId();
     switch (_weaponIndex) {
         case 0:
@@ -241,6 +239,7 @@ void Hero::switchWeapon(int dest) {
 
 
 void Hero::_fire(Arrow *arrow) {
+    UI::enableArrows(this, false);
     this->getPlayer()->addShotsCount();
     _saveAim();
     BattleScene::instance->getBulletPull()->addChild(arrow);
@@ -253,13 +252,14 @@ void Hero::_fire(Arrow *arrow) {
     _shouldersDisplay->setRotation(0.f);
 
     _updateString();
+    setFaceDir();
 }
 
 void Hero::_updateAim() {
     if (!_aim->is_aiming()) {
         return;
     }
-
+    CCLOG("AIM ANGLE : %f", _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay, this);
@@ -269,7 +269,11 @@ void Hero::_updateAim() {
 
     float angle = _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
 
-    _shouldersDisplay->setRotation(_faceDir * angle);
+    if(_faceDir < 0)
+        angle = 180 - angle;
+
+    _aim->set_aimRadian(angle * dragonBones::ANGLE_TO_RADIAN);
+    _shouldersDisplay->setRotation(angle);
 
     _shoulders->invalidUpdate("", true);
 
@@ -355,6 +359,16 @@ void Hero::_saveAim() {
     this->addChild(_aim);
 }
 
+void Hero::setFaceDir() {
+    int facedir = 1;
+    if(DuelScene2P* scene = dynamic_cast<DuelScene2P*>(BattleScene::instance)) {
+        if(scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x){
+            facedir = -1;
+        }
+    }
+    changeFacedir(facedir);
+}
+
 DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
@@ -378,13 +392,7 @@ void DuelHero::move(int dir) {
             cocos2d::MoveTo::create(1.5f, pos),
             cocos2d::CallFunc::create([&]() {
                 setState(IDLE);
-                int facedir = 1;
-                if(DuelScene2P* scene = dynamic_cast<DuelScene2P*>(BattleScene::instance)) {
-                    if(scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x){
-                        facedir = -1;
-                    }
-                }
-                changeFacedir(facedir);
+                setFaceDir();
                 if (_prevAim != nullptr)
                     _prevAim->setVisible(true);
             }),

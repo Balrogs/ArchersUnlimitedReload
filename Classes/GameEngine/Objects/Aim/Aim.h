@@ -9,13 +9,9 @@
 #include "AimPreview.h"
 
 class Aim : public cocos2d::Node {
-public:
-    static const float AIM_DISTANCE_X;
-    static const float AIM_DISTANCE_Y;
 
 private:
     cocos2d::Vec2 _aimPoint;
-    int _aimDir;
     bool _aiming;
     float _aimRadian;
     float _aimPower;
@@ -36,8 +32,6 @@ public:
     float get_aimRadian() const;
 
     void set_aimPoint(cocos2d::Vec2 _aimPoint);
-
-    void set_aimDir(int _aimDir);
 
     void set_aiming(bool _aiming);
 

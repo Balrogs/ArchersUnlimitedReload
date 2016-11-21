@@ -6,7 +6,6 @@
 #define ARCUNLIM_DUELSCENE_H
 
 #include <GameEngine/Player.h>
-#include "cocos2d.h"
 #include "Battle.h"
 
 

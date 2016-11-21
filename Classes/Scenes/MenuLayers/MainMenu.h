@@ -22,6 +22,24 @@ public:
     void onQuit(cocos2d::Ref* sender);
 
     static cocos2d::Scene *createScene();
+
+    void onChangeLayer(int id);
+} ;
+
+class MultiplayerMainMenu : public cocos2d::Layer
+{
+public:
+    CREATE_FUNC(MultiplayerMainMenu);
+
+    MultiplayerMainMenu();
+    ~MultiplayerMainMenu();
+
+    virtual void onEnter() override;
+    virtual void onEnterTransitionDidFinish() override;
+
+    void onPushScene(int id);
+    void onQuit(cocos2d::Ref* sender);
+
 } ;
 
 #endif //ARCUNLIM_MAINMENU_H

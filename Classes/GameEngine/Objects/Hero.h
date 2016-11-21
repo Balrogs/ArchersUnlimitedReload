@@ -66,6 +66,9 @@ protected:
     void _updateString();
 
     virtual void _saveAim();
+
+    void setFaceDir();
+
 };
 
 

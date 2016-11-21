@@ -59,7 +59,6 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
 }
 
 
-
 void UI::initApple(Size visibleSize, Hero *player) {
     auto b = Sprite::create("0.png");
     b->setScale(1);
@@ -86,12 +85,12 @@ bool UI::checkTouch(cocos2d::Vec2 touch) {
 }
 
 
-void UI::enableArrows(Hero *player, bool enable){
-    if(cocos2d::ui::Button* left_arrow = dynamic_cast<cocos2d::ui::Button*>(player->getChildByName("left arrow"))){
+void UI::enableArrows(Hero *player, bool enable) {
+    if (cocos2d::ui::Button *left_arrow = dynamic_cast<cocos2d::ui::Button *>(player->getChildByName("left arrow"))) {
         left_arrow->setEnabled(enable);
         left_arrow->setVisible(enable);
     }
-    if(cocos2d::ui::Button* right_arrow = dynamic_cast<cocos2d::ui::Button*>(player->getChildByName("right arrow"))){
+    if (cocos2d::ui::Button *right_arrow = dynamic_cast<cocos2d::ui::Button *>(player->getChildByName("right arrow"))) {
         right_arrow->setEnabled(enable);
         right_arrow->setVisible(enable);
     }
@@ -99,21 +98,23 @@ void UI::enableArrows(Hero *player, bool enable){
 
 void UI::addMoveArrows(Hero *player) {
     auto left_arrow = cocos2d::ui::Button::create();
-    left_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
+    left_arrow->loadTextures("walk arrow.png", "walk arrow_pressed.png", "walk arrow.png",
+                             cocos2d::ui::Widget::TextureResType::PLIST);
 
     auto right_arrow = cocos2d::ui::Button::create();
-    right_arrow->loadTextures("walk arrow.png","walk arrow_pressed.png","walk arrow.png",cocos2d::ui::Widget::TextureResType::PLIST);
+    right_arrow->loadTextures("walk arrow.png", "walk arrow_pressed.png", "walk arrow.png",
+                              cocos2d::ui::Widget::TextureResType::PLIST);
 
 
     left_arrow->setScaleX(-1);
-    left_arrow->setPosition(cocos2d::Vec2(- 150.f, 100.f));
+    left_arrow->setPosition(cocos2d::Vec2(-150.f, 100.f));
     right_arrow->setPosition(cocos2d::Vec2(150.f, 100.f));
 
     right_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-            BattleScene::instance->_player->move(1);
-               // enableArrows(BattleScene::instance->_player, false);
+                BattleScene::instance->_player->move(1);
+                enableArrows(BattleScene::instance->_player, false);
                 break;
             default:
                 break;
@@ -124,7 +125,7 @@ void UI::addMoveArrows(Hero *player) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
                 BattleScene::instance->_player->move(-1);
-              //  enableArrows(BattleScene::instance->_player, false);
+                enableArrows(BattleScene::instance->_player, false);
                 break;
             default:
                 break;

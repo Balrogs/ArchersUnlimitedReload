@@ -7,10 +7,7 @@
 
 USING_NS_CC;
 
-const float Aim::AIM_DISTANCE_X = 200.f;
-const float Aim::AIM_DISTANCE_Y = 200.f;
-
-Aim::Aim() : _aimDir(10),
+Aim::Aim() :
              _aimRadian(0),
              _aiming(false),
              _aimPower(5.f),
@@ -51,11 +48,6 @@ float Aim::get_aimRadian() const {
 
 void Aim::set_aimPoint(Vec2 _aimPoint) {
     Aim::_aimPoint = _aimPoint;
-    _update();
-}
-
-void Aim::set_aimDir(int _aimDir) {
-    Aim::_aimDir = _aimDir;
     _update();
 }
 
