@@ -7,7 +7,6 @@
 
 
 #include "DuelScene2P.h"
-#include "GameEngine/Global/SocketClient.h"
 
 class DuelSceneMultiplayer : public DuelScene2P {
 public:
@@ -22,7 +21,7 @@ protected:
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
-    SocketClient *client;
+
 
 };
 

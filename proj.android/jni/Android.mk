@@ -30,7 +30,6 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Objects/Aim/Aim.cpp\
                                  ../../Classes/GameEngine/Objects/Brains/Brain.cpp\
                                  ../../Classes/GameEngine/Global/WeaponSelector.cpp\
-                                 ../../Classes/GameEngine/Objects/Target.cpp\
                                  ../../Classes/GameEngine/Global/Variables.cpp\
                                  ../../Classes/GameEngine/Objects/DragonObject.cpp\
                                  ../../Classes/AppDelegate.cpp\
@@ -61,7 +60,11 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/PlayLayers/AppleBattle.cpp\
                                  ../../Classes/Scenes/PlayLayers/DuelScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/MainMenu.cpp \
-                                 ../../Classes/GameEngine/Objects/Environment/Ground.cpp
+                                 ../../Classes/GameEngine/Objects/Environment/Ground.cpp \
+                                 ../../Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp \
+                                 ../../Classes/Scenes/PlayLayers/DuelScene2P.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/SocketClient.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/JSONParser.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 
