@@ -63,9 +63,9 @@ public:
 
     string checkInvite();
 
-    // {"id":1,"password":"1234","playerView":{"color":{"red":0,"green":0,"blue":0},"helmet":0,"hood":0, "bow":0},"code":1}
+    // {"id":1,"password":"wqwf","playerView":{"color":{"red":0,"green":0,"blue":0},"helmet":0,"hood":0, "bow":0},"code":1}
     std::string login();
-    // {"name":"some username","country":1,"password":"1234","code":2}
+    // {"name":"some username12","country":1,"password":"1234","code":2}
     std::string registerUser(string name, int country, string password);
     // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "arrow":"nikita lox", "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
     std::string action(int roomId, float angle, float power, int type);

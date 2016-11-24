@@ -25,6 +25,10 @@ int JSONParser::parseInt(string message, string key) {
 }
 
 bool JSONParser::isError(string message) {
+    if(message.empty()){
+        return false;
+    }
+
     Document document;
     document.Parse(message.c_str());
     if (document.HasMember("answer") && document["answer"].IsString()) {

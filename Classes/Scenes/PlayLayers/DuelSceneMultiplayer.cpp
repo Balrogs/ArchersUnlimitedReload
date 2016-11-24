@@ -18,3 +18,7 @@ bool DuelSceneMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos
 void DuelSceneMultiplayer::makeTurn(int id) {
     DuelScene2P::makeTurn(id);
 }
+
+void DuelSceneMultiplayer::setClient(SocketClient *client) {
+    _client = client;
+}

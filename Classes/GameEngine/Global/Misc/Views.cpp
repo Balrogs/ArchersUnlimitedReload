@@ -92,7 +92,7 @@ Node *Views::getPlayerInfoView(SocketClient *sc) {
     auto name = sc->getName();
 
     auto message = sc->getPlayerInfo(3, name);
-    if (message.empty()) {
+    if (JSONParser::isError(message)) {
         return nullptr;
     }
 

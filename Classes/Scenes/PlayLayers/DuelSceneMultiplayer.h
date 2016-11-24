@@ -14,8 +14,11 @@ public:
 
     void makeTurn(int id) override;
 
+    void setClient(SocketClient* client);
 
 protected:
+
+    SocketClient* _client;
 
     void initWorld() override;
 

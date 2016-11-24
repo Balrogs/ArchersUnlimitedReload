@@ -214,7 +214,6 @@ LobbyLayer::LobbyLayer(SocketClient *client) {
 
     _playerInfoBox = Node::create();
     _playerInfoBox->setPosition(300.f, visibleSize.height - 30.f);
-    _playerInfoBox->addChild(Views::getPlayerInfoView(_client));
     this->addChild(_playerInfoBox);
 
     _inviteBox = Node::create();
@@ -241,7 +240,7 @@ LobbyLayer::LobbyLayer(SocketClient *client) {
     _acceptButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                auto scene = BattleScene::createScene(4);
+                auto scene = BattleScene::createScene(_client);
                 Director::getInstance()->pushScene(scene);
             }
                 break;
@@ -293,7 +292,6 @@ void LobbyLayer::onEnter() {
 }
 
 void LobbyLayer::_inviteView(std::string message) {
-
 
     _inviteBox->removeAllChildren();
     _inviteBox->addChild(Views::getInviteView(message));

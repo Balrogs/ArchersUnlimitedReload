@@ -7,7 +7,7 @@
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-    _address = "127.0.0.1";
+    _address = "178.137.15.141";
     _isConnected = _conn(_address, _port);
     _player = new DBPlayer();
 }
@@ -65,6 +65,13 @@ string SocketClient::_sendMessage(string data) {
     Receive data from the connected host
 */
 string SocketClient::_receive(int size = 512) {
+
+    if(_buffer.size() > 0){
+        auto str = _buffer.at(0);
+        _buffer.pop_back();
+        return str;
+    }
+
     char buffer[size];
     string reply;
 
@@ -76,9 +83,7 @@ string SocketClient::_receive(int size = 512) {
     reply = buffer;
     reply = reply.substr(0, reply.find_last_of('}') + 1);
     auto ind = reply.find_first_of("}");
-    auto len = reply.length();
-    auto l = reply.at(ind + 1);
-    for (; ind > 0 && ind + 2 < reply.length(); ind = reply.find_first_of("}", ind + 1)) {
+    for (; ind > 0 && ind + 1 < reply.length(); ind = reply.find_first_of("}", ind + 1)) {
         if (reply.at(ind + 1) == '{') {
             _buffer.push_back(reply.substr(0, ind + 1));
             reply = reply.substr(ind + 1);
@@ -272,9 +277,9 @@ DBPlayer::DBPlayer() {
 
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
-    _id = def->getIntegerForKey("ID", -1);
-    _name = def->getStringForKey("NAME", "");
-    _password = def->getStringForKey("PASSWORD", "");
+    _id = def->getIntegerForKey("ID", 0);
+    _name = def->getStringForKey("NAME", "igorexa");
+    _password = def->getStringForKey("PASSWORD", "12345");
     _token = def->getStringForKey("TOKEN", "");
     _roomId = def->getIntegerForKey("ROOMID", -1);
     _country = def->getIntegerForKey("COUNTRY", -1);

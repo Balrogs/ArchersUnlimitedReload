@@ -6,6 +6,7 @@
 #include <GameEngine/Objects/Stickman.h>
 #include <GameEngine/Objects/Aim/Aim.h>
 #include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Global/Misc/SocketClient.h>
 #include "cocos2d.h"
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
 #include "Scenes/Layers/UI.h"
@@ -14,6 +15,8 @@
 class BattleScene : public cocos2d::LayerColor {
 public:
     static cocos2d::Scene *createScene(int type);
+
+    static cocos2d::Scene *createScene(SocketClient *client);
 
     virtual bool init();
 
