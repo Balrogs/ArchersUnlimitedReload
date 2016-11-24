@@ -310,7 +310,7 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/DuelSceneMultiplayer.h
         Classes/GameEngine/Global/Misc/SocketClient.h
 
-        Classes/GameEngine/Global/Misc/JSONParser.h)
+        Classes/GameEngine/Global/Misc/JSONParser.h Classes/GameEngine/Global/Misc/Views.cpp Classes/GameEngine/Global/Misc/Views.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

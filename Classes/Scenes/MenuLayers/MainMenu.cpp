@@ -2,6 +2,8 @@
 // Created by igor on 04.10.16.
 //
 
+#include <GameEngine/Global/Misc/Views.h>
+#include <GameEngine/Global/Misc/JSONParser.h>
 #include "MainMenu.h"
 #include "Scenes/PlayLayers/Battle.h"
 
@@ -203,19 +205,35 @@ LobbyLayer::LobbyLayer(SocketClient *client) {
     _client = client;
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_1(LobbyLayer::onQuit, this));
+    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
 
-    _inviteMessage = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 32.f);
-    _inviteMessage->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height * 5 / 8));
-    _inviteMessage->setTextColor(Color4B::WHITE);
-    this->addChild(_inviteMessage);
+    _moreInfoBox = Node::create();
+    _moreInfoBox->setPosition(visibleSize.width / 2 + 200.f, visibleSize.height * 5 / 8);
+
+    this->addChild(_moreInfoBox);
+
+    _playerInfoBox = Node::create();
+    _playerInfoBox->setPosition(300.f, visibleSize.height - 30.f);
+    _playerInfoBox->addChild(Views::getPlayerInfoView(_client));
+    this->addChild(_playerInfoBox);
+
+    _inviteBox = Node::create();
+    _inviteBox->setPosition(_playerInfoBox->getPosition().x, visibleSize.height * 5 / 8);
+    _inviteBox->addChild(message);
+    this->addChild(_inviteBox);
+
+    _playerStatisticsBox = Node::create();
+    _playerStatisticsBox->setPosition(visibleSize.width - 200.f, visibleSize.height - 10.f);
+    _playerStatisticsBox->addChild(Views::getPlayerStatisticsView(_client));
+    this->addChild(_playerStatisticsBox);
 
     _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
-    _errorMessage->setPosition(cocos2d::Vec2(_inviteMessage->getPosition().x, _inviteMessage->getPosition().y - 35.f));
+    _errorMessage->setPosition(cocos2d::Vec2(_inviteBox->getPosition().x, _inviteBox->getPosition().y - 35.f));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
     _acceptButton = cocos2d::ui::Button::create("bar.png");
+    _acceptButton->setScale(0.5f);
     _acceptButton->setTitleText("ACCEPT");
     _acceptButton->setTitleFontSize(32);
     _acceptButton->setTitleColor(Color3B::WHITE);
@@ -232,7 +250,11 @@ LobbyLayer::LobbyLayer(SocketClient *client) {
         }
     });
     this->addChild(_acceptButton);
-    auto menu = Menu::create(item6, nullptr);
+
+
+    auto quit = MenuItemFont::create("Back", CC_CALLBACK_1(LobbyLayer::onQuit, this));
+
+    auto menu = Menu::create(quit, nullptr);
     menu->alignItemsVertically();
     menu->setPosition(visibleSize.width / 2, _acceptButton->getPosition().y - 100);
     this->addChild(menu);
@@ -246,8 +268,9 @@ void LobbyLayer::onQuit(cocos2d::Ref *sender) {
 
 void LobbyLayer::wait(float dt) {
     auto message = _client->checkInvite();
-    if (!message.empty()) {
-        _inviteMessage->setString(message);
+    CCLOG("Message : %s", JSONParser::parseAnswer(message, "player_name").c_str());
+    if (!message.empty() && !JSONParser::parseAnswer(message, "player_name").empty()) {
+        _inviteView(message);
         _acceptButton->setEnabled(true);
         _acceptButton->setVisible(true);
         this->unscheduleAllCallbacks();
@@ -260,5 +283,42 @@ void LobbyLayer::onEnter() {
     schedule(schedule_selector(LobbyLayer::wait), 5.0f);
     _acceptButton->setEnabled(false);
     _acceptButton->setVisible(false);
+
+    _playerInfoBox->removeAllChildren();
+    _playerInfoBox->addChild(Views::getPlayerInfoView(_client));
+
+    _playerStatisticsBox->removeAllChildren();
+    _playerStatisticsBox->addChild(Views::getPlayerStatisticsView(_client));
+
 }
 
+void LobbyLayer::_inviteView(std::string message) {
+
+
+    _inviteBox->removeAllChildren();
+    _inviteBox->addChild(Views::getInviteView(message));
+
+    _moreInfoBox->removeAllChildren();
+    auto name = JSONParser::parseAnswer(message, "player_name");
+    auto info = Views::getPlayerInfoView(name, _client);
+    info->setVisible(false);
+    _moreInfoBox->addChild(info, 1, "info");
+
+    auto moreInfoButton = ui::Button::create("bar.png");
+    moreInfoButton->setTitleText("more info");
+    moreInfoButton->setTitleFontSize(25);
+    moreInfoButton->setTitleColor(Color3B::WHITE);
+    moreInfoButton->setScale(0.5f);
+    moreInfoButton->addTouchEventListener([&](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                _moreInfoBox->getChildByName("info")->setVisible(true);
+                _moreInfoBox->getChildByName("button")->setVisible(false);
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    _moreInfoBox->addChild(moreInfoButton, 1, "button");
+}

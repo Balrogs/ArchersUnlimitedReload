@@ -14,18 +14,22 @@ class DBPlayer {
 
 private:
     int _id;
+    string _name;
     string _token;
     string _password;
     int _roomId;
+    int _country;
 
 public:
     DBPlayer();
-    DBPlayer(int id, string password);
+    DBPlayer(int id, string password, string name, int country);
 
     int getId();
     string getToken() ;
+    string getName() ;
     string getPassword() ;
     int getRoomId() ;
+    int getCountry() ;
 
     void setRoomId(int roomId);
     void setToken(string token);
@@ -51,6 +55,8 @@ private:
     string parseError(int error);
 
 
+
+
 public:
     SocketClient();
     bool connected();
@@ -67,6 +73,16 @@ public:
     std::string invite(int roomId);
     // {"id":0, "friend_id":1, "code":11}
     std::string addToFriends(int friendId);
+    //{"s_type":3, "name":"some other username","code":9}
+    string getPlayerInfo(int s_type, string playerName);
+
+
+    int getId();
+    string getToken() ;
+    string getName() ;
+    string getPassword() ;
+    int getRoomId() ;
+    int getCountry() ;
 
 };
 

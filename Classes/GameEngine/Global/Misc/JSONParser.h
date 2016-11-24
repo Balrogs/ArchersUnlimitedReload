@@ -14,7 +14,9 @@ using namespace std;
 class JSONParser {
 public:
     static string parse(string message, string key);
+    static string parseAnswer(string message, string key);
     static int parseInt(string message, string key);
+    static int parseIntAnswer(string message, string key);
     static bool isError(string message);
     static string parseError(string message, string key);
 };

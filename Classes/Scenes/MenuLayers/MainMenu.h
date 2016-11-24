@@ -5,7 +5,7 @@
 #ifndef ARCUNLIM_MAINMENU_H
 #define ARCUNLIM_MAINMENU_H
 
-#include <GameEngine/Global/Misc/SocketClient.h>
+#include <GameEngine/Global/Misc/Views.h>
 #include "cocos2d.h"
 #include <ui/UIEditBox/UIEditBox.h>
 
@@ -91,10 +91,14 @@ protected:
 
     void wait(float dt);
     cocos2d::ui::Button *_acceptButton;
-    cocos2d::Label *_inviteMessage;
+    cocos2d::Node *_inviteBox;
+    cocos2d::Node *_moreInfoBox;
+    cocos2d::Node *_playerInfoBox;
+    cocos2d::Node *_playerStatisticsBox;
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
 
+    void _inviteView(string message);
 };
 
 

@@ -9,23 +9,23 @@
 #include <cocos2d.h>
 
 class Player {
-public:
-    Player(int hp, const char *name);
 
-private:
+protected:
 
     int _id;
     const char *_name;
     int _shotsCount;
     int _hp;
 
-    cocos2d::Node* _view;
-    cocos2d::Label* _name_view;
-    cocos2d::Label* _hp_view ;
-    cocos2d::Label* _shots_view;
+    cocos2d::Node *_view;
+    cocos2d::Label *_name_view;
+    cocos2d::Label *_hp_view;
+    cocos2d::Label *_shots_view;
 
     void updateView();
+
 public:
+    Player(int hp, const char *name);
 
     void setHAlignment(cocos2d::TextHAlignment alignment);
 
@@ -35,9 +35,9 @@ public:
 
     int getId() const;
 
-    const char * getName() const;
+    const char *getName() const;
 
-    cocos2d::Node* getView();
+    cocos2d::Node *getView();
 
     int getHp() const;
 

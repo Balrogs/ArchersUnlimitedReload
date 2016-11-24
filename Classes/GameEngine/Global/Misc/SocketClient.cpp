@@ -7,7 +7,7 @@
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-    _address = "178.137.15.141";
+    _address = "127.0.0.1";
     _isConnected = _conn(_address, _port);
     _player = new DBPlayer();
 }
@@ -75,13 +75,14 @@ string SocketClient::_receive(int size = 512) {
 
     reply = buffer;
     reply = reply.substr(0, reply.find_last_of('}') + 1);
-    auto ind = reply.find_last_of("\"code\":");
+    auto ind = reply.find_first_of("}");
     auto len = reply.length();
-    auto diff = len - ind;
-    if(diff > 4){
-        auto first = reply.substr(0, reply.find_first_of('}', ind) + 1);
-        _buffer.push_back(reply.substr(first.length(), len));
-        return first;
+    auto l = reply.at(ind + 1);
+    for (; ind > 0 && ind + 2 < reply.length(); ind = reply.find_first_of("}", ind + 1)) {
+        if (reply.at(ind + 1) == '{') {
+            _buffer.push_back(reply.substr(0, ind + 1));
+            reply = reply.substr(ind + 1);
+        }
     }
     return reply;
 }
@@ -110,7 +111,7 @@ string SocketClient::registerUser(string name, int country, string password) {
     if (!JSONParser::isError(answer)) {
         int id = JSONParser::parseInt(answer, "id");
         string token = JSONParser::parse(answer, "token");
-        _player = new DBPlayer(id, password);
+        _player = new DBPlayer(id, password, name, country);
         _player->setToken(token);
         return "";
     } else {
@@ -158,6 +159,21 @@ string SocketClient::addToFriends(int friendId) {
     auto answer = _sendMessage(message);
     if (!JSONParser::isError(answer)) {
         return "";
+    } else {
+        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
+        return parseError(error);
+    }
+}
+
+string SocketClient::getPlayerInfo(int s_type, string playerName) {
+    char x[256];
+    sprintf(x,
+            "{\"s_type\":%s, \"name\":\"%s\",\"code\":9}",
+            cocos2d::StringUtils::toString(s_type).c_str(), playerName.c_str());
+    string message = x;
+    auto answer = _sendMessage(message);
+    if (!JSONParser::isError(answer)) {
+        return answer;
     } else {
         int error = atoi(JSONParser::parseError(answer, "answer").c_str());
         return parseError(error);
@@ -216,7 +232,7 @@ bool SocketClient::connected() {
 
 string SocketClient::checkInvite() {
     auto answer = _receive(512);
-    if(answer.empty()){
+    if (answer.empty()) {
         return "";
     }
     answer = answer.substr(0, answer.find_last_of('}') + 1);
@@ -228,30 +244,60 @@ string SocketClient::checkInvite() {
     }
 }
 
+int SocketClient::getId() {
+    return _player->getId();
+}
+
+string SocketClient::getToken() {
+    return _player->getToken();
+}
+
+string SocketClient::getName() {
+    return _player->getName();
+}
+
+string SocketClient::getPassword() {
+    return _player->getPassword();
+}
+
+int SocketClient::getRoomId() {
+    return _player->getRoomId();
+}
+
+int SocketClient::getCountry() {
+    return _player->getCountry();
+}
+
 DBPlayer::DBPlayer() {
 
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
     _id = def->getIntegerForKey("ID", -1);
+    _name = def->getStringForKey("NAME", "");
     _password = def->getStringForKey("PASSWORD", "");
     _token = def->getStringForKey("TOKEN", "");
     _roomId = def->getIntegerForKey("ROOMID", -1);
+    _country = def->getIntegerForKey("COUNTRY", -1);
 
     def->flush();
 }
 
-DBPlayer::DBPlayer(int id, string password) {
+DBPlayer::DBPlayer(int id, string password, string name, int country) {
     _id = id;
+    _name = name;
     _password = password;
     _token = "";
     _roomId = -1;
+    _country = country;
 
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
     def->setIntegerForKey("ID", id);
+    def->setStringForKey("NAME", name);
     def->setStringForKey("PASSWORD", password);
     def->setStringForKey("TOKEN", "");
     def->setIntegerForKey("ROOMID", -1);
+    def->setIntegerForKey("COUNTRY", country);
 
     def->flush();
 }
@@ -289,5 +335,13 @@ void DBPlayer::setRoomId(int roomId) {
     def->flush();
 
     _roomId = roomId;
+}
+
+string DBPlayer::getName() {
+    return _name;
+}
+
+int DBPlayer::getCountry() {
+    return _country;
 }
 
