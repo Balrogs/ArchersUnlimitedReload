@@ -1,13 +1,27 @@
 
 #include <base/ccUTF8.h>
+#include <Scenes/MenuLayers/MainMenu.h>
 #include "SocketClient.h"
 #include "JSONParser.h"
 
+static SocketClient *instance = nullptr;
+
+
+SocketClient *SocketClient::getInstance() {
+    if (instance == nullptr) {
+        instance = new SocketClient();
+        if (!instance->connected()) {
+            instance->_conn(instance->_address, instance->_port);
+        }
+    }
+
+    return instance;
+}
 
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-    _address = "178.137.15.141";
+    _address = "127.0.0.1";
     _isConnected = _conn(_address, _port);
     _player = new DBPlayer();
 }
@@ -47,32 +61,24 @@ bool SocketClient::_conn(string address, int port) {
         perror("connection failed. Error");
         return false;
     }
-
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::receive, this));
+    t.detach();
     return true;
 }
 
 /**
     Send data to the connected host
 */
-string SocketClient::_sendMessage(string data) {
-    if (send(_sock, data.c_str(), strlen(data.c_str()), 0)) {
-        return _receive(512);
-    }
-    return "";
+bool SocketClient::sendMessage(string data) {
+    return send(_sock, data.c_str(), strlen(data.c_str()), 0) != 0;
 }
 
 /**
     Receive data from the connected host
 */
-string SocketClient::_receive(int size = 512) {
+void SocketClient::receive() {
 
-    if(_buffer.size() > 0){
-        auto str = _buffer.at(0);
-        _buffer.pop_back();
-        return str;
-    }
-
-    char buffer[size];
+    char buffer[512];
     string reply;
 
     //Receive a reply from the server
@@ -82,6 +88,7 @@ string SocketClient::_receive(int size = 512) {
 
     reply = buffer;
     reply = reply.substr(0, reply.find_last_of('}') + 1);
+
     auto ind = reply.find_first_of("}");
     for (; ind > 0 && ind + 1 < reply.length(); ind = reply.find_first_of("}", ind + 1)) {
         if (reply.at(ind + 1) == '{') {
@@ -89,100 +96,99 @@ string SocketClient::_receive(int size = 512) {
             reply = reply.substr(ind + 1);
         }
     }
-    return reply;
+    _buffer.push_back(reply);
+
+    for (long i = _buffer.size() - 1; i >= 0; i--) {
+        auto message = _buffer[i];
+        if (!message.empty())
+            _parseReply(message);
+        _buffer.pop_back();
+    }
+    memset(&buffer[0], 0, sizeof(buffer));
+
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::receive, this));
+    t.detach();
 }
 
-string SocketClient::login() {
+void SocketClient::login() {
     char x[256];
     sprintf(x,
             "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
             cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
     string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        return "";
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
 }
 
-string SocketClient::registerUser(string name, int country, string password) {
+void SocketClient::registerUser(string name, int country, string password) {
+    _player = new DBPlayer(-1, password, name, country);
     char x[256];
     sprintf(x, "{\"name\":\"%s\",\"country\":%s,\"password\":\"%s\",\"code\":2}", name.c_str(),
             cocos2d::StringUtils::toString(country).c_str(), password.c_str());
     string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        int id = JSONParser::parseInt(answer, "id");
-        string token = JSONParser::parse(answer, "token");
-        _player = new DBPlayer(id, password, name, country);
-        _player->setToken(token);
-        return "";
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+
 }
 
-string SocketClient::action(int roomId, float angle, float power, int type) {
+void SocketClient::enterRoom() {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":4}",
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
+void SocketClient::action(float angle, float power, int type) {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%s,\"room_id\":%s,\"angle\":%s, \"power\":%s, \"arrow\":\"%s\", \"token\":{\"id\":%s,\"token\":\"%s\"}, \"code\":6}",
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(angle).c_str(),
+            cocos2d::StringUtils::toString(power).c_str(),
+            cocos2d::StringUtils::toString(type).c_str(),
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+
+}
+
+void SocketClient::invite(int playerId, int roomId) {
     char x[256];
     sprintf(x,
             "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
             cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
     string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        return "";
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
 }
 
-string SocketClient::invite(int roomId) {
+void SocketClient::addToFriends(int friendId) {
     char x[256];
     sprintf(x,
             "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
             cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
     string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        return "";
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
 }
 
-string SocketClient::addToFriends(int friendId) {
-    char x[256];
-    sprintf(x,
-            "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
-    string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        return "";
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
-}
-
-string SocketClient::getPlayerInfo(int s_type, string playerName) {
+void SocketClient::getPlayerInfo(int s_type, string playerName) {
     char x[256];
     sprintf(x,
             "{\"s_type\":%s, \"name\":\"%s\",\"code\":9}",
             cocos2d::StringUtils::toString(s_type).c_str(), playerName.c_str());
     string message = x;
-    auto answer = _sendMessage(message);
-    if (!JSONParser::isError(answer)) {
-        return answer;
-    } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
-    }
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
 }
 
 /*
@@ -208,7 +214,7 @@ string SocketClient::getPlayerInfo(int s_type, string playerName) {
 •
 -600 — статистика пользователя не доступна. Пользователь не найден.
  */
-string SocketClient::parseError(int error) {
+string SocketClient::_parseError(int error) {
     switch (error) {
         case -100:
             return "Login failed! Incorrect name or password.";
@@ -235,43 +241,59 @@ bool SocketClient::connected() {
     return _isConnected;
 }
 
-string SocketClient::checkInvite() {
-    auto answer = _receive(512);
-    if (answer.empty()) {
-        return "";
-    }
-    answer = answer.substr(0, answer.find_last_of('}') + 1);
-    if (!JSONParser::isError(answer)) {
-        return answer;
+DBPlayer *SocketClient::getDBPlayer() {
+    return _player;
+}
+
+void SocketClient::_parseReply(string reply) {
+//
+//    if (!JSONParser::isError(reply)) {
+//        int id = JSONParser::parseInt(reply, "id");
+//        string token = JSONParser::parse(reply, "token");
+//        //_player = new DBPlayer(id, password, name, country);
+//        _player->setToken(token);
+//        return "";
+//    } else {
+//        int error = atoi(JSONParser::parseError(reply, "answer").c_str());
+//        return _parseError(error);
+//    }
+
+    if (JSONParser::isError(reply)) {
+        //  TODO sendError
+        int error = atoi(JSONParser::parseError(reply, "answer").c_str());
+        //  return _parseError(error);
+
     } else {
-        int error = atoi(JSONParser::parseError(answer, "answer").c_str());
-        return parseError(error);
+        int code = JSONParser::parseIntAnswer(reply, "code");
+        switch (code) {
+            case 1:
+                return;
+            case 2:
+                return;
+            case 3: {
+                _player->setId(JSONParser::parseInt(reply, "id"));
+                _player->setToken(JSONParser::parse(reply, "token"));
+                cocos2d::Director::getInstance()->pushScene(LobbyLayer::createScene());
+            }
+                return;
+            case 9: {
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    LobbyLayer::getInstance()->receivePlayerInfo(reply);
+                });
+            }
+                return;
+            default:
+                break;
+        }
+        if (!JSONParser::parseAnswer(reply, "player_name").empty()) {
+            _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                LobbyLayer::getInstance()->receiveInvite(reply);
+            });
+        }
     }
 }
 
-int SocketClient::getId() {
-    return _player->getId();
-}
-
-string SocketClient::getToken() {
-    return _player->getToken();
-}
-
-string SocketClient::getName() {
-    return _player->getName();
-}
-
-string SocketClient::getPassword() {
-    return _player->getPassword();
-}
-
-int SocketClient::getRoomId() {
-    return _player->getRoomId();
-}
-
-int SocketClient::getCountry() {
-    return _player->getCountry();
-}
 
 DBPlayer::DBPlayer() {
 
@@ -311,6 +333,15 @@ int DBPlayer::getId() {
     return _id;
 }
 
+void DBPlayer::setId(int id) {
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+    def->setIntegerForKey("ID", id);
+
+    def->flush();
+    _id = id;
+}
+
 string DBPlayer::getToken() {
     return _token;
 }
@@ -321,6 +352,24 @@ string DBPlayer::getPassword() {
 
 int DBPlayer::getRoomId() {
     return _roomId;
+}
+
+void DBPlayer::setName(string name) {
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+    def->setStringForKey("NAME", name);
+
+    def->flush();
+    _name = name;
+}
+
+void DBPlayer::setPassword(string password) {
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+    def->setStringForKey("PASSWORD", password);
+
+    def->flush();
+    _password = password;
 }
 
 void DBPlayer::setToken(string token) {

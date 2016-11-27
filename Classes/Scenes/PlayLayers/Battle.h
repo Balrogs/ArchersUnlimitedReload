@@ -16,8 +16,6 @@ class BattleScene : public cocos2d::LayerColor {
 public:
     static cocos2d::Scene *createScene(int type);
 
-    static cocos2d::Scene *createScene(SocketClient *client);
-
     virtual bool init();
 
     CREATE_FUNC(BattleScene);

@@ -10,25 +10,6 @@
 
 USING_NS_CC;
 
-Scene *BattleScene::createScene(SocketClient *client) {
-    auto scene = Scene::createWithPhysics();
-    DuelSceneMultiplayer *layer = DuelSceneMultiplayer::create();
-
-    layer->setClient(client);
-
-    UI *hud = UI::create();
-
-    scene->addChild(layer, 3);
-    scene->addChild(hud, 2);
-
-    layer->ui = hud;
-
-    ((BattleScene*)layer)->initWorld();
-
-    return scene;
-}
-
-
 Scene *BattleScene::createScene(int type) {
     auto scene = Scene::createWithPhysics();
     BattleScene *layer;

@@ -21,21 +21,19 @@ public:
 {"s_type":3, "name":"some other username","code":9}
      */
 
-    static cocos2d::Node *getPlayerStatisticsView(SocketClient *sc);
+    static cocos2d::Node *getPlayerStatisticsView(std::string message);
 
-    static cocos2d::Node *getPlayerInfoView(std::string name, SocketClient *sc);
-
-    static cocos2d::Node *getPlayerInfoView(SocketClient *sc);
+    static cocos2d::Node *getPlayerInfoView(std::string message);
 
     static cocos2d::Node *getInviteView(std::string message);
 
 private:
 
-    static cocos2d::Node *getGlobalStatisticsView(std::string name, SocketClient *sc);
+    static cocos2d::Node *getGlobalStatisticsView(std::string message);
 
-    static cocos2d::Node *getCountryStatisticsView(std::string name, SocketClient *sc);
+    static cocos2d::Node *getCountryStatisticsView(std::string message);
 
-    static cocos2d::Node *getEventStatisticsView(std::string name, SocketClient *sc);
+    static cocos2d::Node *getEventStatisticsView(std::string message);
 
 
 };

@@ -17,15 +17,11 @@ public:
     MainMenu();
     ~MainMenu();
 
-    virtual void onEnter() override;
-    virtual void onEnterTransitionDidFinish() override;
-
     void onPushScene(int id);
+    void onChangeLayer(int id);
     void onQuit(cocos2d::Ref* sender);
 
     static cocos2d::Scene *createScene();
-
-    void onChangeLayer(int id);
 } ;
 
 class MultiplayerMainMenu : public cocos2d::Layer
@@ -33,8 +29,8 @@ class MultiplayerMainMenu : public cocos2d::Layer
 public:
 
     MultiplayerMainMenu();
-    MultiplayerMainMenu(SocketClient *client);
 
+    void onEnter();
     void onPushScene(int id);
     void onQuit(cocos2d::Ref* sender);
 
@@ -47,8 +43,8 @@ class RegisterMenu : public cocos2d::Layer
 {
 public:
 
-    RegisterMenu(SocketClient *client);
-
+    RegisterMenu();
+    void onExit();
     void onPushScene(int id) ;
     void onQuit(cocos2d::Ref* sender);
 
@@ -64,41 +60,45 @@ class LoginLayer : public cocos2d::Layer
 {
 public:
 
-    LoginLayer(SocketClient *client);
+    LoginLayer();
 
     void onPushScene(int id) ;
     void onQuit(cocos2d::Ref* sender);
 
 protected:
+    cocos2d::ui::EditBox *_editName;
     cocos2d::ui::EditBox *_editPassword;
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
-
 };
 
 class LobbyLayer : public cocos2d::Layer
 {
 public:
+    static cocos2d::Scene *createScene();
+    static LobbyLayer* getInstance();
+    CREATE_FUNC(LobbyLayer);
 
-    LobbyLayer(SocketClient *client);
 
+    void receiveInvite(string message);
+    void receivePlayerInfo(string message);
+    void receiveGlobalStats(string message);
+    void receiveCountryStats(string message);
     void onQuit(cocos2d::Ref* sender);
 
 protected:
-
-
+    LobbyLayer();
     void onEnter() override;
 
-    void wait(float dt);
     cocos2d::ui::Button *_acceptButton;
     cocos2d::Node *_inviteBox;
     cocos2d::Node *_moreInfoBox;
     cocos2d::Node *_playerInfoBox;
-    cocos2d::Node *_playerStatisticsBox;
+    cocos2d::Node *_playerGlobalStatisticsBox;
+    cocos2d::Node *_playerCountryStatisticsBox;
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
-
-    void _inviteView(string message);
+    int _opponentId;
 };
 
 

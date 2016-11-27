@@ -14,9 +14,11 @@ public:
 
     void makeTurn(int id) override;
 
-    void setClient(SocketClient* client);
+    void receiveAction(float angle, float power);
 
 protected:
+
+    void onEnter();
 
     SocketClient* _client;
 
@@ -24,7 +26,7 @@ protected:
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
-
+    bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
 };
 
