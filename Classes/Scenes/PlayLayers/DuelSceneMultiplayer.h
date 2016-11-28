@@ -16,9 +16,20 @@ public:
 
     void receiveAction(float angle, float power);
 
-protected:
+    void setPlayer(int id);
 
+    void startGame();
+
+    void pauseGame();
+
+    void resumeGame();
+
+protected:
     void onEnter();
+
+    bool _isStarted;
+
+    bool _isGamePaused;
 
     SocketClient* _client;
 

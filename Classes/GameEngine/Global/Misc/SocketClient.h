@@ -55,7 +55,7 @@ private:
     bool _conn(string, int);
     bool sendMessage(string data);
 
-    string _parseError(int error);
+    void _parseError(int error);
     void _parseReply(string reply);
 
     void receive();
@@ -63,6 +63,7 @@ private:
 public:
 
     static SocketClient* getInstance();
+    static void destroyInstance();
     DBPlayer* getDBPlayer();
 
     bool connected();

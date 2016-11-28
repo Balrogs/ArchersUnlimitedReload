@@ -1,7 +1,7 @@
 
 #include <base/ccUTF8.h>
 #include <Scenes/MenuLayers/MainMenu.h>
-#include "SocketClient.h"
+#include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
 #include "JSONParser.h"
 
 static SocketClient *instance = nullptr;
@@ -17,6 +17,15 @@ SocketClient *SocketClient::getInstance() {
 
     return instance;
 }
+
+void SocketClient::destroyInstance() {
+    if (instance == nullptr)
+        return;
+    if (instance->_isConnected)
+        shutdown(instance->_sock, 2);
+    instance = nullptr;
+}
+
 
 SocketClient::SocketClient() {
     _sock = -1;
@@ -214,26 +223,69 @@ void SocketClient::getPlayerInfo(int s_type, string playerName) {
 •
 -600 — статистика пользователя не доступна. Пользователь не найден.
  */
-string SocketClient::_parseError(int error) {
+
+void SocketClient::_parseError(int error) {
     switch (error) {
-        case -100:
-            return "Login failed! Incorrect name or password.";
-        case -201:
-            return "Name is already taken!";
-        case -301:
-            return "GAME STARTED";
-        case -302:
-            return "PAUSE";
-        case -303:
-            return "CONTINUE";
-        case -400:
-            return "SERVER CONNECTION ERROR";
-        case -500:
-            return "Entering the room...";
-        case -600:
-            return "USER NOT FOUND";
+        case -100: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                MultiplayerMainMenu::getInstance()->onError("Login failed! Incorrect name or password.");
+            });
+        }
+            break;
+        case -201: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                LobbyLayer::getInstance()->onError("Name is already taken!");
+            });
+        }
+            break;
+        case -301: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->startGame();
+            });
+        }
+            break;
+        case -302: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->pauseGame();
+            });
+        }
+            break;
+        case -303: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->resumeGame();
+            });
+        }
+            break;
+        case -400: {
+            //TODO show error message
+            cocos2d::Director::getInstance()->popToRootScene();
+        }
+            break;
+        case -501: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->setPlayer(1);
+            });
+        }
+            break;
+        case -502: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->setPlayer(2);
+            });
+        }
+            break;
+        case -600: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                LobbyLayer::getInstance()->receivePlayerInfo("ERROR");
+            });
+        }
+            break;
         default :
-            return "";
+            break;
     }
 }
 
@@ -246,23 +298,8 @@ DBPlayer *SocketClient::getDBPlayer() {
 }
 
 void SocketClient::_parseReply(string reply) {
-//
-//    if (!JSONParser::isError(reply)) {
-//        int id = JSONParser::parseInt(reply, "id");
-//        string token = JSONParser::parse(reply, "token");
-//        //_player = new DBPlayer(id, password, name, country);
-//        _player->setToken(token);
-//        return "";
-//    } else {
-//        int error = atoi(JSONParser::parseError(reply, "answer").c_str());
-//        return _parseError(error);
-//    }
-
     if (JSONParser::isError(reply)) {
-        //  TODO sendError
-        int error = atoi(JSONParser::parseError(reply, "answer").c_str());
-        //  return _parseError(error);
-
+        _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {
         int code = JSONParser::parseIntAnswer(reply, "code");
         switch (code) {
@@ -273,7 +310,19 @@ void SocketClient::_parseReply(string reply) {
             case 3: {
                 _player->setId(JSONParser::parseInt(reply, "id"));
                 _player->setToken(JSONParser::parse(reply, "token"));
-                cocos2d::Director::getInstance()->pushScene(LobbyLayer::createScene());
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    cocos2d::Director::getInstance()->replaceScene(LobbyLayer::createScene());
+                });
+            }
+                return;
+            case 6: {
+                auto power = JSONParser::parseFloat(reply, "power");
+                auto angle = JSONParser::parseFloat(reply, "angle");
+                auto id  =  JSONParser::parseIntAnswer(reply, "id");
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                        gameScene->receiveAction(angle, power);
+                });
             }
                 return;
             case 9: {

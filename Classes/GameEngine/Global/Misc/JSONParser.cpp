@@ -24,6 +24,17 @@ int JSONParser::parseInt(string message, string key) {
     return 0;
 }
 
+
+float JSONParser::parseFloat(string message, string key) {
+    Document document;
+    document.Parse(message.c_str());
+    if (document.HasMember(key.c_str()) && document[key.c_str()].IsFloat()) {
+        return document[key.c_str()].GetFloat();
+    }
+    return 0;
+}
+
+
 bool JSONParser::isError(string message) {
     if(message.empty()){
         return false;

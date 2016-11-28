@@ -25,6 +25,7 @@ protected:
     void updateView();
 
 public:
+    Player(int id, int hp, const char *name);
     Player(int hp, const char *name);
 
     void setHAlignment(cocos2d::TextHAlignment alignment);

@@ -21,8 +21,8 @@ MainMenu::MainMenu() {
     auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
     auto item3 = MenuItemFont::create("Duel with bot", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
     auto item4 = MenuItemFont::create("Duel 2P", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
-    auto item5 = MenuItemFont::create("Duel Multiplayer", CC_CALLBACK_0(MainMenu::onChangeLayer, this, 4));
-    auto item6 = MenuItemFont::create("Quit", CC_CALLBACK_1(MainMenu::onQuit, this));
+    auto item5 = MenuItemFont::create("Duel Multiplayer", CC_CALLBACK_0(MainMenu::onChangeLayer, this));
+    auto item6 = MenuItemFont::create("Quit", CC_CALLBACK_0(MainMenu::onQuit, this));
 
     auto menu = Menu::create(item2, item3, item4, item5, item6, nullptr);
     menu->alignItemsVertically();
@@ -34,17 +34,22 @@ MainMenu::~MainMenu() {
 
 }
 
+void MainMenu::onEnter() {
+    Layer::onEnter();
+    SocketClient::destroyInstance();
+}
+
 void MainMenu::onPushScene(int id) {
     auto scene = BattleScene::createScene(id);
     Director::getInstance()->pushScene(scene);
 }
 
-void MainMenu::onChangeLayer(int id) {
-    this->getParent()->addChild(new MultiplayerMainMenu());
-    this->removeFromParent();
+void MainMenu::onChangeLayer() {
+    auto scene = MultiplayerMainMenu::createScene();
+    Director::getInstance()->pushScene(scene);
 }
 
-void MainMenu::onQuit(cocos2d::Ref *sender) {
+void MainMenu::onQuit() {
     Director::getInstance()->end();
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
@@ -53,7 +58,87 @@ void MainMenu::onQuit(cocos2d::Ref *sender) {
 }
 
 
+MultiplayerMainMenu *MultiplayerMainMenu::_instance = nullptr;
+
+cocos2d::Scene *MultiplayerMainMenu::createScene() {
+    auto scene = Scene::create();
+    MultiplayerMainMenu *layer = MultiplayerMainMenu::getInstance();
+    scene->addChild(layer);
+    return scene;
+}
+
+MultiplayerMainMenu *MultiplayerMainMenu::getInstance() {
+    if (_instance == nullptr) {
+        _instance = new MultiplayerMainMenu();
+    }
+    return _instance;
+}
+
 MultiplayerMainMenu::MultiplayerMainMenu() {
+
+}
+
+void MultiplayerMainMenu::onEnter() {
+    Node::onEnter();
+
+    this->removeAllChildren();
+
+    _client = SocketClient::getInstance();
+
+    auto item1 = MenuItemFont::create("AutoLogin", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 1));
+    auto item2 = MenuItemFont::create("Login", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 3));
+    auto item4 = MenuItemFont::create("Register", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 2));
+    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_0(MultiplayerMainMenu::onQuit, this));
+
+
+    auto editBoxSize = Size(300.f, 50.f);
+    auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    std::string pNormalSprite = "bar.png";
+    _editName = cocos2d::ui::EditBox::create(editBoxSize, ui::Scale9Sprite::create(pNormalSprite));
+    _editName->setPosition(
+            Vec2(visibleOrigin.x + visibleSize.width / 2, visibleOrigin.y + visibleSize.height * 5 / 8));
+    _editName->setFontName("Paint Boy");
+    _editName->setFontSize(25);
+    _editName->setMaxLength(12);
+    _editName->setPlaceHolder("Name:");
+    _editName->setPlaceholderFontColor(Color3B::WHITE);
+    _editName->setMaxLength(8);
+    _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
+
+    _editPassword = ui::EditBox::create(editBoxSize, "bar.png");
+    _editPassword->setPosition(Vec2(_editName->getPosition().x, _editName->getPosition().y - 60.f));
+    _editPassword->setFont("American Typewriter", 25);
+    _editPassword->setPlaceHolder("Password:");
+    _editPassword->setMaxLength(12);
+    _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
+    _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
+
+    _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
+    _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, _editPassword->getPosition().y - 35.f));
+    _errorMessage->setTextColor(Color4B::RED);
+    this->addChild(_errorMessage);
+
+
+    if (_client->connected()) {
+
+        this->addChild(_editName);
+        this->addChild(_editPassword);
+
+        auto menu = Menu::create(item1, item2, item4, item6, nullptr);
+        menu->alignItemsVertically();
+        menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 150);
+        this->addChild(menu);
+
+    } else {
+        _errorMessage->setString("Can't connect to the server...");
+
+        auto menu = Menu::create(item6, nullptr);
+        menu->alignItemsVertically();
+        menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 150);
+        this->addChild(menu);
+    }
 }
 
 void MultiplayerMainMenu::onPushScene(int id) {
@@ -68,8 +153,15 @@ void MultiplayerMainMenu::onPushScene(int id) {
         }
             break;
         case 3: {
-            this->getParent()->addChild(new LoginLayer());
-            this->removeFromParent();
+            auto name = string(_editName->getText());
+            auto password = string(_editPassword->getText());
+            if (!name.empty() && !password.empty()) {
+                _client->getDBPlayer()->setId(atoi(name.c_str()));
+                _client->getDBPlayer()->setPassword(password);
+                _client->login();
+            } else {
+                _errorMessage->setString("Please input your name and password.");
+            }
         }
             break;
         default:
@@ -77,44 +169,14 @@ void MultiplayerMainMenu::onPushScene(int id) {
     }
 }
 
-void MultiplayerMainMenu::onQuit(cocos2d::Ref *sender) {
-    MainMenu *layer = MainMenu::create();
-    this->getParent()->addChild(layer);
-    this->removeFromParent();
+void MultiplayerMainMenu::onQuit() {
+    Director::getInstance()->popScene();
 }
 
-void MultiplayerMainMenu::onEnter() {
-    Node::onEnter();
 
-    this->removeAllChildren();
-
-    _client = SocketClient::getInstance();
-
-    auto item1 = MenuItemFont::create("AutoLogin", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 1));
-    auto item2 = MenuItemFont::create("Login", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 3));
-    auto item4 = MenuItemFont::create("Register", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 2));
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_1(MultiplayerMainMenu::onQuit, this));
-
-    if (_client->connected()) {
-        auto menu = Menu::create(item1, item2, item4, item6, nullptr);
-        menu->alignItemsVertically();
-        this->addChild(menu);
-
-    } else {
-        auto visibleSize = Director::getInstance()->getVisibleSize();
-        auto _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 25.f);
-        _errorMessage->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height * 5 / 8));
-        _errorMessage->setTextColor(Color4B::RED);
-        _errorMessage->setString("Can't connect to the server...");
-        this->addChild(_errorMessage);
-
-        auto menu = Menu::create(item6, nullptr);
-        menu->alignItemsVertically();
-        menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 100);
-        this->addChild(menu);
-    }
+void MultiplayerMainMenu::onError(string message) {
+    _errorMessage->setString(message);
 }
-
 
 RegisterMenu::RegisterMenu() {
 
@@ -150,7 +212,7 @@ RegisterMenu::RegisterMenu() {
     this->addChild(_errorMessage);
 
     auto item4 = MenuItemFont::create("Register", CC_CALLBACK_0(RegisterMenu::onPushScene, this, 2));
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_1(RegisterMenu::onQuit, this));
+    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_0(RegisterMenu::onQuit, this));
 
     auto menu = Menu::create(item4, item6, nullptr);
     menu->alignItemsVertically();
@@ -176,86 +238,13 @@ void RegisterMenu::onPushScene(int id) {
     }
 }
 
-void RegisterMenu::onQuit(cocos2d::Ref *sender) {
-    this->getParent()->addChild(new MultiplayerMainMenu());
-    this->removeFromParent();
-}
-
-void RegisterMenu::onExit() {
-    Node::onExit();
-    
-    this->getParent()->addChild(new MultiplayerMainMenu());
-    this->removeFromParent();
-}
-
-LoginLayer::LoginLayer() {
-    auto editBoxSize = Size(300.f, 50.f);
-
-    auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-
-    std::string pNormalSprite = "bar.png";
-    _editName = cocos2d::ui::EditBox::create(editBoxSize, ui::Scale9Sprite::create(pNormalSprite));
-    _editName->setPosition(Vec2(visibleOrigin.x + visibleSize.width / 2, visibleOrigin.y + visibleSize.height * 5 / 8));
-    _editName->setFontName("Paint Boy");
-    _editName->setFontSize(25);
-    _editName->setMaxLength(12);
-    _editName->setPlaceHolder("Name:");
-    _editName->setPlaceholderFontColor(Color3B::WHITE);
-    _editName->setMaxLength(8);
-    _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
-    this->addChild(_editName);
-
-    _editPassword = ui::EditBox::create(editBoxSize, "bar.png");
-    _editPassword->setPosition(Vec2(_editName->getPosition().x, _editName->getPosition().y - 60.f));
-    _editPassword->setFont("American Typewriter", 25);
-    _editPassword->setPlaceHolder("Password:");
-    _editPassword->setMaxLength(12);
-    _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
-    _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
-    this->addChild(_editPassword);
-
-    _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
-    _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, _editPassword->getPosition().y - 35.f));
-    _errorMessage->setTextColor(Color4B::RED);
-    this->addChild(_errorMessage);
-
-    auto item4 = MenuItemFont::create("Login", CC_CALLBACK_0(LoginLayer::onPushScene, this, 2));
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_1(LoginLayer::onQuit, this));
-
-    auto menu = Menu::create(item4, item6, nullptr);
-    menu->alignItemsVertically();
-    menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 100);
-    _client = SocketClient::getInstance();
-    this->addChild(menu);
-}
-
-void LoginLayer::onPushScene(int id) {
-    switch (id) {
-        case 2: {
-            auto name = string(_editName->getText());
-            auto password = string(_editPassword->getText());
-            if (!name.empty() && !password.empty()) {
-                _client->getDBPlayer()->setId(atoi(name.c_str()));
-                _client->getDBPlayer()->setPassword(password);
-                _client->login();
-            } else {
-                _errorMessage->setString("Please input your name and password.");
-            }
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-void LoginLayer::onQuit(cocos2d::Ref *sender) {
-    this->getParent()->addChild(new MultiplayerMainMenu());
+void RegisterMenu::onQuit() {
+    this->getParent()->addChild(MultiplayerMainMenu::getInstance());
     this->removeFromParent();
 }
 
 
-static LobbyLayer *_instance = nullptr;
+LobbyLayer *LobbyLayer::_instance = nullptr;
 
 LobbyLayer *LobbyLayer::getInstance() {
     if (_instance == nullptr) {
@@ -271,18 +260,13 @@ cocos2d::Scene *LobbyLayer::createScene() {
     return scene;
 }
 
-
 LobbyLayer::LobbyLayer() {
 
 }
 
-void LobbyLayer::onQuit(cocos2d::Ref *sender) {
-    Director::getInstance()->popScene();
-}
-
-
 void LobbyLayer::onEnter() {
     Node::onEnter();
+
     this->removeAllChildren();
 
     _client = SocketClient::getInstance();
@@ -330,7 +314,6 @@ void LobbyLayer::onEnter() {
                 _client->enterRoom();
                 auto scene = BattleScene::createScene(4);
                 Director::getInstance()->pushScene(scene);
-
             }
                 break;
             default:
@@ -339,7 +322,7 @@ void LobbyLayer::onEnter() {
     });
     this->addChild(_acceptButton);
 
-    auto quit = MenuItemFont::create("Back", CC_CALLBACK_1(LobbyLayer::onQuit, this));
+    auto quit = MenuItemFont::create("Back", CC_CALLBACK_0(LobbyLayer::onQuit, this));
 
     auto menu = Menu::create(quit, nullptr);
     menu->alignItemsVertically();
@@ -349,6 +332,7 @@ void LobbyLayer::onEnter() {
 
     _acceptButton->setEnabled(false);
     _acceptButton->setVisible(false);
+
     _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
@@ -403,3 +387,4 @@ void LobbyLayer::receiveCountryStats(string message) {
     _playerCountryStatisticsBox->removeAllChildren();
     _playerCountryStatisticsBox->addChild(Views::getPlayerStatisticsView(message));
 }
+

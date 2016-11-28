@@ -19,6 +19,7 @@ public:
     static int parseIntAnswer(string message, string key);
     static bool isError(string message);
     static string parseError(string message, string key);
+    static float parseFloat(string message, string key);
 };
 
 

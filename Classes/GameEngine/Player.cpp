@@ -19,10 +19,9 @@ void Player::addShotsCount() {
     updateView();
 }
 
+Player::Player(int id, int hp, const char *name) {
 
-Player::Player(int hp, const char *name) {
-
-    _id = BattleScene::instance->getStickmanCount();
+    _id = id;
     _name = name;
     _shotsCount = 0;
     _hp = hp;
@@ -48,6 +47,10 @@ Player::Player(int hp, const char *name) {
     _view->addChild(_name_view, 1, "name");
     _view->addChild(_hp_view, 1, "hp");
     _view->addChild(_shots_view, 1, "shotsCount");
+}
+
+Player::Player(int hp, const char *name) : Player(BattleScene::instance->getStickmanCount(), hp, name) {
+
 }
 
 void Player::updateView() {

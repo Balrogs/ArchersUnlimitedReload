@@ -6,26 +6,18 @@
 USING_NS_CC;
 
 void DuelSceneMultiplayer::initWorld() {
+    _isStarted = false;
+    _isGamePaused = false;
+
     _client = SocketClient::getInstance();
 
     Ground *ground = new Ground(GROUND, visibleSize.width * 4);
     this->addChild(ground);
 
-    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, _client->getDBPlayer()->getName().c_str());
-
-    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, _client->getDBPlayer()->getName().c_str());
-
-    _hero2->changeFacedir(-1);
-    _player1 = _hero1->getPlayer();
-    _player2 = _hero2->getPlayer();
-    _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
-
-    ui->initDuel(visibleSize, _hero1, _hero2);
-    _player = _hero1;
 }
 
 bool DuelSceneMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    if (this->_turnId == _hero1->getPlayer()->getId()) {
+    if (_isStarted && !_isGamePaused && this->_turnId == _client->getDBPlayer()->getId()) {
         return BattleScene::_touchHandlerBegin(touch, event);
     } else
         return false;
@@ -78,6 +70,62 @@ bool DuelSceneMultiplayer::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d
 }
 
 void DuelSceneMultiplayer::receiveAction(float angle, float power) {
-    _hero2->attack(angle, power);
+    _player->attack(angle, power);
     _client->action(angle, power, 1);
+}
+
+void DuelSceneMultiplayer::setPlayer(int id) {
+
+    switch (id) {
+        case 1:{
+            _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, _client->getDBPlayer()->getId(), _client->getDBPlayer()->getName().c_str());
+
+            _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, _client->getDBPlayer()->getName().c_str());
+
+            _hero2->changeFacedir(-1);
+            _player1 = _hero1->getPlayer();
+            _player2 = _hero2->getPlayer();
+            _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
+
+            ui->initDuel(visibleSize, _hero1, _hero2);
+            _player = _hero1;
+        }
+
+            break;
+        case 2: {
+            _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND,  _client->getDBPlayer()->getName().c_str());
+
+            _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, _client->getDBPlayer()->getId(), _client->getDBPlayer()->getName().c_str());
+
+            _hero2->changeFacedir(-1);
+            _player1 = _hero1->getPlayer();
+            _player2 = _hero2->getPlayer();
+            _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
+
+            ui->initDuel(visibleSize, _hero1, _hero2);
+            _player = _hero2;
+        }
+            break;
+        default:
+            break;
+    }
+
+    auto action = Sequence::create(
+            MoveTo::create(0.f, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+            NULL
+    );
+    this->runAction(action);
+    this->_turnId = _player->getPlayer()->getId();
+}
+
+void DuelSceneMultiplayer::startGame() {
+    _isStarted = true;
+}
+
+void DuelSceneMultiplayer::pauseGame() {
+    _isGamePaused = true;
+}
+
+void DuelSceneMultiplayer::resumeGame() {
+    _isGamePaused = false;
 }

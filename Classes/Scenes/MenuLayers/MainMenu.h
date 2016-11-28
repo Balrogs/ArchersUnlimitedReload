@@ -16,10 +16,10 @@ public:
 
     MainMenu();
     ~MainMenu();
-
+    void onEnter() override;
     void onPushScene(int id);
-    void onChangeLayer(int id);
-    void onQuit(cocos2d::Ref* sender);
+    void onChangeLayer();
+    void onQuit();
 
     static cocos2d::Scene *createScene();
 } ;
@@ -27,16 +27,25 @@ public:
 class MultiplayerMainMenu : public cocos2d::Layer
 {
 public:
+    static cocos2d::Scene *createScene();
+    static MultiplayerMainMenu* getInstance();
+    CREATE_FUNC(MultiplayerMainMenu);
 
-    MultiplayerMainMenu();
-
-    void onEnter();
-    void onPushScene(int id);
-    void onQuit(cocos2d::Ref* sender);
+    virtual void onError(string message);
+    virtual void onQuit();
 
 protected:
+    static MultiplayerMainMenu *_instance;
+    MultiplayerMainMenu();
+    void onEnter();
+    void onPushScene(int id);
+
+    cocos2d::Label *_errorMessage;
     SocketClient *_client;
 
+private:
+    cocos2d::ui::EditBox *_editName;
+    cocos2d::ui::EditBox *_editPassword;
 };
 
 class RegisterMenu : public cocos2d::Layer
@@ -44,9 +53,8 @@ class RegisterMenu : public cocos2d::Layer
 public:
 
     RegisterMenu();
-    void onExit();
     void onPushScene(int id) ;
-    void onQuit(cocos2d::Ref* sender);
+    void onQuit();
 
 protected:
     cocos2d::ui::EditBox *_editName;
@@ -56,23 +64,8 @@ protected:
 
 };
 
-class LoginLayer : public cocos2d::Layer
-{
-public:
 
-    LoginLayer();
-
-    void onPushScene(int id) ;
-    void onQuit(cocos2d::Ref* sender);
-
-protected:
-    cocos2d::ui::EditBox *_editName;
-    cocos2d::ui::EditBox *_editPassword;
-    cocos2d::Label *_errorMessage;
-    SocketClient *_client;
-};
-
-class LobbyLayer : public cocos2d::Layer
+class LobbyLayer : public MultiplayerMainMenu
 {
 public:
     static cocos2d::Scene *createScene();
@@ -84,21 +77,18 @@ public:
     void receivePlayerInfo(string message);
     void receiveGlobalStats(string message);
     void receiveCountryStats(string message);
-    void onQuit(cocos2d::Ref* sender);
 
 protected:
+    static LobbyLayer *_instance;
     LobbyLayer();
     void onEnter() override;
-
+private:
     cocos2d::ui::Button *_acceptButton;
     cocos2d::Node *_inviteBox;
     cocos2d::Node *_moreInfoBox;
     cocos2d::Node *_playerInfoBox;
     cocos2d::Node *_playerGlobalStatisticsBox;
     cocos2d::Node *_playerCountryStatisticsBox;
-    cocos2d::Label *_errorMessage;
-    SocketClient *_client;
-    int _opponentId;
 };
 
 

@@ -369,6 +369,11 @@ void Hero::setFaceDir() {
     changeFacedir(facedir);
 }
 
+DuelHero::DuelHero(float x_pos, float y_pos, int id, const char *name): Hero(x_pos, y_pos, new Player(id, 100, name)) {
+    _weaponIndex = 8;
+    WEAPON_LIST.push_back("Arrow");
+}
+
 DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
@@ -399,6 +404,8 @@ void DuelHero::move(int dir) {
             NULL)
     );
 }
+
+
 
 
 AppleHero::AppleHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {

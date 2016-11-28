@@ -75,6 +75,8 @@ protected:
 class DuelHero : public Hero {
 public:
 
+    DuelHero(float x_pos, float y_pos, int id, const char *name);
+
     DuelHero(float x_pos, float y_pos, const char *name);
 
     void switchWeapon(int i) override;
