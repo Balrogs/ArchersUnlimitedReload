@@ -8,6 +8,7 @@
 #include <GameEngine/Global/Misc/Views.h>
 #include "cocos2d.h"
 #include <ui/UIEditBox/UIEditBox.h>
+#include <GameEngine/Player.h>
 
 class MainMenu : public cocos2d::Layer
 {
@@ -39,6 +40,7 @@ protected:
     MultiplayerMainMenu();
     void onEnter();
     void onPushScene(int id);
+    void update(float dt);
 
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
@@ -68,22 +70,32 @@ protected:
 class LobbyLayer : public MultiplayerMainMenu
 {
 public:
+
     static cocos2d::Scene *createScene();
     static LobbyLayer* getInstance();
     CREATE_FUNC(LobbyLayer);
 
 
     void receiveInvite(string message);
+    void deleteInvite();
     void receivePlayerInfo(string message);
     void receiveGlobalStats(string message);
     void receiveCountryStats(string message);
 
 protected:
+
     static LobbyLayer *_instance;
+    Player* _player2;
     LobbyLayer();
     void onEnter() override;
+
 private:
+
     cocos2d::ui::Button *_acceptButton;
+    cocos2d::ui::Button *_denyButton;
+    cocos2d::ui::Button *_inviteButton;
+    cocos2d::ui::Button *_findPlayerButton;
+    cocos2d::ui::Button *_findFriendButton;
     cocos2d::Node *_inviteBox;
     cocos2d::Node *_moreInfoBox;
     cocos2d::Node *_playerInfoBox;

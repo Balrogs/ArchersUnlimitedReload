@@ -14,6 +14,8 @@ public:
 
     void makeTurn(int id) override;
 
+    void createPlayers(Player* player1, Player* player2);
+
     void receiveAction(float angle, float power);
 
     void setPlayer(int id);
@@ -24,7 +26,10 @@ public:
 
     void resumeGame();
 
+    void abort();
+
 protected:
+
     void onEnter();
 
     bool _isStarted;

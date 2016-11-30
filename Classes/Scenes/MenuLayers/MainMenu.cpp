@@ -4,6 +4,7 @@
 
 #include <GameEngine/Global/Misc/Views.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
+#include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
 #include "MainMenu.h"
 #include "Scenes/PlayLayers/Battle.h"
 
@@ -75,7 +76,7 @@ MultiplayerMainMenu *MultiplayerMainMenu::getInstance() {
 }
 
 MultiplayerMainMenu::MultiplayerMainMenu() {
-
+    this->schedule(SEL_SCHEDULE(&MultiplayerMainMenu::update), 1.f);
 }
 
 void MultiplayerMainMenu::onEnter() {
@@ -178,6 +179,13 @@ void MultiplayerMainMenu::onError(string message) {
     _errorMessage->setString(message);
 }
 
+void MultiplayerMainMenu::update(float dt) {
+    if (!_client->connected()) {
+        //TODO show connection error message
+        onQuit();
+    }
+}
+
 RegisterMenu::RegisterMenu() {
 
     auto editBoxSize = Size(300.f, 50.f);
@@ -272,7 +280,7 @@ void LobbyLayer::onEnter() {
     _client = SocketClient::getInstance();
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
+
 
     _moreInfoBox = Node::create();
     _moreInfoBox->setPosition(visibleSize.width / 2 + 200.f, visibleSize.height * 5 / 8);
@@ -283,9 +291,13 @@ void LobbyLayer::onEnter() {
     _playerInfoBox->setPosition(300.f, visibleSize.height - 30.f);
     this->addChild(_playerInfoBox);
 
+
     _inviteBox = Node::create();
     _inviteBox->setPosition(_playerInfoBox->getPosition().x, visibleSize.height * 5 / 8);
+
+    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
     _inviteBox->addChild(message);
+
     this->addChild(_inviteBox);
 
     _playerGlobalStatisticsBox = Node::create();
@@ -301,6 +313,8 @@ void LobbyLayer::onEnter() {
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
+    _player2 = nullptr;
+
     _acceptButton = cocos2d::ui::Button::create("bar.png");
     _acceptButton->setScale(0.5f);
     _acceptButton->setTitleFontSize(32);
@@ -314,6 +328,13 @@ void LobbyLayer::onEnter() {
                 _client->enterRoom();
                 auto scene = BattleScene::createScene(4);
                 Director::getInstance()->pushScene(scene);
+
+                auto player1 = new Player(_client->getDBPlayer()->getId(), 100,
+                                          _client->getDBPlayer()->getName());
+
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
+                    gameScene->createPlayers(player1, LobbyLayer::getInstance()->_player2);
+                }
             }
                 break;
             default:
@@ -322,16 +343,51 @@ void LobbyLayer::onEnter() {
     });
     this->addChild(_acceptButton);
 
+    _denyButton = cocos2d::ui::Button::create("bar.png");
+    _denyButton->setScale(0.5f);
+    _denyButton->setTitleFontSize(32);
+    _denyButton->setTitleColor(Color3B::WHITE);
+    _denyButton->setTitleText("DENY");
+
+    _denyButton->setPosition(cocos2d::Vec2(_acceptButton->getPosition().x, _acceptButton->getPosition().y - 35.f));
+    _denyButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                _client->denyInvite();
+
+                deleteInvite();
+
+                _moreInfoBox->removeAllChildren();
+
+                _acceptButton->setEnabled(false);
+                _acceptButton->setVisible(false);
+
+
+                _denyButton->setEnabled(false);
+                _denyButton->setVisible(false);
+            }
+                break;
+            default:
+                break;
+
+        }
+    });
+    this->addChild(_denyButton);
+
     auto quit = MenuItemFont::create("Back", CC_CALLBACK_0(LobbyLayer::onQuit, this));
 
     auto menu = Menu::create(quit, nullptr);
     menu->alignItemsVertically();
-    menu->setPosition(visibleSize.width / 2, _acceptButton->getPosition().y - 100);
+    menu->setPosition(visibleSize.width / 2, _denyButton->getPosition().y - 100);
     this->addChild(menu);
 
 
     _acceptButton->setEnabled(false);
     _acceptButton->setVisible(false);
+
+
+    _denyButton->setEnabled(false);
+    _denyButton->setVisible(false);
 
     _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
@@ -342,10 +398,17 @@ void LobbyLayer::receiveInvite(string message) {
     _inviteBox->removeAllChildren();
     _inviteBox->addChild(Views::getInviteView(message));
     auto name = JSONParser::parseAnswer(message, "player_name");
+    auto id = JSONParser::parseIntAnswer(message, "player_id");
+    _player2 = new Player(id, 100, name);
     _client->getPlayerInfo(3, name);
-    _acceptButton->setEnabled(true);
-    _acceptButton->setVisible(true);
+
 }
+
+void LobbyLayer::deleteInvite() {
+    _inviteBox->removeAllChildren();
+    _player2 = nullptr;
+}
+
 
 void LobbyLayer::receivePlayerInfo(string message) {
     auto name = JSONParser::parseAnswer(message, "name");
@@ -375,6 +438,12 @@ void LobbyLayer::receivePlayerInfo(string message) {
             }
         });
         _moreInfoBox->addChild(moreInfoButton, 1, "button");
+
+        _acceptButton->setEnabled(true);
+        _acceptButton->setVisible(true);
+
+        _denyButton->setEnabled(true);
+        _denyButton->setVisible(true);
     }
 }
 
@@ -387,4 +456,3 @@ void LobbyLayer::receiveCountryStats(string message) {
     _playerCountryStatisticsBox->removeAllChildren();
     _playerCountryStatisticsBox->addChild(Views::getPlayerStatisticsView(message));
 }
-

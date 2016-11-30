@@ -8,39 +8,38 @@
 
 #include <cocos2d.h>
 
-class Player {
+class Player : public cocos2d::Node{
 
 protected:
 
     int _id;
-    const char *_name;
+    std::string _name;
     int _shotsCount;
     int _hp;
 
-    cocos2d::Node *_view;
     cocos2d::Label *_name_view;
     cocos2d::Label *_hp_view;
     cocos2d::Label *_shots_view;
 
+    cocos2d::TextHAlignment _alignment;
+
     void updateView();
 
 public:
-    Player(int id, int hp, const char *name);
-    Player(int hp, const char *name);
+    Player(int id, int hp, std::string name);
+    Player(int hp, std::string name);
 
     void setHAlignment(cocos2d::TextHAlignment alignment);
 
-    int getShotsCount() const;
+    int getShotsCount();
 
     void addShotsCount();
 
-    int getId() const;
+    int getId();
 
-    const char *getName() const;
+    std::string getName();
 
-    cocos2d::Node *getView();
-
-    int getHp() const;
+    int getHp();
 
     void setHp(int diff);
 };

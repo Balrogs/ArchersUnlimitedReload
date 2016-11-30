@@ -46,10 +46,10 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     auto menu = Menu::create(item1, nullptr);
     this->addChild(menu);
 
-    this->addChild(player1->getPlayer()->getView());
-    this->bounds.push_back(player1->getPlayer()->getView()->getBoundingBox());
+    this->addChild(player1->getPlayer());
+    this->bounds.push_back(player1->getPlayer()->getBoundingBox());
 
-    auto player2_view = player2->getPlayer()->getView();
+    auto player2_view = player2->getPlayer();
     player2_view->setPosition(BattleScene::instance->visibleSize.width / 2 - 10.f, 0.f);
     this->addChild(player2_view);
     this->bounds.push_back(player2_view->getBoundingBox());
@@ -65,8 +65,8 @@ void UI::initApple(Size visibleSize, Hero *player) {
     b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
     this->addChild(b);
 
-    this->addChild(player->getPlayer()->getView());
-    this->bounds.push_back(player->getPlayer()->getView()->getBoundingBox());
+    this->addChild(player->getPlayer());
+    this->bounds.push_back(player->getPlayer()->getBoundingBox());
 
     auto item1 = MenuItemFont::create("PAUSE", CC_CALLBACK_0(BattleScene::_pause, BattleScene::instance));
 

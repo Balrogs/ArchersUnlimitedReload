@@ -22,8 +22,6 @@ public:
 
     static const float MAX_ARROW_POWER;
     static const float MIN_ARROW_POWER;
-    static const float MAX_ARROW_ANGLE;
-    static const float MIN_ARROW_ANGLE;
     float GROUND;
     static const float G;
     static BattleScene *instance;
@@ -51,7 +49,7 @@ public:
 
     void moveScene(float x);
 
-    bool isIsPaused() const;
+    bool isPaused() const;
 
     cocos2d::Vec2 getHeroPos(Hero *player);
 

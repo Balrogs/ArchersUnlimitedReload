@@ -153,6 +153,19 @@ void SocketClient::enterRoom() {
     t.detach();
 }
 
+void SocketClient::denyInvite() {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":41}",
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
 void SocketClient::action(float angle, float power, int type) {
     char x[256];
     sprintf(x,
@@ -234,14 +247,15 @@ void SocketClient::_parseError(int error) {
             break;
         case -201: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                LobbyLayer::getInstance()->onError("Name is already taken!");
+                MultiplayerMainMenu::getInstance()->onError("Name is already taken!");
             });
         }
             break;
         case -301: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
                     gameScene->startGame();
+                }
             });
         }
             break;
@@ -256,6 +270,14 @@ void SocketClient::_parseError(int error) {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
                     gameScene->resumeGame();
+            });
+        }
+        case -304: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
+                    gameScene->abort();
+                else
+                    LobbyLayer::getInstance()->deleteInvite();
             });
         }
             break;
@@ -318,7 +340,7 @@ void SocketClient::_parseReply(string reply) {
             case 6: {
                 auto power = JSONParser::parseFloat(reply, "power");
                 auto angle = JSONParser::parseFloat(reply, "angle");
-                auto id  =  JSONParser::parseIntAnswer(reply, "id");
+                auto id = JSONParser::parseIntAnswer(reply, "id");
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                     if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
                         gameScene->receiveAction(angle, power);

@@ -90,20 +90,3 @@ bool DuelScene::isGameOver() {
     return (_player1->getShotsCount() == _player2->getShotsCount() && _player1->getShotsCount() >= 15) ||
            _player1->getHp() <= 0 || _player2->getHp() <= 0;
 }
-
-void DuelScene::_keyBoardPressedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
-    BattleScene::_keyBoardPressedHandler(keyCode, event);
-
-}
-
-void DuelScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
-    BattleScene::_keyBoardReleasedHandler(keyCode, event);
-    switch (keyCode) {
-        case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-            _player->move(-1);
-            break;
-        case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
-            _player->move(1);
-            break;
-    }
-}

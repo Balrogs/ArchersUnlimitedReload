@@ -1,16 +1,16 @@
 #include <Scenes/PlayLayers/Battle.h>
 
-int Player::getId() const {
+int Player::getId() {
     return _id;
 }
 
-const char *Player::getName() const {
+std::string Player::getName() {
     return _name;
 }
 
 
 
-int Player::getShotsCount() const {
+int Player::getShotsCount() {
     return _shotsCount;
 }
 
@@ -19,15 +19,24 @@ void Player::addShotsCount() {
     updateView();
 }
 
-Player::Player(int id, int hp, const char *name) {
+Player::Player(int id, int hp, string name) {
 
     _id = id;
     _name = name;
     _shotsCount = 0;
     _hp = hp;
-    _view = cocos2d::Node::create();
 
-    auto size = BattleScene::instance->visibleSize;
+}
+
+Player::Player(int hp, string name) : Player(BattleScene::instance->getStickmanCount(), hp, name) {
+
+}
+
+void Player::updateView() {
+
+    this->removeAllChildren();
+
+    auto size = cocos2d::Director::getInstance()->getVisibleSize();
 
     _name_view = cocos2d::Label::createWithTTF("", "arial.ttf", 32.f, cocos2d::Size(size.width / 2 , 0.f));
 
@@ -35,7 +44,9 @@ Player::Player(int id, int hp, const char *name) {
 
     _shots_view = cocos2d::Label::createWithTTF("", "arial.ttf", 32.f, cocos2d::Size(size.width / 2 , 0.f));
 
-    updateView();
+    _name_view->setString(cocos2d::StringUtils::format("%s", _name.c_str()));
+    _hp_view->setString(cocos2d::StringUtils::format("HP: %d", _hp));
+    _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
 
     _name_view->setPosition(size.width / 4, size.height - 50.f);
     _hp_view->setPosition(size.width / 4, size.height - 80.f);
@@ -44,27 +55,17 @@ Player::Player(int id, int hp, const char *name) {
     _hp_view->setColor(cocos2d::Color3B::BLACK);
     _shots_view->setColor(cocos2d::Color3B::BLACK);
 
-    _view->addChild(_name_view, 1, "name");
-    _view->addChild(_hp_view, 1, "hp");
-    _view->addChild(_shots_view, 1, "shotsCount");
+    _name_view->setHorizontalAlignment(_alignment);
+    _hp_view->setHorizontalAlignment(_alignment);
+    _shots_view->setHorizontalAlignment(_alignment);
+
+    this->addChild(_name_view, 1, "name");
+    this->addChild(_hp_view, 1, "hp");
+    this->addChild(_shots_view, 1, "shotsCount");
 }
 
-Player::Player(int hp, const char *name) : Player(BattleScene::instance->getStickmanCount(), hp, name) {
 
-}
-
-void Player::updateView() {
-
-    _name_view->setString(cocos2d::StringUtils::format("%s", _name));
-    _hp_view->setString(cocos2d::StringUtils::format("HP: %d", _hp));
-    _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
-}
-
-cocos2d::Node *Player::getView() {
-    return _view;
-}
-
-int Player::getHp() const {
+int Player::getHp() {
     return _hp;
 }
 
@@ -74,7 +75,6 @@ void Player::setHp(int diff) {
 }
 
 void Player::setHAlignment(cocos2d::TextHAlignment alignment) {
-    _name_view->setHorizontalAlignment(alignment);
-    _hp_view->setHorizontalAlignment(alignment);
-    _shots_view->setHorizontalAlignment(alignment);
+    _alignment = alignment;
+    updateView();
 }

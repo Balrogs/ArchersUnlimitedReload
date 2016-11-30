@@ -256,7 +256,7 @@ cocos2d::Node *BattleScene::getBulletPull() {
     return this->_bullet_pull;
 }
 
-bool BattleScene::isIsPaused() const {
+bool BattleScene::isPaused() const {
     return _isPaused;
 }
 
