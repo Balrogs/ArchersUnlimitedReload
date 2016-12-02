@@ -185,6 +185,7 @@ void BattleScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCo
         case EventKeyboard::KeyCode::KEY_BREAK:
         case EventKeyboard::KeyCode::KEY_ESCAPE:
         case EventKeyboard::KeyCode::KEY_BACKSPACE:
+            //TODO SHOW SHOW MESSAGE
             _onPopScene();
             break;
     }

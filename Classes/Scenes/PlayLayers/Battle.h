@@ -90,7 +90,7 @@ protected:
 
     virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
 
-    void _onPopScene();
+    virtual void _onPopScene();
 
     virtual bool isGameOver();
 };

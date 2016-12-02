@@ -78,6 +78,7 @@ public:
 
     void receiveInvite(string message);
     void deleteInvite();
+    void joinLobby();
     void receivePlayerInfo(string message);
     void receiveGlobalStats(string message);
     void receiveCountryStats(string message);

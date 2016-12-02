@@ -157,7 +157,7 @@ void MultiplayerMainMenu::onPushScene(int id) {
             auto name = string(_editName->getText());
             auto password = string(_editPassword->getText());
             if (!name.empty() && !password.empty()) {
-                _client->getDBPlayer()->setId(atoi(name.c_str()));
+                _client->getDBPlayer()->setName(name);
                 _client->getDBPlayer()->setPassword(password);
                 _client->login();
             } else {
@@ -288,17 +288,30 @@ void LobbyLayer::onEnter() {
     this->addChild(_moreInfoBox);
 
     _playerInfoBox = Node::create();
-    _playerInfoBox->setPosition(300.f, visibleSize.height - 30.f);
+    _playerInfoBox->setPosition(30.f, visibleSize.height - 30.f);
     this->addChild(_playerInfoBox);
 
-
     _inviteBox = Node::create();
-    _inviteBox->setPosition(_playerInfoBox->getPosition().x, visibleSize.height * 5 / 8);
-
-    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
-    _inviteBox->addChild(message);
-
+    _inviteBox->setPosition(visibleSize.width / 2, visibleSize.height - 30.f);
     this->addChild(_inviteBox);
+
+    _findPlayerButton = cocos2d::ui::Button::create("bar.png");
+    _findPlayerButton->setScale(0.5f);
+    _findPlayerButton->setTitleFontSize(32);
+    _findPlayerButton->setTitleColor(Color3B::WHITE);
+    _findPlayerButton->setTitleText("FIND PLAYER");
+
+    _findPlayerButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                _client->enterLobby();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    _inviteBox->addChild(_findPlayerButton);
 
     _playerGlobalStatisticsBox = Node::create();
     _playerGlobalStatisticsBox->setPosition(visibleSize.width - 200.f, visibleSize.height - 10.f);
@@ -329,10 +342,9 @@ void LobbyLayer::onEnter() {
                 auto scene = BattleScene::createScene(4);
                 Director::getInstance()->pushScene(scene);
 
-                auto player1 = new Player(_client->getDBPlayer()->getId(), 100,
-                                          _client->getDBPlayer()->getName());
-
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
+                    auto player1 = new Player(_client->getDBPlayer()->getId(), 100,
+                                              _client->getDBPlayer()->getName());
                     gameScene->createPlayers(player1, LobbyLayer::getInstance()->_player2);
                 }
             }
@@ -455,4 +467,13 @@ void LobbyLayer::receiveGlobalStats(string message) {
 void LobbyLayer::receiveCountryStats(string message) {
     _playerCountryStatisticsBox->removeAllChildren();
     _playerCountryStatisticsBox->addChild(Views::getPlayerStatisticsView(message));
+}
+
+void LobbyLayer::joinLobby() {
+    _inviteBox->removeAllChildren();
+
+    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
+    _inviteBox->addChild(message);
+
+    _player2 = nullptr;
 }

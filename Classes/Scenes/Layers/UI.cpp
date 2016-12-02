@@ -46,8 +46,10 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     auto menu = Menu::create(item1, nullptr);
     this->addChild(menu);
 
-    this->addChild(player1->getPlayer());
-    this->bounds.push_back(player1->getPlayer()->getBoundingBox());
+    auto player1_view = player1->getPlayer();
+    player1_view->setPosition(10.f, 0.f);
+    this->addChild(player1_view);
+    this->bounds.push_back(player1_view->getBoundingBox());
 
     auto player2_view = player2->getPlayer();
     player2_view->setPosition(BattleScene::instance->visibleSize.width / 2 - 10.f, 0.f);

@@ -16,7 +16,7 @@ public:
 
     void createPlayers(Player* player1, Player* player2);
 
-    void receiveAction(float angle, float power);
+    void receiveAction(float angle, float power, int id);
 
     void setPlayer(int id);
 
@@ -43,6 +43,8 @@ protected:
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
     bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
+
+    void _onPopScene() override;
 
 };
 

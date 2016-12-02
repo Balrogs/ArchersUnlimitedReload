@@ -38,13 +38,14 @@ void DuelSceneMultiplayer::makeTurn(int id) {
         if (this->getPosition().x >= visibleSize.width / 2) {
             delay = 0.5f;
         }
-        _player = getHero(id);
+        auto player = getHero(id);
         auto action = Sequence::create(
-                MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+                MoveTo::create(delay, Vec2(-player->getPosition().x + visibleSize.width / 2, 0.f)),
                 CallFunc::create(
                         [&]() {
-                            UI::enableArrows(_player, true);
-                            this->_turnId = _player->getPlayer()->getId();
+                            if (player->getPlayer()->getId() == _player->getPlayer()->getId())
+                                UI::enableArrows(player, true);
+                            this->_turnId = player->getPlayer()->getId();
                         }
                 ),
                 NULL
@@ -73,14 +74,15 @@ bool DuelSceneMultiplayer::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d
     return true;
 }
 
-void DuelSceneMultiplayer::receiveAction(float angle, float power) {
-    _player->attack(angle, power);
-    _client->action(angle, power, 1);
+void DuelSceneMultiplayer::receiveAction(float angle, float power, int id) {
+    if (id != _client->getDBPlayer()->getId()) {
+        _player->attack(angle, power);
+    }
 }
 
 void DuelSceneMultiplayer::setPlayer(int id) {
     switch (id) {
-        case 1:{
+        case 1: {
             _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, _player1);
             _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, _player2);
             _player = _hero1;
@@ -130,3 +132,7 @@ void DuelSceneMultiplayer::abort() {
     Director::getInstance()->popScene();
 }
 
+void DuelSceneMultiplayer::_onPopScene() {
+    _client->gameOver(-1, 1);
+    BattleScene::_onPopScene();
+}

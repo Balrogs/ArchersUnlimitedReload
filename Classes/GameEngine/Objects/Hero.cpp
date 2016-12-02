@@ -240,7 +240,7 @@ void Hero::switchWeapon(int dest) {
 
 void Hero::_fire(Arrow *arrow) {
     UI::enableArrows(this, false);
-    this->getPlayer()->addShotsCount();
+    //this->getPlayer()->addShotsCount();
     _saveAim();
     BattleScene::instance->getBulletPull()->addChild(arrow);
     _arrowDisplay->setVisible(false);

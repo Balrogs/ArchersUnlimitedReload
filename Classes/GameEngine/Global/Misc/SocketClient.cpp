@@ -122,8 +122,8 @@ void SocketClient::receive() {
 void SocketClient::login() {
     char x[256];
     sprintf(x,
-            "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
+            "{\"name\":\"%s\",\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
+            _player->getName().c_str(), _player->getPassword().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -153,12 +153,40 @@ void SocketClient::enterRoom() {
     t.detach();
 }
 
+void SocketClient::enterLobby() {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":40}",
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
 void SocketClient::denyInvite() {
     char x[256];
     sprintf(x,
             "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":41}",
             cocos2d::StringUtils::toString(_player->getId()).c_str(),
             cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
+//{"winner_id":0, "room_id":1,"v_type":0,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"} ,"code":7}
+void SocketClient::gameOver(int winner_id, int v_type) {
+    char x[256];
+    sprintf(x,
+            "{\"winner_id\":%s, \"room_id\":%s,\"v_type\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"} ,\"code\":7}",
+            cocos2d::StringUtils::toString(winner_id).c_str(),
+            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
+            cocos2d::StringUtils::toString(v_type).c_str(),
             cocos2d::StringUtils::toString(_player->getId()).c_str(),
             _player->getToken().c_str());
     string message = x;
@@ -183,7 +211,7 @@ void SocketClient::action(float angle, float power, int type) {
 
 }
 
-void SocketClient::invite(int playerId, int roomId) {
+void SocketClient::invite(int playerId) {
     char x[256];
     sprintf(x,
             "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
@@ -196,8 +224,9 @@ void SocketClient::invite(int playerId, int roomId) {
 void SocketClient::addToFriends(int friendId) {
     char x[256];
     sprintf(x,
-            "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
+            "{\"id\":%s, \"friend_id\":%s, \"code\":11}",
+            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            cocos2d::StringUtils::toString(friendId).c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -306,6 +335,12 @@ void SocketClient::_parseError(int error) {
             });
         }
             break;
+        case -700: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                LobbyLayer::getInstance()->joinLobby();
+            });
+        }
+            break;
         default :
             break;
     }
@@ -343,7 +378,7 @@ void SocketClient::_parseReply(string reply) {
                 auto id = JSONParser::parseIntAnswer(reply, "id");
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                     if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance))
-                        gameScene->receiveAction(angle, power);
+                        gameScene->receiveAction(angle, power, id);
                 });
             }
                 return;
@@ -357,9 +392,9 @@ void SocketClient::_parseReply(string reply) {
                 break;
         }
         if (!JSONParser::parseAnswer(reply, "player_name").empty()) {
-            _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 LobbyLayer::getInstance()->receiveInvite(reply);
+                _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
             });
         }
     }
@@ -370,12 +405,13 @@ DBPlayer::DBPlayer() {
 
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
-    _id = def->getIntegerForKey("ID", 0);
-    _name = def->getStringForKey("NAME", "igorexa");
-    _password = def->getStringForKey("PASSWORD", "12345");
+    _id = def->getIntegerForKey("ID", -1);
+    _name = def->getStringForKey("NAME", "");
+    _password = def->getStringForKey("PASSWORD", "");
     _token = def->getStringForKey("TOKEN", "");
     _roomId = def->getIntegerForKey("ROOMID", -1);
     _country = def->getIntegerForKey("COUNTRY", -1);
+
 
     def->flush();
 }

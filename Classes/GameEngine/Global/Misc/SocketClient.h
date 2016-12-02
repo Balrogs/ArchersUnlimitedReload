@@ -74,16 +74,20 @@ public:
     void registerUser(string name, int country, string password);
     //{"player_name":"123","player_rank":1,"room_id":55,"token":{"id":-1,"token":"server"}}
     void enterRoom();
+
     void denyInvite();
+
+    void enterLobby();
     // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "arrow":"nikita lox", "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
     void action(float angle, float power, int type);
     // {"player_id":1, "room_id":1,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"},"code":4}
-    void invite(int playerId, int roomId);
+    void invite(int playerId);
     // {"id":0, "friend_id":1, "code":11}
     void addToFriends(int friendId);
     //{"s_type":3, "name":"some other username","code":9}
     void getPlayerInfo(int s_type, string playerName);
-
+    //{"winner_id":0, "room_id":1,"v_type":0,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"} ,"code":7}
+    void gameOver(int winner_id, int v_type);
 };
 
 
