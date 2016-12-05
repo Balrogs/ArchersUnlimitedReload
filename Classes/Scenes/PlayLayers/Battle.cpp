@@ -2,6 +2,8 @@
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
 #include <GameEngine/Objects/Environment/Ground.h>
+#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Variables.h>
 #include "Battle.h"
 #include "AppleBattle.h"
 #include "DuelScene.h"
@@ -96,6 +98,7 @@ bool BattleScene::init() {
         contactListener->onContactBegin = CC_CALLBACK_1(BattleScene::onContactBegin, this);
         this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+
     } else {
         assert(false);
     }
@@ -138,6 +141,8 @@ void BattleScene::_onPopScene() {
 }
 
 bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if (_isPaused)
+        return false;
     const auto start = touch->getStartLocation();
     if (this->ui->checkTouch(start)) {
         return false;
@@ -184,9 +189,26 @@ void BattleScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCo
     switch (keyCode) {
         case EventKeyboard::KeyCode::KEY_BREAK:
         case EventKeyboard::KeyCode::KEY_ESCAPE:
-        case EventKeyboard::KeyCode::KEY_BACKSPACE:
-            //TODO SHOW SHOW MESSAGE
-            _onPopScene();
+        case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+            auto popUp = this->ui->getChildByName("PopUp");
+            if (popUp == nullptr) {
+                _pause();
+                popUp = new PopUp("CONFIRM",
+                                  cocos2d::Label::createWithTTF("DO YOU WANT TO LEAVE THE GAME?", Variables::FONT_NAME,
+                                                                Variables::FONT_SIZE),
+                                  CallFunc::create([&](){
+                                      BattleScene::instance->_onPopScene();
+                                  }), NULL
+                );
+                popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+                this->ui->addChild(popUp, 0, "PopUp");
+            } else {
+                _unPause();
+                popUp->removeFromParent();
+            }
+        }
+            break;
+        default:
             break;
     }
 }
@@ -233,23 +255,28 @@ void BattleScene::moveScene(float x) {
 
 
 void BattleScene::_pause() {
-    if (_isPaused) {
-        _unPause();
-        return;
-    }
     _isPaused = true;
-    for (auto bullet: _bullet_pull->getChildren()) {
-        bullet->pause();
+    Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(0);
+    _pauseRecursive(this, _isPaused);
+    this->resume();
+}
+
+void BattleScene::_pauseRecursive(Node *_node, bool _pause) {
+    if (_pause)
+        _node->pause();
+    else
+        _node->resume();
+
+    auto &children = _node->getChildren();
+    for (size_t i = 0; i < children.size(); i++) {
+        _pauseRecursive(children.at(i), _pause);
     }
-    this->pause();
 }
 
 void BattleScene::_unPause() {
     _isPaused = false;
-    for (auto bullet: _bullet_pull->getChildren()) {
-        bullet->resume();
-    }
-    this->resume();
+    Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(1);
+    _pauseRecursive(this, _isPaused);
 }
 
 

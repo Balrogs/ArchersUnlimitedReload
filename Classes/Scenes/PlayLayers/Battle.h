@@ -57,6 +57,8 @@ public:
 
     virtual void _unPause();
 
+    virtual void _onPopScene();
+
     Hero *_player;
 
     cocos2d::Vec2 getPlayerPos();
@@ -90,9 +92,9 @@ protected:
 
     virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
 
-    virtual void _onPopScene();
-
     virtual bool isGameOver();
+
+    void _pauseRecursive(cocos2d::Node *_node, bool _pause);
 };
 
 #endif // __BATTLE_H__

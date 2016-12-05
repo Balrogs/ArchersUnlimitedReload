@@ -29,3 +29,15 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
     node->getNodeToWorldTransform().transformPoint(&localPoint);
     return cocos2d::Vec2(localPoint.x, localPoint.y);
 }
+
+const std::string Variables::FONT_NAME = "arial.ttf";
+const float Variables::FONT_SIZE = 25.f;
+const float Variables::H_FONT_SIZE = 32.f;
+const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
+
+const std::string Variables::YES_BUTTON_PATH = "yes.png";
+const std::string Variables::NO_BUTTON_PATH = "no.png";
+const std::string Variables::BUTTON_PATH = "button.png";
+
+const std::string Variables::CLOSE_BUTTON_PATH = "close.png";
+

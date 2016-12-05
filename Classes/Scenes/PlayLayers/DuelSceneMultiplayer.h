@@ -36,8 +36,6 @@ protected:
 
     bool _isGamePaused;
 
-    SocketClient* _client;
-
     void initWorld() override;
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) override;

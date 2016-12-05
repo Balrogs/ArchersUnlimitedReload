@@ -21,13 +21,6 @@ void UI::initBattle(Size visibleSize, Hero *player) {
     this->addChild(b);
 
 
-    auto item1 = MenuItemFont::create("PAUSE", CC_CALLBACK_0(BattleScene::_pause, BattleScene::instance));
-
-    auto menu = Menu::create(item1, nullptr);
-    menu->alignItemsVertically();
-    menu->setPosition(Vec2(visibleSize.width - 50, 25));
-    this->addChild(menu);
-
     auto selector = new WeaponSelector(player);
     this->bounds.push_back(selector->getBoundingBox());
     this->addChild(selector);
@@ -40,11 +33,6 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
     this->addChild(b);
 
-    auto item1 = MenuItemFont::create("PAUSE", CC_CALLBACK_0(BattleScene::_pause, BattleScene::instance));
-    item1->setPosition(Vec2(visibleSize.width - 50, 25));
-
-    auto menu = Menu::create(item1, nullptr);
-    this->addChild(menu);
 
     auto player1_view = player1->getPlayer();
     player1_view->setPosition(10.f, 0.f);
@@ -69,13 +57,6 @@ void UI::initApple(Size visibleSize, Hero *player) {
 
     this->addChild(player->getPlayer());
     this->bounds.push_back(player->getPlayer()->getBoundingBox());
-
-    auto item1 = MenuItemFont::create("PAUSE", CC_CALLBACK_0(BattleScene::_pause, BattleScene::instance));
-
-    auto menu = Menu::create(item1, nullptr);
-    menu->alignItemsVertically();
-    menu->setPosition(Vec2(visibleSize.width - 50, 25));
-    this->addChild(menu);
 }
 
 bool UI::checkTouch(cocos2d::Vec2 touch) {

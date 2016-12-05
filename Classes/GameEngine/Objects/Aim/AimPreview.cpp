@@ -12,7 +12,6 @@ AimPreview::AimPreview(float scale, const cocos2d::Vec2 &position) {
     circle->drawSolidCircle(Vec2(0, 0), 5.f, 10, 10, Color4F::BLACK);
     this->addChild(circle);
     this->setPosition(position);
-    this->setColor(Color3B::BLUE);
     this->setScale(scale * BattleScene::instance->getGlobalScale());
 }
 

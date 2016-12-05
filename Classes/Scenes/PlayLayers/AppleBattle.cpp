@@ -1,6 +1,7 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Objects/Environment/Ground.h>
+#include <GameEngine/Global/Misc/PopUp.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;

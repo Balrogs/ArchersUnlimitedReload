@@ -6,7 +6,6 @@
 #include <GameEngine/Global/Misc/JSONParser.h>
 #include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
 #include "MainMenu.h"
-#include "Scenes/PlayLayers/Battle.h"
 
 USING_NS_CC;
 
@@ -20,10 +19,10 @@ Scene *MainMenu::createScene() {
 MainMenu::MainMenu() {
     // auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
     auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
-    auto item3 = MenuItemFont::create("Duel with bot", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
-    auto item4 = MenuItemFont::create("Duel 2P", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
-    auto item5 = MenuItemFont::create("Duel Multiplayer", CC_CALLBACK_0(MainMenu::onChangeLayer, this));
-    auto item6 = MenuItemFont::create("Quit", CC_CALLBACK_0(MainMenu::onQuit, this));
+    auto item3 = MenuItemFont::create("DUEL", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
+    auto item4 = MenuItemFont::create("DUEL 2 PLAYERS", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
+    auto item5 = MenuItemFont::create("MULTIPLAYER", CC_CALLBACK_0(MainMenu::onChangeLayer, this));
+    auto item6 = MenuItemFont::create("QUIT", CC_CALLBACK_0(MainMenu::onQuit, this));
 
     auto menu = Menu::create(item2, item3, item4, item5, item6, nullptr);
     menu->alignItemsVertically();
@@ -343,7 +342,7 @@ void LobbyLayer::onEnter() {
                 Director::getInstance()->pushScene(scene);
 
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
-                    auto player1 = new Player(_client->getDBPlayer()->getId(), 100,
+                    auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                               _client->getDBPlayer()->getName());
                     gameScene->createPlayers(player1, LobbyLayer::getInstance()->_player2);
                 }
@@ -411,7 +410,7 @@ void LobbyLayer::receiveInvite(string message) {
     _inviteBox->addChild(Views::getInviteView(message));
     auto name = JSONParser::parseAnswer(message, "player_name");
     auto id = JSONParser::parseIntAnswer(message, "player_id");
-    _player2 = new Player(id, 100, name);
+    _player2 = Player::create(id, 100, name);
     _client->getPlayerInfo(3, name);
 
 }

@@ -31,7 +31,7 @@ SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
     _address = "127.0.0.1";
-    _isConnected = _conn(_address, _port);
+    _isConnected = false;
     _player = new DBPlayer();
 }
 
@@ -351,7 +351,10 @@ bool SocketClient::connected() {
 }
 
 DBPlayer *SocketClient::getDBPlayer() {
-    return _player;
+    if (instance == nullptr) {
+        instance = new SocketClient();
+    }
+    return instance->_player;
 }
 
 void SocketClient::_parseReply(string reply) {
@@ -405,8 +408,8 @@ DBPlayer::DBPlayer() {
 
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
-    _id = def->getIntegerForKey("ID", -1);
-    _name = def->getStringForKey("NAME", "");
+    _id = def->getIntegerForKey("ID", 0);
+    _name = def->getStringForKey("NAME", "Player");
     _password = def->getStringForKey("PASSWORD", "");
     _token = def->getStringForKey("TOKEN", "");
     _roomId = def->getIntegerForKey("ROOMID", -1);

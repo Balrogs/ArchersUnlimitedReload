@@ -1,20 +1,6 @@
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 
-#define SCREEN_WIDTH_SD     627
-#define SCREEN_HEIGHT_SD    396
-#define SCREEN_WIDTH_HD     1254
-#define SCREEN_HEIGHT_HD    792
-#define SCREEN_WIDTH_RETINA 2508
-#define SCREEN_HEIGHT_RETINA 1584
-
-#define GAME_WIDTH_SD       528
-#define GAME_HEIGHT_SD      360
-#define GAME_WIDTH_HD       1056
-#define GAME_HEIGHT_HD      704
-#define GAME_WIDTH_RETINA   2112
-#define GAME_HEIGHT_RETINA  1408
-
 #include "cocos2d.h"
 
 /**

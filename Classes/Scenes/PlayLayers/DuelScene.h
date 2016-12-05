@@ -21,6 +21,7 @@ protected:
     Player *_player1;
     Player *_player2;
 
+    SocketClient* _client;
 
     void initWorld() override;
 

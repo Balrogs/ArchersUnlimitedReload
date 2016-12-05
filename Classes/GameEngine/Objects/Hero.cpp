@@ -4,7 +4,7 @@
 #include "Scenes/PlayLayers/Battle.h"
 #include "GameEngine/Global/Variables.h"
 
-Hero::Hero(float x_pos, float y_pos) : Hero(x_pos, y_pos, new Player(100, "HERO")) {
+Hero::Hero(float x_pos, float y_pos) : Hero(x_pos, y_pos, Player::create(100, "HERO")) {
 }
 
 Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 1),
@@ -242,7 +242,7 @@ void Hero::_fire(Arrow *arrow) {
     UI::enableArrows(this, false);
     //this->getPlayer()->addShotsCount();
     _saveAim();
-    BattleScene::instance->getBulletPull()->addChild(arrow);
+    BattleScene::instance->getBulletPull()->addChild(arrow,4);
     _arrowDisplay->setVisible(false);
     _state = IDLE;
     _aimPowerState = _shoulders->getAnimation().fadeIn(
@@ -375,7 +375,7 @@ DuelHero::DuelHero(float x_pos, float y_pos, Player* player): Hero(x_pos, y_pos,
 }
 
 
-DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
+DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, Player::create(100, name)) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
 }
@@ -409,7 +409,7 @@ void DuelHero::move(int dir) {
 
 
 
-AppleHero::AppleHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, new Player(100, name)) {
+AppleHero::AppleHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, Player::create(100, name)) {
     _weaponIndex = 0;
     WEAPON_LIST.push_back("Arrow");
 }

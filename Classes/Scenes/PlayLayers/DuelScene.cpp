@@ -9,8 +9,10 @@ void DuelScene::initWorld() {
 
     Ground *ground = new Ground(GROUND, visibleSize.width * 4);
     this->addChild(ground);
+    auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
+                              _client->getDBPlayer()->getName());
 
-    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, "HEROOOOOOOOOO");
+    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
 
     auto target = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, "BOT");
 

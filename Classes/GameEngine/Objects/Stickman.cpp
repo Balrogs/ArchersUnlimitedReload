@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, 1) {
-
+    _player =  Player::create(100, "BOT");
     _armature = BattleScene::instance->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
     _armature->removeSlot(_armature->getSlot("Shoulders"));

@@ -11,6 +11,7 @@
 class Player : public cocos2d::Node{
 
 protected:
+    Player();
 
     int _id;
     std::string _name;
@@ -26,8 +27,11 @@ protected:
     void updateView();
 
 public:
-    Player(int id, int hp, std::string name);
-    Player(int hp, std::string name);
+
+    static Player* create(int id, int hp, std::string name);
+    static Player* create(int hp, std::string name);
+
+    virtual bool init(int id, int hp, std::string name);
 
     void setHAlignment(cocos2d::TextHAlignment alignment);
 

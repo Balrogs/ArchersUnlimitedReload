@@ -25,6 +25,18 @@ public:
 
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node1,  cocos2d::Node *node2);
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node);
+
+
+    static const std::string FONT_NAME;
+    static const float FONT_SIZE;
+    static const float H_FONT_SIZE;
+    static const cocos2d::Color3B FONT_COLOR;
+
+    static const std::string YES_BUTTON_PATH;
+    static const std::string NO_BUTTON_PATH;
+
+    static const std::string BUTTON_PATH;
+    static const std::string CLOSE_BUTTON_PATH;
 };
 
 

@@ -1,6 +1,7 @@
 
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Objects/Environment/Ground.h>
+#include <GameEngine/Global/Misc/PopUp.h>
 #include "DuelSceneMultiplayer.h"
 
 USING_NS_CC;
@@ -128,8 +129,12 @@ void DuelSceneMultiplayer::resumeGame() {
 }
 
 void DuelSceneMultiplayer::abort() {
-    //TODO SHOW GAME ABORTED MESSAGE
-    Director::getInstance()->popScene();
+    this->addChild(
+            new PopUp("GAME OVER", cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", "arial.ttf", 20.f),
+                      CallFunc::create([&]() {
+                          BattleScene::_onPopScene();
+                      })
+            ), 10, "PopUp");
 }
 
 void DuelSceneMultiplayer::_onPopScene() {
