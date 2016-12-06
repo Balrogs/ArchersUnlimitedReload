@@ -2,6 +2,7 @@
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Variables.h>
 #include "DuelSceneMultiplayer.h"
 
 USING_NS_CC;
@@ -12,8 +13,6 @@ void DuelSceneMultiplayer::initWorld() {
 
     _client = SocketClient::getInstance();
 
-    Ground *ground = new Ground(GROUND, visibleSize.width * 4);
-    this->addChild(ground);
 }
 
 void DuelSceneMultiplayer::createPlayers(Player *player1, Player *player2) {
@@ -129,12 +128,9 @@ void DuelSceneMultiplayer::resumeGame() {
 }
 
 void DuelSceneMultiplayer::abort() {
-    this->addChild(
-            new PopUp("GAME OVER", cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", "arial.ttf", 20.f),
-                      CallFunc::create([&]() {
-                          BattleScene::_onPopScene();
-                      })
-            ), 10, "PopUp");
+    this->addChild(PopUp::create("GAME OVER",
+                                 cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", Variables::FONT_NAME,
+                                                               20.f)), 10, "PopUp");
 }
 
 void DuelSceneMultiplayer::_onPopScene() {

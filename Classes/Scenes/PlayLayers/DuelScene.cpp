@@ -7,8 +7,6 @@ USING_NS_CC;
 
 void DuelScene::initWorld() {
 
-    Ground *ground = new Ground(GROUND, visibleSize.width * 4);
-    this->addChild(ground);
     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                               _client->getDBPlayer()->getName());
 

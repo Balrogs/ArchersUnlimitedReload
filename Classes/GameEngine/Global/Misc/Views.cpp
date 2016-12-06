@@ -2,6 +2,7 @@
 // Created by igor on 24.11.16.
 //
 
+#include <GameEngine/Global/Variables.h>
 #include "Views.h"
 #include "JSONParser.h"
 
@@ -40,18 +41,18 @@ Node *Views::getPlayerInfoView(std::string message) {
 
 
     //   auto player_view = cocos2d::Label::createWithTTF("Name : " + name, "arial.ttf", 25.f);
-    auto name_view = cocos2d::Label::createWithTTF("Name : " + name, "arial.ttf", 25.f);
-    auto date_view = cocos2d::Label::createWithTTF("Registration date : " + date, "arial.ttf", 25.f);
-    auto country_view = cocos2d::Label::createWithTTF("Country : " + to_string(country), "arial.ttf", 25.f);
+    auto name_view = cocos2d::Label::createWithTTF("Name : " + name, Variables::FONT_NAME, 25.f);
+    auto date_view = cocos2d::Label::createWithTTF("Registration date : " + date, Variables::FONT_NAME, 25.f);
+    auto country_view = cocos2d::Label::createWithTTF("Country : " + to_string(country),Variables::FONT_NAME, 25.f);
 
-    auto rank_view = cocos2d::Label::createWithTTF("Rank : " + to_string(rank), "arial.ttf", 25.f);
-    auto global_rank = cocos2d::Label::createWithTTF("Global : " + to_string(g_rank), "arial.ttf", 25.f);
-    auto country_rank = cocos2d::Label::createWithTTF("Country rank : " + to_string(c_rank), "arial.ttf", 25.f);
+    auto rank_view = cocos2d::Label::createWithTTF("Rank : " + to_string(rank), Variables::FONT_NAME, 25.f);
+    auto global_rank = cocos2d::Label::createWithTTF("Global : " + to_string(g_rank), Variables::FONT_NAME, 25.f);
+    auto country_rank = cocos2d::Label::createWithTTF("Country rank : " + to_string(c_rank), Variables::FONT_NAME, 25.f);
 
 
-    auto battles_loose = cocos2d::Label::createWithTTF("Loose : " + to_string(b_loose), "arial.ttf", 25.f);
-    auto battles_win = cocos2d::Label::createWithTTF("Win : " + to_string(b_win), "arial.ttf", 25.f);
-    auto battles_count = cocos2d::Label::createWithTTF("Total : " + to_string(b_count), "arial.ttf", 25.f);
+    auto battles_loose = cocos2d::Label::createWithTTF("Loose : " + to_string(b_loose), Variables::FONT_NAME, 25.f);
+    auto battles_win = cocos2d::Label::createWithTTF("Win : " + to_string(b_win), Variables::FONT_NAME, 25.f);
+    auto battles_count = cocos2d::Label::createWithTTF("Total : " + to_string(b_count), Variables::FONT_NAME, 25.f);
 
     int x = 0;
     int y = 0;
@@ -91,8 +92,8 @@ Node *Views::getInviteView(std::string message) {
     auto name = JSONParser::parseAnswer(message, "player_name");
     auto rank = JSONParser::parseIntAnswer(message, "player_rank");
 
-    auto name_view = cocos2d::Label::createWithTTF("Name : " + name, "arial.ttf", 25.f);
-    auto rank_view = cocos2d::Label::createWithTTF("Rank : " + to_string(rank), "arial.ttf", 25.f);
+    auto name_view = cocos2d::Label::createWithTTF("Name : " + name, Variables::FONT_NAME, 25.f);
+    auto rank_view = cocos2d::Label::createWithTTF("Rank : " + to_string(rank), Variables::FONT_NAME, 25.f);
     rank_view->setPosition(name_view->getPosition().x, name_view->getPosition().y - 30.f);
     view->addChild(name_view);
     view->addChild(rank_view);

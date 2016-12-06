@@ -10,7 +10,7 @@
 #include "cocos2d.h"
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
 #include "Scenes/Layers/UI.h"
-
+#include "Scenes/Layers/BackgroundLayer.h"
 
 class BattleScene : public cocos2d::LayerColor {
 public:
@@ -69,6 +69,7 @@ protected:
 
     float GLOBAL_SCALE;
     UI *ui;
+    BackgroundLayer *bg;
     bool _isPaused;
 
     std::vector<Brain *> _brains;

@@ -1,6 +1,8 @@
 #include <Scenes/PlayLayers/Battle.h>
+#include <GameEngine/Global/Variables.h>
 
 USING_NS_CC;
+
 Player::Player() {
 
 }
@@ -33,11 +35,11 @@ bool Player::init(int id, int hp, std::string name) {
 
     auto size = cocos2d::Director::getInstance()->getVisibleSize();
 
-    _name_view = cocos2d::Label::createWithTTF(_name.c_str(), "arial.ttf", 32.f, cocos2d::Size(size.width / 2, 0.f));
+    _name_view = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f, cocos2d::Size(size.width / 2, 0.f));
 
-    _hp_view = cocos2d::Label::createWithTTF("", "arial.ttf", 32.f, cocos2d::Size(size.width / 2, 0.f));
+    _hp_view = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 32.f, cocos2d::Size(size.width / 2, 0.f));
 
-    _shots_view = cocos2d::Label::createWithTTF("", "arial.ttf", 32.f, cocos2d::Size(size.width / 2, 0.f));
+    _shots_view = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 32.f, cocos2d::Size(size.width / 2, 0.f));
 
     _name_view->setPosition(size.width / 4, size.height - 50.f);
     _hp_view->setPosition(size.width / 4, size.height - 80.f);

@@ -12,10 +12,6 @@ void AppleBattle::initWorld() {
 
     _isTargetHitted = false;
 
-    Ground *ground = new Ground(GROUND, visibleSize.width);
-
-    this->addChild(ground);
-
     initObjects();
 
     ui->initApple(visibleSize, _player);

@@ -5,34 +5,21 @@
 #include <GameEngine/Global/Misc/Views.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
 #include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
+#include <GameEngine/Global/Variables.h>
+#include <GameEngine/Global/Misc/PopUp.h>
+#include <ui/UIDeprecated.h>
 #include "MainMenu.h"
 
 USING_NS_CC;
 
 Scene *MainMenu::createScene() {
     auto scene = Scene::create();
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
     MainMenu *layer = MainMenu::create();
     scene->addChild(layer);
     return scene;
 }
 
-MainMenu::MainMenu() {
-    // auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
-    auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
-    auto item3 = MenuItemFont::create("DUEL", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
-    auto item4 = MenuItemFont::create("DUEL 2 PLAYERS", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
-    auto item5 = MenuItemFont::create("MULTIPLAYER", CC_CALLBACK_0(MainMenu::onChangeLayer, this));
-    auto item6 = MenuItemFont::create("QUIT", CC_CALLBACK_0(MainMenu::onQuit, this));
-
-    auto menu = Menu::create(item2, item3, item4, item5, item6, nullptr);
-    menu->alignItemsVertically();
-
-    this->addChild(menu);
-}
-
-MainMenu::~MainMenu() {
-
-}
 
 void MainMenu::onEnter() {
     Layer::onEnter();
@@ -49,14 +36,54 @@ void MainMenu::onChangeLayer() {
     Director::getInstance()->pushScene(scene);
 }
 
-void MainMenu::onQuit() {
-    Director::getInstance()->end();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
+bool MainMenu::init() {
+    if (!Layer::init()) {
+        return false;
+    }
+    // auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
+    auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
+    auto item3 = MenuItemFont::create("DUEL", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
+    auto item4 = MenuItemFont::create("DUEL 2 PLAYERS", CC_CALLBACK_0(MainMenu::onPushScene, this, 3));
+    auto item5 = MenuItemFont::create("MULTIPLAYER", CC_CALLBACK_0(MainMenu::onChangeLayer, this));
 
+    auto menu = Menu::create(item2, item3, item4, item5, nullptr);
+    menu->alignItemsVertically();
+
+    this->addChild(menu);
+
+    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                auto popUp = this->getChildByName("PopUp");
+                if (popUp == nullptr) {
+                   // this->pause();
+                    auto label = cocos2d::Label::createWithTTF("EXIT THE GAME?", Variables::FONT_NAME,
+                                                               Variables::FONT_SIZE);
+                    label->setColor(cocos2d::Color3B::BLACK);
+                    popUp = MainMenuPopUp::create("ARE YOU SURE?",
+                                                  label,
+                                                  true);
+                    auto visibleSize = Director::getInstance()->getVisibleSize();
+                    popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+                    this->addChild(popUp, 0, "PopUp");
+                } else {
+                    popUp->removeFromParent();
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
+    return true;
 }
-
 
 MultiplayerMainMenu *MultiplayerMainMenu::_instance = nullptr;
 
@@ -82,62 +109,92 @@ void MultiplayerMainMenu::onEnter() {
     Node::onEnter();
 
     this->removeAllChildren();
+    this->getEventDispatcher()->removeEventListenersForTarget(this);
 
     _client = SocketClient::getInstance();
 
     auto item1 = MenuItemFont::create("AutoLogin", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 1));
     auto item2 = MenuItemFont::create("Login", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 3));
     auto item4 = MenuItemFont::create("Register", CC_CALLBACK_0(MultiplayerMainMenu::onPushScene, this, 2));
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_0(MultiplayerMainMenu::onQuit, this));
 
 
     auto editBoxSize = Size(300.f, 50.f);
     auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    std::string pNormalSprite = "bar.png";
-    _editName = cocos2d::ui::EditBox::create(editBoxSize, ui::Scale9Sprite::create(pNormalSprite));
+    _editName = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
     _editName->setPosition(
             Vec2(visibleOrigin.x + visibleSize.width / 2, visibleOrigin.y + visibleSize.height * 5 / 8));
-    _editName->setFontName("Paint Boy");
+    _editName->setFontName(Variables::FONT_NAME.c_str());
+    _editName->setFontColor(Color3B::BLACK);
     _editName->setFontSize(25);
     _editName->setMaxLength(12);
-    _editName->setPlaceHolder("Name:");
-    _editName->setPlaceholderFontColor(Color3B::WHITE);
-    _editName->setMaxLength(8);
+    _editName->setPlaceHolder("NAME:");
+    _editName->setPlaceholderFontColor(Color3B::BLACK);
     _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
+    _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
 
-    _editPassword = ui::EditBox::create(editBoxSize, "bar.png");
+    _editPassword = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
     _editPassword->setPosition(Vec2(_editName->getPosition().x, _editName->getPosition().y - 60.f));
-    _editPassword->setFont("American Typewriter", 25);
-    _editPassword->setPlaceHolder("Password:");
+    _editPassword->setFontName(Variables::FONT_NAME.c_str());
+    _editPassword->setFontColor(Color3B::BLACK);
+    _editPassword->setFontSize(25);
     _editPassword->setMaxLength(12);
+    _editPassword->setPlaceHolder("PASSWORD:");
+    _editPassword->setPlaceholderFontColor(Color3B::BLACK);
     _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
     _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
 
-    _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
+    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 20.f);
     _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, _editPassword->getPosition().y - 35.f));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
+    auto backButton = cocos2d::ui::Button::create();
+    backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
+                             Variables::BACK_BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    backButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    this->addChild(backButton);
+
+    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
     if (_client->connected()) {
 
         this->addChild(_editName);
         this->addChild(_editPassword);
 
-        auto menu = Menu::create(item1, item2, item4, item6, nullptr);
+        auto menu = Menu::create(item1, item2, item4, nullptr);
         menu->alignItemsVertically();
         menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 150);
         this->addChild(menu);
 
     } else {
-        _errorMessage->setString("Can't connect to the server...");
-
-        auto menu = Menu::create(item6, nullptr);
-        menu->alignItemsVertically();
-        menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 150);
-        this->addChild(menu);
+        //TODO SHOW CONNECTION ERROR POPUP
     }
 }
 
@@ -181,7 +238,6 @@ void MultiplayerMainMenu::onError(string message) {
 void MultiplayerMainMenu::update(float dt) {
     if (!_client->connected()) {
         //TODO show connection error message
-        onQuit();
     }
 }
 
@@ -192,57 +248,92 @@ RegisterMenu::RegisterMenu() {
     auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    std::string pNormalSprite = "bar.png";
-    _editName = cocos2d::ui::EditBox::create(editBoxSize, ui::Scale9Sprite::create(pNormalSprite));
+    _editName = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
     _editName->setPosition(Vec2(visibleOrigin.x + visibleSize.width / 2, visibleOrigin.y + visibleSize.height * 5 / 8));
-    _editName->setFontName("Paint Boy");
+    _editName->setFontName(Variables::FONT_NAME.c_str());
+    _editName->setFontColor(Color3B::BLACK);
     _editName->setFontSize(25);
     _editName->setMaxLength(12);
-    _editName->setPlaceHolder("Name:");
-    _editName->setPlaceholderFontColor(Color3B::WHITE);
-    _editName->setMaxLength(8);
+    _editName->setPlaceHolder("NAME:");
+    _editName->setPlaceholderFontColor(Color3B::BLACK);
     _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
+    _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
     this->addChild(_editName);
 
-    _editPassword = ui::EditBox::create(editBoxSize, "bar.png");
+    _editPassword = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
     _editPassword->setPosition(Vec2(_editName->getPosition().x, _editName->getPosition().y - 60.f));
-    _editPassword->setFont("American Typewriter", 25);
-    _editPassword->setPlaceHolder("Password:");
+    _editPassword->setFontName(Variables::FONT_NAME.c_str());
+    _editPassword->setFontColor(Color3B::BLACK);
+    _editPassword->setFontSize(25);
     _editPassword->setMaxLength(12);
+    _editPassword->setPlaceHolder("PASSWORD:");
+    _editPassword->setPlaceholderFontColor(Color3B::BLACK);
     _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
     _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
     this->addChild(_editPassword);
 
-    _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
+    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 20.f);
     _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, _editPassword->getPosition().y - 35.f));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
-    auto item4 = MenuItemFont::create("Register", CC_CALLBACK_0(RegisterMenu::onPushScene, this, 2));
-    auto item6 = MenuItemFont::create("Back", CC_CALLBACK_0(RegisterMenu::onQuit, this));
+    auto acceptButton = cocos2d::ui::Button::create();
+    acceptButton->loadTextures(Variables::BUTTON_PATH, Variables::PRESSED_BUTTON_PATH,
+                               Variables::BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
 
-    auto menu = Menu::create(item4, item6, nullptr);
-    menu->alignItemsVertically();
-    menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 100);
-    _client = SocketClient::getInstance();
-    this->addChild(menu);
-}
-
-void RegisterMenu::onPushScene(int id) {
-    switch (id) {
-        case 2: {
-            auto name = string(_editName->getText());
-            auto password = string(_editPassword->getText());
-            if (!name.empty() && !password.empty()) {
-                _client->registerUser(name, 1, password);
-            } else {
-                _errorMessage->setString("Please input your name and password.");
+    acceptButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                auto name = string(_editName->getText());
+                auto password = string(_editPassword->getText());
+                if (!name.empty() && !password.empty()) {
+                    _client->registerUser(name, 1, password);
+                } else {
+                    _errorMessage->setString("Please input your name and password.");
+                }
             }
+                break;
+            default:
+                break;
         }
-            break;
-        default:
-            break;
-    }
+    });
+    acceptButton->setPosition(Vec2(visibleSize.width / 2, _errorMessage->getPosition().y - 100));
+    this->addChild(acceptButton);
+
+    _client = SocketClient::getInstance();
+
+    auto backButton = cocos2d::ui::Button::create();
+    backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
+                             Variables::BACK_BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    backButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    this->addChild(backButton);
+
+    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 }
 
 void RegisterMenu::onQuit() {
@@ -275,11 +366,43 @@ void LobbyLayer::onEnter() {
     Node::onEnter();
 
     this->removeAllChildren();
+    this->getEventDispatcher()->removeEventListenersForTarget(this);
 
     _client = SocketClient::getInstance();
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
+    auto backButton = cocos2d::ui::Button::create();
+    backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
+                             Variables::BACK_BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
 
+    backButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    this->addChild(backButton);
+
+    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
     _moreInfoBox = Node::create();
     _moreInfoBox->setPosition(visibleSize.width / 2 + 200.f, visibleSize.height * 5 / 8);
@@ -287,18 +410,16 @@ void LobbyLayer::onEnter() {
     this->addChild(_moreInfoBox);
 
     _playerInfoBox = Node::create();
-    _playerInfoBox->setPosition(30.f, visibleSize.height - 30.f);
+    _playerInfoBox->setPosition(150.f, visibleSize.height - 150.f);
     this->addChild(_playerInfoBox);
 
     _inviteBox = Node::create();
-    _inviteBox->setPosition(visibleSize.width / 2, visibleSize.height - 30.f);
+    _inviteBox->setPosition(visibleSize.width - 150.f, visibleSize.height - 30.f);
     this->addChild(_inviteBox);
 
-    _findPlayerButton = cocos2d::ui::Button::create("bar.png");
-    _findPlayerButton->setScale(0.5f);
-    _findPlayerButton->setTitleFontSize(32);
-    _findPlayerButton->setTitleColor(Color3B::WHITE);
-    _findPlayerButton->setTitleText("FIND PLAYER");
+    _findPlayerButton = cocos2d::ui::Button::create();
+    _findPlayerButton->loadTextures(Variables::FIND_BUTTON, Variables::FIND_PRESSED_BUTTON,
+                                    Variables::FIND_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
 
     _findPlayerButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
@@ -320,20 +441,17 @@ void LobbyLayer::onEnter() {
     _playerCountryStatisticsBox->setPosition(visibleSize.width - 200.f, visibleSize.height - 10.f);
     this->addChild(_playerCountryStatisticsBox);
 
-    _errorMessage = cocos2d::Label::createWithTTF("", "arial.ttf", 20.f);
+    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 20.f);
     _errorMessage->setPosition(cocos2d::Vec2(_inviteBox->getPosition().x, _inviteBox->getPosition().y - 35.f));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
     _player2 = nullptr;
 
-    _acceptButton = cocos2d::ui::Button::create("bar.png");
-    _acceptButton->setScale(0.5f);
-    _acceptButton->setTitleFontSize(32);
-    _acceptButton->setTitleColor(Color3B::WHITE);
-    _acceptButton->setTitleText("ACCEPT");
-
-    _acceptButton->setPosition(cocos2d::Vec2(_errorMessage->getPosition().x, _errorMessage->getPosition().y - 35.f));
+    _acceptButton = cocos2d::ui::Button::create();
+    _acceptButton->loadTextures(Variables::BUTTON_PATH, Variables::PRESSED_BUTTON_PATH,
+                                Variables::BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
+    _acceptButton->setPosition(cocos2d::Vec2(_errorMessage->getPosition().x - 50.f, _errorMessage->getPosition().y - 35.f));
     _acceptButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
@@ -343,7 +461,7 @@ void LobbyLayer::onEnter() {
 
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
                     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
-                                              _client->getDBPlayer()->getName());
+                                                  _client->getDBPlayer()->getName());
                     gameScene->createPlayers(player1, LobbyLayer::getInstance()->_player2);
                 }
             }
@@ -354,13 +472,10 @@ void LobbyLayer::onEnter() {
     });
     this->addChild(_acceptButton);
 
-    _denyButton = cocos2d::ui::Button::create("bar.png");
-    _denyButton->setScale(0.5f);
-    _denyButton->setTitleFontSize(32);
-    _denyButton->setTitleColor(Color3B::WHITE);
-    _denyButton->setTitleText("DENY");
-
-    _denyButton->setPosition(cocos2d::Vec2(_acceptButton->getPosition().x, _acceptButton->getPosition().y - 35.f));
+    _denyButton = cocos2d::ui::Button::create();
+    _denyButton->loadTextures(Variables::CANCEL_BUTTON, Variables::CANCEL_PRESSED_BUTTON, Variables::CANCEL_BUTTON,
+                              ui::Widget::TextureResType::PLIST);
+    _denyButton->setPosition(cocos2d::Vec2(_acceptButton->getPosition().x + 200.f, _acceptButton->getPosition().y));
     _denyButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
@@ -384,14 +499,6 @@ void LobbyLayer::onEnter() {
         }
     });
     this->addChild(_denyButton);
-
-    auto quit = MenuItemFont::create("Back", CC_CALLBACK_0(LobbyLayer::onQuit, this));
-
-    auto menu = Menu::create(quit, nullptr);
-    menu->alignItemsVertically();
-    menu->setPosition(visibleSize.width / 2, _denyButton->getPosition().y - 100);
-    this->addChild(menu);
-
 
     _acceptButton->setEnabled(false);
     _acceptButton->setVisible(false);
@@ -432,11 +539,10 @@ void LobbyLayer::receivePlayerInfo(string message) {
         info->setVisible(false);
 
         _moreInfoBox->addChild(info, 1, "info");
-        auto moreInfoButton = ui::Button::create("bar.png");
-        moreInfoButton->setTitleText("more info");
-        moreInfoButton->setTitleFontSize(25);
-        moreInfoButton->setTitleColor(Color3B::WHITE);
-        moreInfoButton->setScale(0.5f);
+        auto moreInfoButton = ui::Button::create();
+        moreInfoButton->loadTextures(Variables::MORE_INFO_BUTTON, Variables::MORE_INFO_PRESSED_BUTTON,
+                                     Variables::MORE_INFO_BUTTON,
+                                     ui::Widget::TextureResType::PLIST);
         moreInfoButton->addTouchEventListener([&](Ref *sender, ui::Widget::TouchEventType type) {
             switch (type) {
                 case ui::Widget::TouchEventType::ENDED: {
@@ -471,7 +577,7 @@ void LobbyLayer::receiveCountryStats(string message) {
 void LobbyLayer::joinLobby() {
     _inviteBox->removeAllChildren();
 
-    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", "arial.ttf", 25.f);
+    auto message = cocos2d::Label::createWithTTF("Waiting for opponent...", Variables::FONT_NAME, 25.f);
     _inviteBox->addChild(message);
 
     _player2 = nullptr;

@@ -37,6 +37,20 @@ public:
 
     static const std::string BUTTON_PATH;
     static const std::string CLOSE_BUTTON_PATH;
+    static const std::string YES_PRESSED_BUTTON_PATH;
+    static const std::string NO_PRESSED_BUTTON_PATH;
+    static const std::string PRESSED_BUTTON_PATH;
+    static const std::string CLOSE_PRESSED_BUTTON_PATH;
+    static const std::string BACK_PRESSED_BUTTON_PATH;
+    static const std::string BACK_BUTTON_PATH;
+    static const std::string CANCEL_BUTTON;
+    static const std::string CANCEL_PRESSED_BUTTON;
+    static const std::string FIND_BUTTON;
+    static const std::string FIND_PRESSED_BUTTON;
+    static const std::string MORE_INFO_BUTTON;
+    static const std::string MORE_INFO_PRESSED_BUTTON;
+
+    static const std::string BAR;
 };
 
 

@@ -11,15 +11,9 @@ UI::~UI() {}
 
 bool UI::init() {
     return cocos2d::LayerColor::init();
-
 }
 
 void UI::initBattle(Size visibleSize, Hero *player) {
-    auto b = Sprite::create("0.png");
-    b->setScale(1);
-    b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-    this->addChild(b);
-
 
     auto selector = new WeaponSelector(player);
     this->bounds.push_back(selector->getBoundingBox());
@@ -27,12 +21,6 @@ void UI::initBattle(Size visibleSize, Hero *player) {
 }
 
 void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
-
-    auto b = Sprite::create("0.png");
-    b->setScale(1);
-    b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-    this->addChild(b);
-
 
     auto player1_view = player1->getPlayer();
     player1_view->setPosition(10.f, 0.f);
@@ -50,10 +38,6 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
 
 
 void UI::initApple(Size visibleSize, Hero *player) {
-    auto b = Sprite::create("0.png");
-    b->setScale(1);
-    b->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-    this->addChild(b);
 
     this->addChild(player->getPlayer());
     this->bounds.push_back(player->getPlayer()->getBoundingBox());
@@ -81,11 +65,11 @@ void UI::enableArrows(Hero *player, bool enable) {
 
 void UI::addMoveArrows(Hero *player) {
     auto left_arrow = cocos2d::ui::Button::create();
-    left_arrow->loadTextures("walk arrow.png", "walk arrow_pressed.png", "walk arrow.png",
+    left_arrow->loadTextures("move_arrow.png", "move_arrow_pressed.png", "move_arrow.png",
                              cocos2d::ui::Widget::TextureResType::PLIST);
 
     auto right_arrow = cocos2d::ui::Button::create();
-    right_arrow->loadTextures("walk arrow.png", "walk arrow_pressed.png", "walk arrow.png",
+    right_arrow->loadTextures("move_arrow.png", "move_arrow_pressed.png", "move_arrow.png",
                               cocos2d::ui::Widget::TextureResType::PLIST);
 
 

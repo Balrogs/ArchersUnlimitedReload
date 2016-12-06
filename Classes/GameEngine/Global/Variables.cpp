@@ -30,14 +30,35 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
     return cocos2d::Vec2(localPoint.x, localPoint.y);
 }
 
-const std::string Variables::FONT_NAME = "arial.ttf";
+const std::string Variables::FONT_NAME = "Mechanical.ttf";
 const float Variables::FONT_SIZE = 25.f;
 const float Variables::H_FONT_SIZE = 32.f;
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
 
 const std::string Variables::YES_BUTTON_PATH = "yes.png";
+const std::string Variables::YES_PRESSED_BUTTON_PATH = "yes_pressed.png";
+
 const std::string Variables::NO_BUTTON_PATH = "no.png";
-const std::string Variables::BUTTON_PATH = "button.png";
+const std::string Variables::NO_PRESSED_BUTTON_PATH = "no_pressed.png";
+
+const std::string Variables::BUTTON_PATH = "ok.png";
+const std::string Variables::PRESSED_BUTTON_PATH = "ok_pressed.png";
 
 const std::string Variables::CLOSE_BUTTON_PATH = "close.png";
+const std::string Variables::CLOSE_PRESSED_BUTTON_PATH = "close_pressed.png";
+
+const std::string Variables::BACK_PRESSED_BUTTON_PATH = "back_button_pressed.png";
+const std::string Variables::BACK_BUTTON_PATH = "back_button.png";
+
+const std::string Variables::CANCEL_BUTTON = "cancel.png";
+const std::string Variables::CANCEL_PRESSED_BUTTON = "cancel_pressed.png";
+
+const std::string Variables::FIND_BUTTON = "search.png";
+const std::string Variables::FIND_PRESSED_BUTTON = "search_pressed.png";
+
+const std::string Variables::MORE_INFO_BUTTON = "drop_list.png";
+const std::string Variables::MORE_INFO_PRESSED_BUTTON = "drop_list_pressed.png";
+
+const std::string Variables::BAR = "grey_button06.png";
+
 

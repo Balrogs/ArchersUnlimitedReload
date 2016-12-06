@@ -11,7 +11,7 @@ SocketClient *SocketClient::getInstance() {
     if (instance == nullptr) {
         instance = new SocketClient();
         if (!instance->connected()) {
-            instance->_conn(instance->_address, instance->_port);
+            instance->_isConnected = instance->_conn(instance->_address, instance->_port);
         }
     }
 

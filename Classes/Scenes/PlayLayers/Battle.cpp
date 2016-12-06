@@ -1,9 +1,9 @@
 #include <GameEngine/Objects/Stickman.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
-#include <GameEngine/Objects/Environment/Ground.h>
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <GameEngine/Global/Variables.h>
+#include <Scenes/Layers/BackgroundLayer.h>
 #include "Battle.h"
 #include "AppleBattle.h"
 #include "DuelScene.h"
@@ -37,10 +37,15 @@ Scene *BattleScene::createScene(int type) {
 
     UI *hud = UI::create();
 
+    int id = RandomHelper::random_int(1, 5);
+    BackgroundLayer *bg = BackgroundLayer::create(id);
+
+    scene->addChild(bg, 2);
     scene->addChild(layer, 3);
-    scene->addChild(hud, 2);
+    scene->addChild(hud, 4);
 
     layer->ui = hud;
+    layer->bg = bg;
 
     layer->initWorld();
 
@@ -72,8 +77,6 @@ bool BattleScene::init() {
 
     const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
     factory.loadTextureAtlasData("texture.json");
-
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
 
 
     if (dragonBonesData) {
@@ -193,13 +196,12 @@ void BattleScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCo
             auto popUp = this->ui->getChildByName("PopUp");
             if (popUp == nullptr) {
                 _pause();
-                popUp = new PopUp("CONFIRM",
-                                  cocos2d::Label::createWithTTF("DO YOU WANT TO LEAVE THE GAME?", Variables::FONT_NAME,
-                                                                Variables::FONT_SIZE),
-                                  CallFunc::create([&](){
-                                      BattleScene::instance->_onPopScene();
-                                  }), NULL
-                );
+                auto label = cocos2d::Label::createWithTTF("DO YOU WANT TO LEAVE THE GAME?", Variables::FONT_NAME,
+                                                           Variables::FONT_SIZE);
+                label->setColor(cocos2d::Color3B::BLACK);
+                popUp = PopUp::create("CONFIRM",
+                                      label,
+                                      true);
                 popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
                 this->ui->addChild(popUp, 0, "PopUp");
             } else {
@@ -231,10 +233,6 @@ bool BattleScene::onContactBegin(cocos2d::PhysicsContact &contact) {
 
 void BattleScene::initWorld() {
 
-    Ground *ground = new Ground(GROUND, visibleSize.width);
-
-    this->addChild(ground);
-
     _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f);
 
     ui->initBattle(visibleSize, _player);
@@ -251,6 +249,7 @@ float BattleScene::getGlobalScale() {
 void BattleScene::moveScene(float x) {
     auto current_pos = this->getPosition();
     this->setPosition(Vec2(current_pos.x - x, current_pos.y));
+    this->bg->move(x);
 }
 
 

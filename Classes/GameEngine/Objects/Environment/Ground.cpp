@@ -13,7 +13,7 @@ Ground::Ground(float y_pos, float width) {
                                                           Vec2(width, y_pos)));
     this->getPhysicsBody()->setContactTestBitmask(true);
 
-    float curr_width = 0;
+    float curr_width = -2000;
 
     while(curr_width < width){
         auto random = RandomHelper::random_int(4,6);
@@ -24,5 +24,4 @@ Ground::Ground(float y_pos, float width) {
         curr_width+= grass->getContentSize().width - 100.f;
         this->addChild(grass);
     }
-
 }

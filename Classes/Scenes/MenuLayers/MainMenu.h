@@ -10,36 +10,42 @@
 #include <ui/UIEditBox/UIEditBox.h>
 #include <GameEngine/Player.h>
 
-class MainMenu : public cocos2d::Layer
-{
+class MainMenu : public cocos2d::Layer {
 public:
     CREATE_FUNC(MainMenu);
 
-    MainMenu();
-    ~MainMenu();
+    bool init();
+
     void onEnter() override;
+
     void onPushScene(int id);
+
     void onChangeLayer();
-    void onQuit();
 
     static cocos2d::Scene *createScene();
-} ;
+};
 
-class MultiplayerMainMenu : public cocos2d::Layer
-{
+class MultiplayerMainMenu : public cocos2d::Layer {
 public:
     static cocos2d::Scene *createScene();
-    static MultiplayerMainMenu* getInstance();
+
+    static MultiplayerMainMenu *getInstance();
+
     CREATE_FUNC(MultiplayerMainMenu);
 
     virtual void onError(string message);
+
     virtual void onQuit();
 
 protected:
     static MultiplayerMainMenu *_instance;
+
     MultiplayerMainMenu();
+
     void onEnter();
+
     void onPushScene(int id);
+
     void update(float dt);
 
     cocos2d::Label *_errorMessage;
@@ -50,15 +56,15 @@ private:
     cocos2d::ui::EditBox *_editPassword;
 };
 
-class RegisterMenu : public cocos2d::Layer
-{
+class RegisterMenu : public cocos2d::Layer {
 public:
 
     RegisterMenu();
-    void onPushScene(int id) ;
+
     void onQuit();
 
 protected:
+
     cocos2d::ui::EditBox *_editName;
     cocos2d::ui::EditBox *_editPassword;
     cocos2d::Label *_errorMessage;
@@ -67,27 +73,35 @@ protected:
 };
 
 
-class LobbyLayer : public MultiplayerMainMenu
-{
+class LobbyLayer : public MultiplayerMainMenu {
 public:
 
     static cocos2d::Scene *createScene();
-    static LobbyLayer* getInstance();
+
+    static LobbyLayer *getInstance();
+
     CREATE_FUNC(LobbyLayer);
 
 
     void receiveInvite(string message);
+
     void deleteInvite();
+
     void joinLobby();
+
     void receivePlayerInfo(string message);
+
     void receiveGlobalStats(string message);
+
     void receiveCountryStats(string message);
 
 protected:
 
     static LobbyLayer *_instance;
-    Player* _player2;
+    Player *_player2;
+
     LobbyLayer();
+
     void onEnter() override;
 
 private:

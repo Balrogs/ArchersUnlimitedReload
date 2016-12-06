@@ -9,9 +9,6 @@ USING_NS_CC;
 
 void DuelScene2P::initWorld() {
 
-    Ground *ground = new Ground(GROUND, visibleSize.width * 4);
-    this->addChild(ground);
-
     _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, "Player 1");
 
     _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, "Player 2");

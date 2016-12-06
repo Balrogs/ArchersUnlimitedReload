@@ -7,27 +7,43 @@
 
 #include "cocos2d.h"
 
-class PopUp : public cocos2d::Node
-{
+class PopUp : public cocos2d::Node {
 public:
-    PopUp(std::string title);
-    PopUp(std::string title, cocos2d::Node* message, cocos2d::CallFunc *okCallback);
-    PopUp(std::string title, cocos2d::Node* message, cocos2d::CallFunc *yesCallback, cocos2d::CallFunc *noCallback);
-    void closePopup();
+    static PopUp *create(std::string title, cocos2d::Node *message, bool isTwoButtons);
+
+    static PopUp *create(std::string title, cocos2d::Node *message);
+
+    bool init(std::string title);
+
+    bool init(std::string title, cocos2d::Node *message);
+
+    bool init(std::string title, cocos2d::Node *message, bool isTwoButtons);
 
     static const cocos2d::Size POPUP_SIZE;
 
+protected:
+    cocos2d::Label *_title;
+    cocos2d::Node *_buttons;
 
+    virtual void noAction();
 
-private:
+    virtual void yesAction();
 
-    cocos2d::Label* _title;
-    cocos2d::Menu* _buttons;
-    cocos2d::Menu* _close;
-
-    void _popScene();
-    void BlockPassingTouch();
+    virtual void okAction();
 };
 
+class MainMenuPopUp : public PopUp {
+public:
+    static MainMenuPopUp *create(std::string title, cocos2d::Node *message, bool isTwoButtons) ;
+
+    static MainMenuPopUp *create(std::string title, cocos2d::Node *message);
+
+protected:
+    void noAction() override ;
+
+    void yesAction() override;
+
+    void okAction() override;
+};
 
 #endif //ARCHERSUNLIMITED_POPUP_H
