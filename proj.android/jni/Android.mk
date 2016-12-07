@@ -64,7 +64,9 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp \
                                  ../../Classes/Scenes/PlayLayers/DuelScene2P.cpp \
                                  ../../Classes/GameEngine/Global/Misc/SocketClient.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/JSONParser.cpp
+                                 ../../Classes/GameEngine/Global/Misc/JSONParser.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/Views.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/PopUp.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 

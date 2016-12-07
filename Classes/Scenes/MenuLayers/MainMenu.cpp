@@ -9,6 +9,7 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <ui/UIDeprecated.h>
 #include "MainMenu.h"
+#include "Settings.h"
 
 USING_NS_CC;
 
@@ -16,7 +17,11 @@ Scene *MainMenu::createScene() {
     auto scene = Scene::create();
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
     MainMenu *layer = MainMenu::create();
-    scene->addChild(layer);
+    BackgroundLayer *bg = BackgroundLayer::create();
+
+    scene->addChild(bg, 2);
+    scene->addChild(layer, 3);
+
     return scene;
 }
 
@@ -24,6 +29,7 @@ Scene *MainMenu::createScene() {
 void MainMenu::onEnter() {
     Layer::onEnter();
     SocketClient::destroyInstance();
+    this->setVisible(true);
 }
 
 void MainMenu::onPushScene(int id) {
@@ -40,6 +46,7 @@ bool MainMenu::init() {
     if (!Layer::init()) {
         return false;
     }
+
     // auto item1 = MenuItemFont::create("Waves", CC_CALLBACK_0(MainMenu::onPushScene, this, 0));
     auto item2 = MenuItemFont::create("Apple", CC_CALLBACK_0(MainMenu::onPushScene, this, 1));
     auto item3 = MenuItemFont::create("DUEL", CC_CALLBACK_0(MainMenu::onPushScene, this, 2));
@@ -48,8 +55,29 @@ bool MainMenu::init() {
 
     auto menu = Menu::create(item2, item3, item4, item5, nullptr);
     menu->alignItemsVertically();
-
+    menu->setColor(Color3B::BLACK);
     this->addChild(menu);
+
+    auto settingsButton = cocos2d::ui::Button::create();
+    settingsButton->loadTextures(Variables::SETTINGS_BUTTON, Variables::SETTINGS_PRESSED_BUTTON,
+                                 Variables::SETTINGS_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    settingsButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                this->getParent()->addChild(Settings::create(), 3);
+                this->removeFromParent();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    settingsButton->setPosition(Vec2(visibleSize.width - 50.f, 50.f));
+    this->addChild(settingsButton);
+
 
     const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
     keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
@@ -59,15 +87,16 @@ bool MainMenu::init() {
             case EventKeyboard::KeyCode::KEY_BACKSPACE: {
                 auto popUp = this->getChildByName("PopUp");
                 if (popUp == nullptr) {
-                   // this->pause();
+                    auto size = Director::getInstance()->getVisibleSize();
+
                     auto label = cocos2d::Label::createWithTTF("EXIT THE GAME?", Variables::FONT_NAME,
                                                                Variables::FONT_SIZE);
                     label->setColor(cocos2d::Color3B::BLACK);
                     popUp = MainMenuPopUp::create("ARE YOU SURE?",
                                                   label,
                                                   true);
-                    auto visibleSize = Director::getInstance()->getVisibleSize();
-                    popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+
+                    popUp->setPosition(size.width / 2, size.height / 2);
                     this->addChild(popUp, 0, "PopUp");
                 } else {
                     popUp->removeFromParent();
@@ -90,7 +119,10 @@ MultiplayerMainMenu *MultiplayerMainMenu::_instance = nullptr;
 cocos2d::Scene *MultiplayerMainMenu::createScene() {
     auto scene = Scene::create();
     MultiplayerMainMenu *layer = MultiplayerMainMenu::getInstance();
-    scene->addChild(layer);
+    BackgroundLayer *bg = BackgroundLayer::create();
+
+    scene->addChild(bg, 2);
+    scene->addChild(layer, 3);
     return scene;
 }
 
@@ -190,11 +222,19 @@ void MultiplayerMainMenu::onEnter() {
 
         auto menu = Menu::create(item1, item2, item4, nullptr);
         menu->alignItemsVertically();
+        menu->setColor(Color3B::BLACK);
         menu->setPosition(visibleSize.width / 2, _errorMessage->getPosition().y - 150);
         this->addChild(menu);
 
     } else {
-        //TODO SHOW CONNECTION ERROR POPUP
+        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+        label->setColor(cocos2d::Color3B::BLACK);
+        auto popUp = MainMenuPopUp::create("",
+                                           label);
+        auto visibleSize = Director::getInstance()->getVisibleSize();
+        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        this->addChild(popUp, 0, "PopUp");
     }
 }
 
@@ -237,7 +277,14 @@ void MultiplayerMainMenu::onError(string message) {
 
 void MultiplayerMainMenu::update(float dt) {
     if (!_client->connected()) {
-        //TODO show connection error message
+        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+        label->setColor(cocos2d::Color3B::BLACK);
+        auto popUp = MainMenuPopUp::create("",
+                                           label);
+        auto visibleSize = Director::getInstance()->getVisibleSize();
+        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        this->addChild(popUp, 0, "PopUp");
     }
 }
 
@@ -354,7 +401,10 @@ LobbyLayer *LobbyLayer::getInstance() {
 cocos2d::Scene *LobbyLayer::createScene() {
     auto scene = Scene::create();
     LobbyLayer *layer = LobbyLayer::getInstance();
-    scene->addChild(layer);
+    BackgroundLayer *bg = BackgroundLayer::create();
+
+    scene->addChild(bg, 2);
+    scene->addChild(layer, 3);
     return scene;
 }
 
@@ -425,6 +475,7 @@ void LobbyLayer::onEnter() {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 _client->enterLobby();
+                _findPlayerButton->setVisible(false);
             }
                 break;
             default:
@@ -451,7 +502,8 @@ void LobbyLayer::onEnter() {
     _acceptButton = cocos2d::ui::Button::create();
     _acceptButton->loadTextures(Variables::BUTTON_PATH, Variables::PRESSED_BUTTON_PATH,
                                 Variables::BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
-    _acceptButton->setPosition(cocos2d::Vec2(_errorMessage->getPosition().x - 50.f, _errorMessage->getPosition().y - 35.f));
+    _acceptButton->setPosition(
+            cocos2d::Vec2(_errorMessage->getPosition().x - 50.f, _errorMessage->getPosition().y - 35.f));
     _acceptButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {

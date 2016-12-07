@@ -11,10 +11,7 @@ class Settings : public cocos2d::Layer {
 public:
     CREATE_FUNC(Settings);
 
-    static cocos2d::Scene *createScene();
-
-    Settings();
-    ~Settings();
+    bool init();
 
 protected:
 

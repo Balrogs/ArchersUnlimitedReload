@@ -50,7 +50,17 @@ public:
     static const std::string MORE_INFO_BUTTON;
     static const std::string MORE_INFO_PRESSED_BUTTON;
 
+    static const std::string DROP_LIST_BUTTON;
+    static const std::string DROP_LIST_PRESSED_BUTTON;
+
     static const std::string BAR;
+
+    static const std::string MOVE_BUTTON;
+    static const std::string MOVE_PRESSED_BUTTON;
+    static const std::string PAUSE_BUTTON;
+    static const std::string PAUSE_PRESSED_BUTTON;
+    static const std::string SETTINGS_BUTTON;
+    static const std::string SETTINGS_PRESSED_BUTTON;
 };
 
 

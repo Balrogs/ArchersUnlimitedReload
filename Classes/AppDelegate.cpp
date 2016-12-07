@@ -70,7 +70,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     else if (frameSize.height > smallResolutionSize.height)
     {        
         director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-        searchPaths.push_back("sd");
+        searchPaths.push_back("hd");
     }
     // if the frame's height is smaller than the height of medium size.
     else

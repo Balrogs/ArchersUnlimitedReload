@@ -56,9 +56,21 @@ const std::string Variables::CANCEL_PRESSED_BUTTON = "cancel_pressed.png";
 const std::string Variables::FIND_BUTTON = "search.png";
 const std::string Variables::FIND_PRESSED_BUTTON = "search_pressed.png";
 
-const std::string Variables::MORE_INFO_BUTTON = "drop_list.png";
-const std::string Variables::MORE_INFO_PRESSED_BUTTON = "drop_list_pressed.png";
+const std::string Variables::MORE_INFO_BUTTON = "moreinfo.png";
+const std::string Variables::MORE_INFO_PRESSED_BUTTON = "moreinfo_pressed.png";
+
+const std::string Variables::DROP_LIST_BUTTON = "drop_list.png";
+const std::string Variables::DROP_LIST_PRESSED_BUTTON = "drop_list_pressed.png";
 
 const std::string Variables::BAR = "grey_button06.png";
 
+
+const std::string Variables::MOVE_BUTTON = "move_arrow.png";
+const std::string Variables::MOVE_PRESSED_BUTTON = "move_arrow_pressed.png";
+
+const std::string Variables::PAUSE_BUTTON = "pause.png";
+const std::string Variables::PAUSE_PRESSED_BUTTON = "pause_pressed.png";
+
+const std::string Variables::SETTINGS_BUTTON = "settings.png";
+const std::string Variables::SETTINGS_PRESSED_BUTTON = "settings_pressed.png";
 

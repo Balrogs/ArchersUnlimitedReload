@@ -127,16 +127,29 @@ BackgroundLayer *BackgroundLayer::create(int id) {
     return ret;
 }
 
+bool BackgroundLayer::init() {
+    if (!LayerColor::initWithColor(Color4B::WHITE)) {
+        return false;
+    }
+
+    _parallax = nullptr;
+
+    return true;
+}
+
+BackgroundLayer *BackgroundLayer::create() {
+    BackgroundLayer *ret = new(std::nothrow) BackgroundLayer();
+    if (ret && ret->init()) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+
 void BackgroundLayer::move(float delta) {
     Point scrollDecrement = Point(delta, 0);
     _parallax->setPosition(_parallax->getPosition() - scrollDecrement);
     _parallax->updatePosition();
-}
-
-BackgroundLayer::BackgroundLayer() {
-
-}
-
-BackgroundLayer::~BackgroundLayer() {
-
 }

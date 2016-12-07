@@ -2,6 +2,7 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <ui/UIButton.h>
+#include <GameEngine/Global/Variables.h>
 
 USING_NS_CC;
 
@@ -10,7 +11,29 @@ UI::UI() {}
 UI::~UI() {}
 
 bool UI::init() {
-    return cocos2d::LayerColor::init();
+    if(!cocos2d::LayerColor::init()){
+        return false;
+    }
+    auto pause = cocos2d::ui::Button::create();
+    pause->loadTextures(Variables::PAUSE_BUTTON, Variables::PAUSE_PRESSED_BUTTON, Variables::PAUSE_BUTTON,
+                              cocos2d::ui::Widget::TextureResType::PLIST);
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    pause->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - 50.f));
+    pause->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED:
+                BattleScene::instance->_pause();
+                break;
+            default:
+                break;
+        }
+    });
+
+    this->bounds.push_back(pause->getBoundingBox());
+
+    this->addChild(pause);
+
+    return  true;
 }
 
 void UI::initBattle(Size visibleSize, Hero *player) {
@@ -65,12 +88,12 @@ void UI::enableArrows(Hero *player, bool enable) {
 
 void UI::addMoveArrows(Hero *player) {
     auto left_arrow = cocos2d::ui::Button::create();
-    left_arrow->loadTextures("move_arrow.png", "move_arrow_pressed.png", "move_arrow.png",
+    left_arrow->loadTextures(Variables::MOVE_BUTTON, Variables::MOVE_PRESSED_BUTTON, Variables::MOVE_BUTTON,
                              cocos2d::ui::Widget::TextureResType::PLIST);
 
     auto right_arrow = cocos2d::ui::Button::create();
-    right_arrow->loadTextures("move_arrow.png", "move_arrow_pressed.png", "move_arrow.png",
-                              cocos2d::ui::Widget::TextureResType::PLIST);
+    right_arrow->loadTextures(Variables::MOVE_BUTTON, Variables::MOVE_PRESSED_BUTTON, Variables::MOVE_BUTTON,
+                             cocos2d::ui::Widget::TextureResType::PLIST);
 
 
     left_arrow->setScaleX(-1);

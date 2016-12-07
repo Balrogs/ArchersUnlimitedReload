@@ -39,13 +39,14 @@ public:
 class BackgroundLayer : public cocos2d::LayerColor {
 public:
 
-    virtual bool init(int id);
+    bool init();
+
+    static BackgroundLayer *create();
+
+    bool init(int id);
 
     static BackgroundLayer *create(int id);
 
-    BackgroundLayer();
-
-    ~BackgroundLayer();
 
     void move(float delta);
 

@@ -64,7 +64,7 @@ bool PopUp::init(std::string title, cocos2d::Node *message) {
     auto ok = ui::Button::create();
     ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
                      cocos2d::ui::Widget::TextureResType::PLIST);
-    ok->setPosition(Vec2(-30.f, 0.f));
+    ok->setPosition(Vec2(0.f, 0.f));
     ok->addTouchEventListener(CC_CALLBACK_0(PopUp::okAction, this));
 
     _buttons = Node::create();
@@ -134,6 +134,7 @@ void MainMenuPopUp::yesAction() {
 
 void MainMenuPopUp::okAction() {
     this->removeFromParent();
+    Director::getInstance()->popScene();
 }
 
 MainMenuPopUp *MainMenuPopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {

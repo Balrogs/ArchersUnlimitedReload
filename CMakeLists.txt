@@ -304,13 +304,17 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/DuelScene2P.cpp
         Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp
         Classes/GameEngine/Global/Misc/JSONParser.cpp
+        Classes/GameEngine/Global/Misc/Views.cpp
+        Classes/GameEngine/Global/Misc/PopUp.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/DuelScene2P.h
         Classes/Scenes/PlayLayers/DuelSceneMultiplayer.h
         Classes/GameEngine/Global/Misc/SocketClient.h
-
-        Classes/GameEngine/Global/Misc/JSONParser.h Classes/GameEngine/Global/Misc/Views.cpp Classes/GameEngine/Global/Misc/Views.h Classes/GameEngine/Global/Misc/PopUp.cpp Classes/GameEngine/Global/Misc/PopUp.h)
+        Classes/GameEngine/Global/Misc/Views.h
+        Classes/GameEngine/Global/Misc/PopUp.h
+        Classes/GameEngine/Global/Misc/JSONParser.h
+        )
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})
