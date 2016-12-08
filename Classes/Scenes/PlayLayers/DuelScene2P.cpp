@@ -18,7 +18,7 @@ void DuelScene2P::initWorld() {
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
-    ui->initDuel(visibleSize, _hero1, _hero2);
+    _ui->initDuel(visibleSize, _hero1, _hero2);
     _player = _hero1;
 
 }
@@ -43,7 +43,15 @@ void DuelScene2P::makeTurn(int id) {
         }
         _player = getHero(id);
         auto action = Sequence::create(
-                MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+                Spawn::createWithTwoActions(MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+                              CallFunc::create(
+                                      [&, delay]() {
+                                          auto vec = Vec2(-_player->getPosition().x +
+                                                          visibleSize.width / 2, 0.f);
+                                          this->_bg->runAction(MoveTo::create(delay, vec));
+                                      }
+                              )
+                ),
                 CallFunc::create(
                         [&]() {
                             UI::enableArrows(_player, true);
@@ -57,9 +65,9 @@ void DuelScene2P::makeTurn(int id) {
 }
 
 Hero *DuelScene2P::getHero(int id) {
-    if(_hero1->getPlayer()->getId() == id){
+    if (_hero1->getPlayer()->getId() == id) {
         return _hero2;
-    } else if(_hero2->getPlayer()->getId() == id) {
+    } else if (_hero2->getPlayer()->getId() == id) {
         return _hero1;
     }
     return nullptr;

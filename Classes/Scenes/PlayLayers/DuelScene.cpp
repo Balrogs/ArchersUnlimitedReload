@@ -8,7 +8,7 @@ USING_NS_CC;
 void DuelScene::initWorld() {
 
     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
-                              _client->getDBPlayer()->getName());
+                                  _client->getDBPlayer()->getName());
 
     _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
 
@@ -20,7 +20,7 @@ void DuelScene::initWorld() {
     _targets.push_back(target);
     _brains.push_back(new HeroBrainDuel(target, 0.f));
 
-    ui->initDuel(visibleSize, _player, target);
+    _ui->initDuel(visibleSize, _player, target);
 
     makeTurn(_player2->getId());
 }
@@ -55,8 +55,15 @@ void DuelScene::makeTurn(int id) {
                                 this->_turnId = _player1->getId();
                             }
                     ),
-                    MoveTo::create(delay,
-                                   Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f)),
+                    Spawn::createWithTwoActions(
+                            MoveTo::create(delay, Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f)),
+                            CallFunc::create(
+                                    [&, delay]() {
+                                        auto vec = Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f);
+                                        this->_bg->runAction(MoveTo::create(delay, vec));
+                                    }
+                            )
+                    ),
                     DelayTime::create(1),
                     CallFunc::create(
                             [&]() {
@@ -72,7 +79,15 @@ void DuelScene::makeTurn(int id) {
                 delay = 0.5f;
             }
             auto action = Sequence::create(
-                    MoveTo::create(delay, Vec2::ZERO),
+                    Spawn::createWithTwoActions(MoveTo::create(delay, Vec2::ZERO),
+                                                CallFunc::create(
+                                                        [&, delay]() {
+                                                            auto vec = Vec2(-_player->getPosition().x +
+                                                                            visibleSize.width / 2, 0.f);
+                                                            this->_bg->runAction(MoveTo::create(delay, vec));
+                                                        }
+                                                )
+                    ),
                     CallFunc::create(
                             [&]() {
                                 UI::enableArrows(_player, true);

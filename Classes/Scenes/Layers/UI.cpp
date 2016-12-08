@@ -22,7 +22,7 @@ bool UI::init() {
     pause->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->_pause();
+                BattleScene::instance->showPopUp();
                 break;
             default:
                 break;
@@ -103,8 +103,8 @@ void UI::addMoveArrows(Hero *player) {
     right_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->_player->move(1);
-                enableArrows(BattleScene::instance->_player, false);
+                BattleScene::instance->getPlayer()->move(1);
+                enableArrows(BattleScene::instance->getPlayer(), false);
                 break;
             default:
                 break;
@@ -114,8 +114,8 @@ void UI::addMoveArrows(Hero *player) {
     left_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->_player->move(-1);
-                enableArrows(BattleScene::instance->_player, false);
+                BattleScene::instance->getPlayer()->move(-1);
+                enableArrows(BattleScene::instance->getPlayer(), false);
                 break;
             default:
                 break;

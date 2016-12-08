@@ -40,7 +40,15 @@ void DuelSceneMultiplayer::makeTurn(int id) {
         }
         auto player = getHero(id);
         auto action = Sequence::create(
-                MoveTo::create(delay, Vec2(-player->getPosition().x + visibleSize.width / 2, 0.f)),
+                Spawn::createWithTwoActions(
+                        MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+                        CallFunc::create(
+                                [&, delay]() {
+                                    auto vec = Vec2(-_player->getPosition().x +
+                                                    visibleSize.width / 2, 0.f);
+                                    this->_bg->runAction(MoveTo::create(delay, vec));
+                                }
+                        )),
                 CallFunc::create(
                         [&]() {
                             if (player->getPlayer()->getId() == _player->getPlayer()->getId())
@@ -104,7 +112,7 @@ void DuelSceneMultiplayer::setPlayer(int id) {
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
-    ui->initDuel(visibleSize, _hero1, _hero2);
+    _ui->initDuel(visibleSize, _hero1, _hero2);
 
     auto action = Sequence::create(
             MoveTo::create(0.f, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
@@ -133,7 +141,7 @@ void DuelSceneMultiplayer::abort() {
                                                                20.f)), 10, "PopUp");
 }
 
-void DuelSceneMultiplayer::_onPopScene() {
+void DuelSceneMultiplayer::onPopScene() {
     _client->gameOver(-1, 1);
-    BattleScene::_onPopScene();
+    BattleScene::onPopScene();
 }

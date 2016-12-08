@@ -17,8 +17,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/Layers/PauseScene.cpp\
                                  ../../Classes/Scenes/PlayLayers/GameOverScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/EquipmentScene.cpp\
-                                 ../../Classes/Scenes/MenuLayers/Randomizer.cpp\
-                                 ../../Classes/GameEngine/Global/InfoPanel.cpp\
+                                 ../../Classes/Scenes/MenuLayers/Randomizer.cpp \
                                  ../../Classes/Scenes/Layers/UI.cpp\
                                  ../../Classes/Scenes/Layers/BackgroundLayer.cpp\
                                  ../../Classes/Scenes/MenuLayers/Settings.cpp\

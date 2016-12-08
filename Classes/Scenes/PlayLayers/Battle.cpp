@@ -37,15 +37,16 @@ Scene *BattleScene::createScene(int type) {
 
     UI *hud = UI::create();
 
-    int id = RandomHelper::random_int(1, 5);
+    int id = 1;
+    //int id = RandomHelper::random_int(1, 3);
     BackgroundLayer *bg = BackgroundLayer::create(id);
 
     scene->addChild(bg, 2);
     scene->addChild(layer, 3);
     scene->addChild(hud, 4);
 
-    layer->ui = hud;
-    layer->bg = bg;
+    layer->_ui = hud;
+    layer->_bg = bg;
 
     layer->initWorld();
 
@@ -63,11 +64,11 @@ bool BattleScene::init() {
         return false;
     }
     BattleScene::instance = this;
-    GROUND = Director::getInstance()->getVisibleSize().height / 8;
+    GROUND = Director::getInstance()->getVisibleSize().height / 6;
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
 
-    GLOBAL_SCALE = 1.f;
+    _GLOBAL_SCALE = 1.f;
 
     _player = nullptr;
     _bullet_pull = Node::create();
@@ -134,12 +135,13 @@ void BattleScene::removeTarget(cocos2d::Node *target) {
 
 void BattleScene::_enterFrameHandler(float passedTime) {
     if (isGameOver()) {
-        _onPopScene();
+        onPopScene();
     }
     dragonBones::WorldClock::clock.advanceTime(passedTime);
 }
 
-void BattleScene::_onPopScene() {
+void BattleScene::onPopScene() {
+    this->_bg->removeSprites();
     Director::getInstance()->popScene();
 }
 
@@ -147,7 +149,7 @@ bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event
     if (_isPaused)
         return false;
     const auto start = touch->getStartLocation();
-    if (this->ui->checkTouch(start)) {
+    if (this->_ui->checkTouch(start)) {
         return false;
     }
     _player->startAim();
@@ -193,21 +195,7 @@ void BattleScene::_keyBoardReleasedHandler(cocos2d::EventKeyboard::KeyCode keyCo
         case EventKeyboard::KeyCode::KEY_BREAK:
         case EventKeyboard::KeyCode::KEY_ESCAPE:
         case EventKeyboard::KeyCode::KEY_BACKSPACE: {
-            auto popUp = this->ui->getChildByName("PopUp");
-            if (popUp == nullptr) {
-                _pause();
-                auto label = cocos2d::Label::createWithTTF("DO YOU WANT TO LEAVE THE GAME?", Variables::FONT_NAME,
-                                                           Variables::FONT_SIZE);
-                label->setColor(cocos2d::Color3B::BLACK);
-                popUp = PopUp::create("CONFIRM",
-                                      label,
-                                      true);
-                popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-                this->ui->addChild(popUp, 0, "PopUp");
-            } else {
-                _unPause();
-                popUp->removeFromParent();
-            }
+            showPopUp();
         }
             break;
         default:
@@ -235,7 +223,7 @@ void BattleScene::initWorld() {
 
     _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f);
 
-    ui->initBattle(visibleSize, _player);
+    _ui->initBattle(visibleSize, _player);
 
     Producer *prod = new Producer("cre");
 
@@ -243,17 +231,16 @@ void BattleScene::initWorld() {
 }
 
 float BattleScene::getGlobalScale() {
-    return this->GLOBAL_SCALE;
+    return this->_GLOBAL_SCALE;
 }
 
 void BattleScene::moveScene(float x) {
     auto current_pos = this->getPosition();
     this->setPosition(Vec2(current_pos.x - x, current_pos.y));
-    this->bg->move(x);
+    this->_bg->move(x);
 }
 
-
-void BattleScene::_pause() {
+void BattleScene::pauseBattle() {
     _isPaused = true;
     Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(0);
     _pauseRecursive(this, _isPaused);
@@ -272,7 +259,7 @@ void BattleScene::_pauseRecursive(Node *_node, bool _pause) {
     }
 }
 
-void BattleScene::_unPause() {
+void BattleScene::unPause() {
     _isPaused = false;
     Director::getInstance()->getRunningScene()->getPhysicsWorld()->setSpeed(1);
     _pauseRecursive(this, _isPaused);
@@ -296,14 +283,31 @@ cocos2d::Vec2 BattleScene::getHeroPos(Hero *player) {
 }
 
 int BattleScene::getStickmanCount() {
-    return _stickmansCount;
+    return _stickmanCount;
 }
 
 void BattleScene::addStickman() {
-    _stickmansCount++;
+    _stickmanCount++;
 }
 
 Vec2 BattleScene::getPlayerPos() {
     return Vec2(_player->getPosition().x, _player->getGlobalHeight("Head"));
+}
+
+void BattleScene::showPopUp() {
+    auto popUp = this->_ui->getChildByName("PopUp");
+    if (popUp == nullptr) {
+        pauseBattle();
+        popUp = PausePopUp::create("PAUSE");
+        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        this->_ui->addChild(popUp, 0, "PopUp");
+    } else {
+        unPause();
+        popUp->removeFromParent();
+    }
+}
+
+Hero *BattleScene::getPlayer() {
+    return _player;
 }
 

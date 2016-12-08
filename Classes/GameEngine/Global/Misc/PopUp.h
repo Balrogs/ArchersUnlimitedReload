@@ -6,6 +6,7 @@
 #define ARCHERSUNLIMITED_POPUP_H
 
 #include "cocos2d.h"
+#include "ui/UIButton.h"
 
 class PopUp : public cocos2d::Node {
 public:
@@ -13,11 +14,11 @@ public:
 
     static PopUp *create(std::string title, cocos2d::Node *message);
 
-    bool init(std::string title);
+    virtual bool init(std::string title);
 
-    bool init(std::string title, cocos2d::Node *message);
+    virtual bool init(std::string title, cocos2d::Node *message);
 
-    bool init(std::string title, cocos2d::Node *message, bool isTwoButtons);
+    virtual bool init(std::string title, cocos2d::Node *message, bool isTwoButtons);
 
     static const cocos2d::Size POPUP_SIZE;
 
@@ -44,6 +45,24 @@ protected:
     void yesAction() override;
 
     void okAction() override;
+};
+
+class PausePopUp : public PopUp {
+public:
+    static PausePopUp *create(std::string title);
+    bool init(std::string title);
+
+protected:
+    cocos2d::ui::Button *_musicButton;
+    cocos2d::ui::Button *_effectsButton;
+    bool _musicState;
+    bool _effectsState;
+
+    void _reloadButtons();
+
+    virtual void noAction() ;
+
+    virtual void yesAction();
 };
 
 #endif //ARCHERSUNLIMITED_POPUP_H

@@ -53,23 +53,24 @@ public:
 
     cocos2d::Vec2 getHeroPos(Hero *player);
 
-    virtual void _pause();
+    Hero* getPlayer();
 
-    virtual void _unPause();
+    virtual void pauseBattle();
 
-    virtual void _onPopScene();
+    virtual void unPause();
 
-    Hero *_player;
+    virtual void onPopScene();
 
     cocos2d::Vec2 getPlayerPos();
 
+    void showPopUp();
+
 protected:
-
-    int _stickmansCount;
-
-    float GLOBAL_SCALE;
-    UI *ui;
-    BackgroundLayer *bg;
+    Hero *_player;
+    int _stickmanCount;
+    float _GLOBAL_SCALE;
+    UI *_ui;
+    BackgroundLayer *_bg;
     bool _isPaused;
 
     std::vector<Brain *> _brains;
@@ -96,6 +97,8 @@ protected:
     virtual bool isGameOver();
 
     void _pauseRecursive(cocos2d::Node *_node, bool _pause);
+
+
 };
 
 #endif // __BATTLE_H__

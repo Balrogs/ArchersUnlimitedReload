@@ -7,7 +7,6 @@
 #include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/PopUp.h>
-#include <ui/UIDeprecated.h>
 #include "MainMenu.h"
 #include "Settings.h"
 
@@ -15,12 +14,14 @@ USING_NS_CC;
 
 Scene *MainMenu::createScene() {
     auto scene = Scene::create();
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("textures.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui-0.plist");
     MainMenu *layer = MainMenu::create();
     BackgroundLayer *bg = BackgroundLayer::create();
 
     scene->addChild(bg, 2);
     scene->addChild(layer, 3);
+
+    //TODO add equipment layer with controls
 
     return scene;
 }
@@ -87,6 +88,9 @@ bool MainMenu::init() {
             case EventKeyboard::KeyCode::KEY_BACKSPACE: {
                 auto popUp = this->getChildByName("PopUp");
                 if (popUp == nullptr) {
+
+                    this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
+
                     auto size = Director::getInstance()->getVisibleSize();
 
                     auto label = cocos2d::Label::createWithTTF("EXIT THE GAME?", Variables::FONT_NAME,
@@ -111,6 +115,12 @@ bool MainMenu::init() {
 
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
+    //TODO add remove ads button
+
+    //TODO add coins view
+
+    //TODO add open case button
+
     return true;
 }
 
@@ -123,6 +133,8 @@ cocos2d::Scene *MultiplayerMainMenu::createScene() {
 
     scene->addChild(bg, 2);
     scene->addChild(layer, 3);
+
+    //TODO add equipment layer without controls
     return scene;
 }
 
@@ -230,8 +242,7 @@ void MultiplayerMainMenu::onEnter() {
         auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
                                                    Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
-        auto popUp = MainMenuPopUp::create("",
-                                           label);
+        auto popUp = MainMenuPopUp::create("", label, false);
         auto visibleSize = Director::getInstance()->getVisibleSize();
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
         this->addChild(popUp, 0, "PopUp");

@@ -7,21 +7,61 @@
 
 USING_NS_CC;
 
-Ground::Ground(float y_pos, float width) {
 
+bool Ground::init(float y_pos, float width, std::string path) {
+    if (!Node::init()) {
+        return false;
+    }
     this->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(0.f, y_pos),
-                                                          Vec2(width, y_pos)));
+                                                        Vec2(width, y_pos)));
     this->getPhysicsBody()->setContactTestBitmask(true);
 
-    float curr_width = -2000;
+    auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    while(curr_width < width){
-        auto random = RandomHelper::random_int(4,6);
-        auto path = StringUtils::format("Grass%d.png", random);
+    float curr_width = - visibleSize.width * 5;
+
+    while (curr_width < width) {
         auto grass = cocos2d::Sprite::createWithSpriteFrameName(path);
-        grass->setScaleX(RandomHelper::random_int(0,1) == 0?-1:1);
-        grass->setPosition(curr_width, y_pos);
-        curr_width+= grass->getContentSize().width - 100.f;
+        grass->setPosition(curr_width, grass->getContentSize().height / 2);
+        curr_width += grass->getContentSize().width - 3.f;
         this->addChild(grass);
     }
+    return true;
+}
+
+Ground *Ground::create(float y_pos, float width, std::string path) {
+    Ground *ret = new(std::nothrow) Ground();
+    if (ret && ret->init(y_pos, width, path)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool Clouds::init(float width, std::string path) {
+    if (!Node::init()) {
+        return false;
+    }
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    float curr_width = - visibleSize.width * 2;
+
+    while (curr_width < width) {
+        auto grass = cocos2d::Sprite::createWithSpriteFrameName(path);
+        grass->setPosition(curr_width, visibleSize.height - grass->getContentSize().height / 2);
+        curr_width += grass->getContentSize().width- 3.f;
+        this->addChild(grass);
+    }
+    return true;
+}
+
+Clouds *Clouds::create(float width, std::string path) {
+    Clouds *ret = new(std::nothrow) Clouds();
+    if (ret && ret->init(width, path)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
 }

@@ -8,20 +8,20 @@ USING_NS_CC;
 
 void AppleBattle::initWorld() {
 
-    GLOBAL_SCALE = 1.f;
+    _GLOBAL_SCALE = 1.f;
 
     _isTargetHitted = false;
 
     initObjects();
 
-    ui->initApple(visibleSize, _player);
+    _ui->initApple(visibleSize, _player);
 }
 
 void AppleBattle::initObjects() {
 
-    _player = new AppleHero(50.f * this->GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO");
+    _player = new AppleHero(50.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO");
 
-    auto target = new Stickman(visibleSize.width - 100.f * this->GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
+    auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
 
     _targets.push_back(target);
@@ -31,7 +31,7 @@ void AppleBattle::initObjects() {
 
 
 void AppleBattle::nextLevelAction() {
-    GLOBAL_SCALE -= 0.05f;
+    _GLOBAL_SCALE -= 0.05f;
 
     _bullet_pull->removeAllChildren();
 
@@ -41,8 +41,8 @@ void AppleBattle::nextLevelAction() {
                             CallFunc::create(
                                     [&]() {
                                         _player->runAction(Spawn::createWithTwoActions(
-                                                MoveTo::create(1.f, Vec2(50.f * GLOBAL_SCALE, AppleBattle::GROUND)),
-                                                ScaleTo::create(1.f, GLOBAL_SCALE)));
+                                                MoveTo::create(1.f, Vec2(50.f * _GLOBAL_SCALE, AppleBattle::GROUND)),
+                                                ScaleTo::create(1.f, _GLOBAL_SCALE)));
                                     }
                             ),
                             CallFunc::create(
@@ -51,10 +51,10 @@ void AppleBattle::nextLevelAction() {
                                         _targets[0]->runAction(Spawn::createWithTwoActions(MoveTo::create(1.f,
                                                                                                           Vec2(visibleSize.width -
                                                                                                                100.f *
-                                                                                                               GLOBAL_SCALE,
+                                                                                                               _GLOBAL_SCALE,
                                                                                                                AppleBattle::GROUND)),
                                                                                            ScaleTo::create(1.f,
-                                                                                                           GLOBAL_SCALE)));
+                                                                                                           _GLOBAL_SCALE)));
                                     }
                             )
 

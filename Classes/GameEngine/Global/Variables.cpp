@@ -74,3 +74,10 @@ const std::string Variables::PAUSE_PRESSED_BUTTON = "pause_pressed.png";
 const std::string Variables::SETTINGS_BUTTON = "settings.png";
 const std::string Variables::SETTINGS_PRESSED_BUTTON = "settings_pressed.png";
 
+
+const std::string Variables::MUSIC_ON_BUTTON = "music_on.png";
+const std::string Variables::MUSIC_OFF_BUTTON = "music_off.png";
+
+const std::string Variables::EFFECTS_ON_BUTTON = "soundeffects_on.png";
+const std::string Variables::EFFECTS_OFF_BUTTON = "soundeffects_off.png";
+

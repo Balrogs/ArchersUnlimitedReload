@@ -15,6 +15,15 @@ public:
 
 protected:
 
+    void _reloadButtons();
+
+    cocos2d::ui::Button *_musicButton;
+    cocos2d::ui::Button *_effectsButton;
+
+    bool _musicState;
+
+    bool _effectsState;
+
     void onEnter() override;
 
     void onQuit();

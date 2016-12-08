@@ -61,6 +61,12 @@ public:
     static const std::string PAUSE_PRESSED_BUTTON;
     static const std::string SETTINGS_BUTTON;
     static const std::string SETTINGS_PRESSED_BUTTON;
+
+    static const std::string MUSIC_ON_BUTTON;
+    static const std::string MUSIC_OFF_BUTTON;
+
+    static const std::string EFFECTS_ON_BUTTON;
+    static const std::string EFFECTS_OFF_BUTTON;
 };
 
 

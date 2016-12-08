@@ -33,6 +33,12 @@ public:
     bool init(int id);
 
     void updatePosition();
+
+    void createGraveyard();
+
+    void createDesert();
+
+    void createGreenfield();
 };
 
 
@@ -47,12 +53,17 @@ public:
 
     static BackgroundLayer *create(int id);
 
+    void setPosition(float x, float y) override;
+
+    cocos2d::Vec3 getPosition3D() const override;
+
+    void removeSprites();
 
     void move(float delta);
 
 protected:
     InfiniteParallaxNode *_parallax;
-
+    int _id;
 };
 
 

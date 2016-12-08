@@ -10,7 +10,19 @@
 class Ground : public cocos2d::Node {
 
 public:
-    Ground(float y_pos, float width);
+
+    bool init(float y_pos, float width, std::string path);
+
+    static Ground* create(float y_pos, float width, std::string path);
+};
+
+class Clouds : public cocos2d::Node {
+
+public:
+
+    bool init(float width, std::string path);
+
+    static Clouds* create(float width, std::string path);
 };
 
 

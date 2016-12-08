@@ -168,7 +168,6 @@ set(GAME_SRC
         Classes/Scenes/PlayLayers/GameOverScene.cpp
         Classes/Scenes/MenuLayers/EquipmentScene.cpp
         Classes/Scenes/MenuLayers/Randomizer.cpp
-        Classes/GameEngine/Global/InfoPanel.cpp
         Classes/Scenes/Layers/UI.cpp
         Classes/Scenes/Layers/BackgroundLayer.cpp
         Classes/Scenes/MenuLayers/Settings.cpp
@@ -293,7 +292,6 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/EquipmentScene.h
         Classes/Scenes/MenuLayers/Randomizer.h
         Classes/GameEngine/Player.h
-        Classes/GameEngine/Global/InfoPanel.h
         Classes/Scenes/Layers/UI.h
         Classes/Scenes/Layers/BackgroundLayer.h
         Classes/Scenes/MenuLayers/Settings.h
