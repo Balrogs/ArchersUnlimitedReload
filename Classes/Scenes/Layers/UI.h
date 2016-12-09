@@ -9,10 +9,6 @@
 
 class UI : public cocos2d::LayerColor {
 public:
-    UI();
-
-    ~UI();
-
     bool init();
 
     CREATE_FUNC(UI);

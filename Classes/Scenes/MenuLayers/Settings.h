@@ -27,6 +27,8 @@ protected:
     void onEnter() override;
 
     void onQuit();
+
+    cocos2d::Sprite *_bg;
 };
 
 

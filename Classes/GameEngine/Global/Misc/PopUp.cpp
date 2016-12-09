@@ -9,8 +9,6 @@
 
 USING_NS_CC;
 
-const Size PopUp::POPUP_SIZE = Size(500.f, 200.f);
-
 PopUp *PopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {
     PopUp *ret = new(std::nothrow) PopUp();
     if (ret && ret->init(title, message, isTwoButtons)) {
@@ -42,19 +40,17 @@ bool PopUp::init(std::string title) {
     black->setPosition(pos);
     this->addChild(black);
 
-    auto base = DrawNode::create();
-    base->drawSolidRect(Vec2(-PopUp::POPUP_SIZE.width / 2, -PopUp::POPUP_SIZE.height / 2),
-                        Vec2(PopUp::POPUP_SIZE.width / 2, PopUp::POPUP_SIZE.height / 2),
-                        Color4F(Color3B(255, 212, 45), 1.f));
+    auto base = Sprite::createWithSpriteFrameName(Variables::BG2);
     this->addChild(base);
+    POPUP_SIZE = base->getContentSize();
 
-    auto titleBase = DrawNode::create();
-    titleBase->drawSolidRect(Vec2(-POPUP_SIZE.width / 2, POPUP_SIZE.height / 2 - 40.f),
-                             Vec2(POPUP_SIZE.width / 2, POPUP_SIZE.height / 2), Color4F(Color3B(242, 118, 38), 1.f));
-    this->addChild(titleBase, 1);
+//    auto titleBase = DrawNode::create();
+//    titleBase->drawSolidRect(Vec2(-POPUP_SIZE.width / 2, POPUP_SIZE.height / 2 - 40.f),
+//                             Vec2(POPUP_SIZE.width / 2, POPUP_SIZE.height / 2), Color4F(Color3B(242, 118, 38), 1.f));
+//    this->addChild(titleBase, 1);
 
-    _title = Label::createWithTTF(title, Variables::FONT_NAME, Variables::FONT_SIZE);
-    _title->setPosition(0.f, POPUP_SIZE.height / 2 - 20.f);
+    _title = Label::createWithTTF(title, Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    _title->setPosition(0.f, POPUP_SIZE.height / 2 - _title->getContentSize().height / 2 - 20.f);
     _title->setColor(cocos2d::Color3B::BLACK);
     this->addChild(_title, 2);
 
@@ -82,33 +78,33 @@ bool PopUp::init(std::string title, cocos2d::Node *message, bool isTwoButtons) {
         auto yes = ui::Button::create();
         yes->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
                           cocos2d::ui::Widget::TextureResType::PLIST);
-        yes->setPosition(Vec2(-30.f, 0.f));
+        yes->setPosition(Vec2(-yes->getBoundingBox().size.width, 0.f));
 
         yes->addTouchEventListener(CC_CALLBACK_0(PopUp::yesAction, this));
 
         auto no = ui::Button::create();
         no->loadTextures(Variables::NO_BUTTON_PATH, Variables::NO_PRESSED_BUTTON_PATH, Variables::NO_BUTTON_PATH,
                          cocos2d::ui::Widget::TextureResType::PLIST);
-        no->setPosition(Vec2(30.f, 0.f));
+        no->setPosition(Vec2(no->getBoundingBox().size.width, 0.f));
         no->addTouchEventListener(CC_CALLBACK_0(PopUp::noAction, this));
 
         _buttons = Node::create();
         _buttons->addChild(yes);
         _buttons->addChild(no);
-        _buttons->setPosition(0, -POPUP_SIZE.height / 2 + 30.f);
-        this->addChild(_buttons, 2);
+        _buttons->setPosition(0.f, -POPUP_SIZE.height / 2 + yes->getBoundingBox().size.height / 2 + 25.f);
+
     } else {
         auto ok = ui::Button::create();
         ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
                          cocos2d::ui::Widget::TextureResType::PLIST);
-        ok->setPosition(Vec2(0.f, 0.f));
         ok->addTouchEventListener(CC_CALLBACK_0(PopUp::okAction, this));
 
         _buttons = Node::create();
         _buttons->addChild(ok);
-        _buttons->setPosition(0, -POPUP_SIZE.height / 2 + 30.f);
-        this->addChild(_buttons, 2);
+        _buttons->setPosition(0, -POPUP_SIZE.height / 2 + ok->getBoundingBox().size.height / 2 + 25.f);
     }
+
+    this->addChild(_buttons, 2);
     return true;
 }
 
@@ -190,27 +186,35 @@ bool PausePopUp::init(std::string title) {
 
     _reloadButtons();
 
-    // TODO add play button
+    auto goToMenu = ui::Button::create();
+    goToMenu->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
+                           cocos2d::ui::Widget::TextureResType::PLIST);
+    goToMenu->setPosition(Vec2(0.f, 0.f));
 
-    // TODO add menu button
+    goToMenu->addTouchEventListener(CC_CALLBACK_0(PausePopUp::yesAction, this));
 
-    auto yes = ui::Button::create();
-    yes->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
-                      cocos2d::ui::Widget::TextureResType::PLIST);
-    yes->setPosition(Vec2(-30.f, 0.f));
+    auto goToMenuTitle = cocos2d::Label::createWithTTF("GO TO MENU", Variables::FONT_NAME,
+                                                       Variables::FONT_SIZE);
+    goToMenuTitle->setPosition(goToMenu->getContentSize().width / 2,
+                               goToMenu->getContentSize().height / 2);
+    goToMenu->addChild(goToMenuTitle, 4);
 
-    yes->addTouchEventListener(CC_CALLBACK_0(PausePopUp::yesAction, this));
+    auto play = ui::Button::create();
+    play->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
+                       cocos2d::ui::Widget::TextureResType::PLIST);
+    play->setPosition(Vec2(0.f, goToMenu->getPosition().y - 3 * goToMenu->getBoundingBox().size.height / 2));
+    play->addTouchEventListener(CC_CALLBACK_0(PausePopUp::noAction, this));
 
-    auto no = ui::Button::create();
-    no->loadTextures(Variables::NO_BUTTON_PATH, Variables::NO_PRESSED_BUTTON_PATH, Variables::NO_BUTTON_PATH,
-                     cocos2d::ui::Widget::TextureResType::PLIST);
-    no->setPosition(Vec2(30.f, 0.f));
-    no->addTouchEventListener(CC_CALLBACK_0(PausePopUp::noAction, this));
+    auto playTitle = cocos2d::Label::createWithTTF("CONTINUE", Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+    playTitle->setPosition(play->getContentSize().width / 2,
+                           play->getContentSize().height / 2);
+    play->addChild(playTitle, 4);
 
     _buttons = Node::create();
-    _buttons->addChild(yes);
-    _buttons->addChild(no);
-    _buttons->setPosition(0, -POPUP_SIZE.height / 2 + 30.f);
+    _buttons->addChild(goToMenu);
+    _buttons->addChild(play);
+    _buttons->setPosition(0, _musicButton->getPosition().y - 3 * _musicButton->getBoundingBox().size.height / 2);
     this->addChild(_buttons, 2);
 
     return true;
@@ -254,7 +258,10 @@ void PausePopUp::_reloadButtons() {
                 break;
         }
     });
-    _musicButton->setPosition(Vec2(30.f, 20.f));
+
+    _musicButton->setPosition(Vec2(-_musicButton->getBoundingBox().size.width,
+                                   _title->getPosition().y - _musicButton->getContentSize().height));
+
     this->addChild(_musicButton);
 
     _effectsButton = cocos2d::ui::Button::create();
@@ -272,7 +279,7 @@ void PausePopUp::_reloadButtons() {
                 break;
         }
     });
-    _effectsButton->setPosition(Vec2(-30.f, 20.f));
+    _effectsButton->setPosition(Vec2(_effectsButton->getBoundingBox().size.width, _musicButton->getPosition().y));
     this->addChild(_effectsButton);
 }
 

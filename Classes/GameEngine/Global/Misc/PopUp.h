@@ -20,7 +20,7 @@ public:
 
     virtual bool init(std::string title, cocos2d::Node *message, bool isTwoButtons);
 
-    static const cocos2d::Size POPUP_SIZE;
+    cocos2d::Size POPUP_SIZE;
 
 protected:
     cocos2d::Label *_title;

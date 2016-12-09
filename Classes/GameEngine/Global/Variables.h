@@ -67,6 +67,33 @@ public:
 
     static const std::string EFFECTS_ON_BUTTON;
     static const std::string EFFECTS_OFF_BUTTON;
+
+    static const std::string REMOVE_ADS_BUTTON;
+    static const std::string REMOVE_ADS_PRESSED_BUTTON;
+
+    static const std::string CUSTOMIZE_BUTTON;
+
+    static const std::string COIN_BAR;
+    static const std::string COIN;
+
+    static const std::string VIDEO_BUTTON;
+
+    static const std::string STAND;
+
+    static const std::string YELLOW_BUTTON;
+    static const std::string YELLOW_PRESSED_BUTTON;
+
+    static const std::string RED_BUTTON;
+    static const std::string RED_PRESSED_BUTTON;
+
+    static const std::string BLUE_BUTTON;
+    static const std::string BLUE_PRESSED_BUTTON;
+
+    static const std::string GREEN_BUTTON;
+    static const std::string GREEN_PRESSED_BUTTON;
+
+    static const std::string BG1;
+    static const std::string BG2;
 };
 
 

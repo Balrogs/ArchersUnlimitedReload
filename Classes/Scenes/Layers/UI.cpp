@@ -6,10 +6,6 @@
 
 USING_NS_CC;
 
-UI::UI() {}
-
-UI::~UI() {}
-
 bool UI::init() {
     if(!cocos2d::LayerColor::init()){
         return false;
@@ -18,7 +14,7 @@ bool UI::init() {
     pause->loadTextures(Variables::PAUSE_BUTTON, Variables::PAUSE_PRESSED_BUTTON, Variables::PAUSE_BUTTON,
                               cocos2d::ui::Widget::TextureResType::PLIST);
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    pause->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - 50.f));
+    pause->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - pause->getBoundingBox().size.height / 2 - 25.f));
     pause->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:

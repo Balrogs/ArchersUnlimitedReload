@@ -23,6 +23,9 @@ public:
     void onChangeLayer();
 
     static cocos2d::Scene *createScene();
+private:
+    cocos2d::Node* _menu;
+    void onMenuClick(int id);
 };
 
 class MultiplayerMainMenu : public cocos2d::Layer {

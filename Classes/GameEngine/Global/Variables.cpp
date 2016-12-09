@@ -30,9 +30,9 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
     return cocos2d::Vec2(localPoint.x, localPoint.y);
 }
 
-const std::string Variables::FONT_NAME = "Mechanical.ttf";
-const float Variables::FONT_SIZE = 25.f;
-const float Variables::H_FONT_SIZE = 32.f;
+const std::string Variables::FONT_NAME = "FSEX300.ttf";
+const float Variables::FONT_SIZE = 42.f;
+const float Variables::H_FONT_SIZE = 72.f;
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
 
 const std::string Variables::YES_BUTTON_PATH = "yes.png";
@@ -47,8 +47,8 @@ const std::string Variables::PRESSED_BUTTON_PATH = "ok_pressed.png";
 const std::string Variables::CLOSE_BUTTON_PATH = "close.png";
 const std::string Variables::CLOSE_PRESSED_BUTTON_PATH = "close_pressed.png";
 
-const std::string Variables::BACK_PRESSED_BUTTON_PATH = "back_button_pressed.png";
-const std::string Variables::BACK_BUTTON_PATH = "back_button.png";
+const std::string Variables::BACK_PRESSED_BUTTON_PATH = "back_pressed.png";
+const std::string Variables::BACK_BUTTON_PATH = "back.png";
 
 const std::string Variables::CANCEL_BUTTON = "cancel.png";
 const std::string Variables::CANCEL_PRESSED_BUTTON = "cancel_pressed.png";
@@ -81,3 +81,33 @@ const std::string Variables::MUSIC_OFF_BUTTON = "music_off.png";
 const std::string Variables::EFFECTS_ON_BUTTON = "soundeffects_on.png";
 const std::string Variables::EFFECTS_OFF_BUTTON = "soundeffects_off.png";
 
+
+const std::string Variables::REMOVE_ADS_BUTTON = "removeAds.png";
+const std::string Variables::REMOVE_ADS_PRESSED_BUTTON = "removeAds_pressed.png";
+
+
+const std::string Variables::CUSTOMIZE_BUTTON = "customize.png";
+
+
+const std::string Variables::COIN_BAR = "coin_bar.png";
+const std::string Variables::COIN = "coin.png";
+
+const std::string Variables::VIDEO_BUTTON = "video.png";
+
+const std::string Variables::STAND = "stand.png";
+
+const std::string Variables::YELLOW_BUTTON = "yellow_normal";
+const std::string Variables::YELLOW_PRESSED_BUTTON = "yellow_pressed.png";
+
+const std::string Variables::RED_BUTTON = "red_normal.png";
+const std::string Variables::RED_PRESSED_BUTTON = "red_pressed.png";
+
+
+const std::string Variables::BLUE_BUTTON = "blue_normal.png";
+const std::string Variables::BLUE_PRESSED_BUTTON = "blue_pressed.png";
+
+const std::string Variables::GREEN_BUTTON = "green_normal.png";
+const std::string Variables::GREEN_PRESSED_BUTTON = "green_pressed.png";
+
+const std::string Variables::BG1 = "bg1.png";
+const std::string Variables::BG2 = "bg2.png";

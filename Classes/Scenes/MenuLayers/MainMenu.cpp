@@ -9,19 +9,22 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "MainMenu.h"
 #include "Settings.h"
+#include "EquipmentScene.h"
 
 USING_NS_CC;
 
 Scene *MainMenu::createScene() {
     auto scene = Scene::create();
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui-0.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui.plist");
     MainMenu *layer = MainMenu::create();
     BackgroundLayer *bg = BackgroundLayer::create();
+    EquipmentScene *eq = EquipmentScene::create();
 
     scene->addChild(bg, 2);
-    scene->addChild(layer, 3);
 
-    //TODO add equipment layer with controls
+    scene->addChild(eq, 3);
+
+    scene->addChild(layer, 4);
 
     return scene;
 }
@@ -59,11 +62,11 @@ bool MainMenu::init() {
     menu->setColor(Color3B::BLACK);
     this->addChild(menu);
 
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
     auto settingsButton = cocos2d::ui::Button::create();
     settingsButton->loadTextures(Variables::SETTINGS_BUTTON, Variables::SETTINGS_PRESSED_BUTTON,
                                  Variables::SETTINGS_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
-
-    auto visibleSize = Director::getInstance()->getVisibleSize();
 
     settingsButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
@@ -76,7 +79,8 @@ bool MainMenu::init() {
                 break;
         }
     });
-    settingsButton->setPosition(Vec2(visibleSize.width - 50.f, 50.f));
+    settingsButton->setPosition(Vec2(visibleSize.width - settingsButton->getBoundingBox().size.width / 2 - 15.f,
+                                     settingsButton->getBoundingBox().size.height / 2 + 15.f));
     this->addChild(settingsButton);
 
 
@@ -115,13 +119,33 @@ bool MainMenu::init() {
 
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
-    //TODO add remove ads button
+    auto coins_bar = cocos2d::ui::Button::create();
+    coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
 
-    //TODO add coins view
+    coins_bar->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    coins_bar->setScale(0.5f);
+    coins_bar->setPosition(Vec2(visibleSize.width - coins_bar->getBoundingBox().size.width / 2 - 15.f,
+                                visibleSize.height - coins_bar->getBoundingBox().size.height / 2 - 15.f));
+    //TODO add coins value
+
+    this->addChild(coins_bar);
 
     //TODO add open case button
 
     return true;
+}
+
+void MainMenu::onMenuClick(int id) {
+
 }
 
 MultiplayerMainMenu *MultiplayerMainMenu::_instance = nullptr;
@@ -208,7 +232,8 @@ void MultiplayerMainMenu::onEnter() {
                 break;
         }
     });
-    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    backButton->setPosition(Vec2(backButton->getBoundingBox().size.width / 2 + 15.f,
+                                 visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
     this->addChild(backButton);
 
     const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
@@ -239,11 +264,9 @@ void MultiplayerMainMenu::onEnter() {
         this->addChild(menu);
 
     } else {
-        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME, Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("", label, false);
-        auto visibleSize = Director::getInstance()->getVisibleSize();
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
         this->addChild(popUp, 0, "PopUp");
     }
@@ -374,7 +397,8 @@ RegisterMenu::RegisterMenu() {
                 break;
         }
     });
-    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    backButton->setPosition(Vec2(backButton->getBoundingBox().size.width / 2 + 15.f,
+                                 visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
     this->addChild(backButton);
 
     const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
@@ -446,7 +470,8 @@ void LobbyLayer::onEnter() {
                 break;
         }
     });
-    backButton->setPosition(Vec2(50.f, visibleSize.height - 50.f));
+    backButton->setPosition(Vec2(backButton->getBoundingBox().size.width / 2 + 15.f,
+                                 visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
     this->addChild(backButton);
 
     const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
