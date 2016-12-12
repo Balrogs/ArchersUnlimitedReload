@@ -7,6 +7,27 @@
 
 
 #include <cocos2d.h>
+enum HPState{
+    FULL,
+    NORMAL,
+    DANGER
+};
+
+class HPBar : public cocos2d::Node{
+public:
+    static HPBar* create();
+    bool init();
+    void setHp(float hp);
+    void setAlignment(bool alignment);
+protected:
+    bool _alignment;
+    float _hp;
+    float _scale;
+    cocos2d::Size _size;
+    cocos2d::Sprite* _bar;
+    HPState _state;
+
+};
 
 class Player : public cocos2d::Node{
 
@@ -19,7 +40,7 @@ protected:
     int _hp;
 
     cocos2d::Label *_name_view;
-    cocos2d::Label *_hp_view;
+    HPBar *_hp_view;
     cocos2d::Label *_shots_view;
 
     cocos2d::TextHAlignment _alignment;

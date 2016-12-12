@@ -136,7 +136,7 @@ void Settings::onEnter() {
 }
 
 void Settings::onQuit() {
-    this->getParent()->addChild(MainMenu::create(), 3);
+    this->getParent()->addChild(MainMenu::create(), 4);
     this->removeFromParent();
 }
 

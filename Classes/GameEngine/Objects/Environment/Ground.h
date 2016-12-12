@@ -14,6 +14,9 @@ public:
     bool init(float y_pos, float width, std::string path);
 
     static Ground* create(float y_pos, float width, std::string path);
+    float getHeight();
+protected:
+    float _height;
 };
 
 class Clouds : public cocos2d::Node {

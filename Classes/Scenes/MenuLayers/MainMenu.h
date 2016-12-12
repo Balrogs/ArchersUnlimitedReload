@@ -20,10 +20,10 @@ public:
 
     void onPushScene(int id);
 
-    void onChangeLayer();
-
     static cocos2d::Scene *createScene();
 private:
+    cocos2d::Size _visibleSize;
+    int _menuId;
     cocos2d::Node* _menu;
     void onMenuClick(int id);
 };

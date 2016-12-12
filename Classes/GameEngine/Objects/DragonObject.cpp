@@ -3,6 +3,7 @@
 //
 
 #include <GameEngine/Global/Variables.h>
+#include <dragonBones/cocos2dx/CCFactory.h>
 #include "DragonObject.h"
 
 USING_NS_CC;
@@ -82,4 +83,68 @@ void DragonObject::addDOChild(cocos2d::Node *target) {
 
     this->addChild(target, 1);
     target->release();
+}
+
+HeroPreview::HeroPreview() {
+    dragonBones::CCFactory factory;
+    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
+    factory.loadTextureAtlasData("texture.json");
+
+    _armature = factory.buildArmature("Stickman");
+    _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
+
+    //TODO add some animations
+    _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
+
+    auto _shoulders = _armature->getSlot("Shoulders")->getChildArmature();
+    auto _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
+
+
+    const auto firePointBone = _armature->getBone("shoulders");
+    cocos2d::Vec2 globalPoint;
+    globalPoint.set(firePointBone->global.x, -firePointBone->global.y);
+    _shouldersDisplay->setPosition(globalPoint);
+    _shouldersDisplay->setAnchorPoint(globalPoint);
+
+    _armature->removeBone(_armature->getBone("shoulders"));
+
+    _bowArmature = _shoulders->getSlot("Bow")->getChildArmature();
+    _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bowArmature->getDisplay();
+    _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
+    _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
+
+    _string = cocos2d::Node::create();
+
+    _updateString();
+
+    _bowArmatureDisplay->addChild(_string);
+
+    dragonBones::WorldClock::clock.add(_armature);
+    this->addChild(_armatureDisplay);
+}
+
+void HeroPreview::changeHat() {
+
+}
+
+void HeroPreview::changeBow() {
+
+}
+
+void HeroPreview::changeArrow() {
+
+}
+
+void HeroPreview::_updateString() {
+
+    _string->removeAllChildren();
+
+    auto top = _bowArmature->getBone("top");
+    auto bottom = _bowArmature->getBone("bottom");
+
+
+    auto line = cocos2d::DrawNode::create();
+    line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
+                   cocos2d::Color4F::BLACK);
+
 }

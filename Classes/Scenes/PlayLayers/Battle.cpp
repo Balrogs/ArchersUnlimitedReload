@@ -37,7 +37,7 @@ Scene *BattleScene::createScene(int type) {
 
     UI *hud = UI::create();
 
-    int id = 1;
+    int id = 3;
     //int id = RandomHelper::random_int(1, 3);
     BackgroundLayer *bg = BackgroundLayer::create(id);
 

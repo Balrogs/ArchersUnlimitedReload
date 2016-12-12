@@ -94,6 +94,9 @@ public:
 
     static const std::string BG1;
     static const std::string BG2;
+
+    static const std::string CHEST_BUTTON;
+    static const std::string CHEST_PRESSED_BUTTON;
 };
 
 

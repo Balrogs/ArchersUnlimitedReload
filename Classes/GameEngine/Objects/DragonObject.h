@@ -35,5 +35,23 @@ protected:
     virtual void _updateAnimation();
 };
 
+class HeroPreview : public DragonObject {
+public:
+    HeroPreview();
+    void changeHat();
+    void changeBow();
+    void changeArrow();
+
+protected:
+
+    dragonBones::CCArmatureDisplay *_bowArmatureDisplay;
+    dragonBones::CCArmatureDisplay *_arrowDisplay;
+    dragonBones::Armature *_arrowArmature;
+    dragonBones::Armature *_bowArmature;
+    cocos2d::Node *_string;
+
+    void _updateString();
+};
+
 
 #endif //ARCUNLIM_DRAGONOBJECT_H

@@ -375,7 +375,7 @@ DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
                                                                            player_id) {
     CCLOG("Power : %f radian : %f", power, radian * dragonBones::RADIAN_TO_ANGLE);
     CCLOG("Position : x %f  y : %f", position.x, position.y);
-    _damage = 10.f;
+    _damage = 15.f;
     lifePeriod = 0;
     if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
         duel->makeTurn(-1);
