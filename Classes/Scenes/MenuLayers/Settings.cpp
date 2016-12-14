@@ -125,12 +125,6 @@ bool Settings::init() {
 
     this->addChild(sounds, 2);
 
-    auto language = cocos2d::Label::createWithTTF("LANGUAGE", Variables::FONT_NAME,
-                                                  Variables::FONT_SIZE);
-    language->setPosition(_bg->getBoundingBox().getMinX() + 150.f + language->getContentSize().width / 2,
-                          3 * _bg->getBoundingBox().size.height / 4);
-
-    this->addChild(language, 2);
 
     _language = def->getStringForKey("LANGUAGE", "ENGLISH");
 
@@ -147,8 +141,9 @@ bool Settings::init() {
                 break;
         }
     });
-    _languageBox->setPosition(Vec2(language->getPosition().x,
-                                   language->getPosition().y - _languageBox->getContentSize().height));
+    _languageBox->setPosition(
+            Vec2(_bg->getBoundingBox().getMinX() + 150.f + _languageBox->getBoundingBox().size.width / 2,
+                 _bg->getBoundingBox().size.height / 2 + _languageBox->getContentSize().height));
     auto languageBox_title = cocos2d::Label::createWithTTF(_language.c_str(), Variables::FONT_NAME,
                                                            Variables::FONT_SIZE);
     languageBox_title->setColor(Color3B::BLACK);
@@ -158,9 +153,17 @@ bool Settings::init() {
 
     this->addChild(_languageBox, 3);
 
+    auto language = cocos2d::Label::createWithTTF("LANGUAGE", Variables::FONT_NAME,
+                                                  Variables::FONT_SIZE);
+    language->setPosition(_languageBox->getPosition().x,
+                          _languageBox->getPosition().y + _languageBox->getBoundingBox().size.height / 2 +
+                          language->getBoundingBox().size.height);
+
+    this->addChild(language, 2);
+
     auto rate = cocos2d::ui::Button::create();
     rate->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON,
-                            Variables::GREEN_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+                       Variables::GREEN_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
 
     rate->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
@@ -182,7 +185,7 @@ bool Settings::init() {
     rate->addChild(rate_icon, 5);
 
     auto rate_title = cocos2d::Label::createWithTTF("RATE US", Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                    Variables::FONT_SIZE);
     rate_title->setPosition((rate->getContentSize().width / 2 - rate_title->getContentSize().width / 2),
                             rate->getContentSize().height / 2);
     rate->addChild(rate_title, 4);
@@ -240,7 +243,7 @@ void Settings::_reloadButtons() {
     });
     _musicButton->setPosition(
             Vec2(_bg->getBoundingBox().getMaxX() - _musicButton->getBoundingBox().size.width / 2 - 100.f,
-                 _bg->getBoundingBox().getMaxY() - 2 * _musicButton->getBoundingBox().size.height));
+                 _bg->getBoundingBox().getMaxY() - 3 * _musicButton->getBoundingBox().size.height));
     this->addChild(_musicButton, 3);
 
     _effectsButton = cocos2d::ui::Button::create();
@@ -269,7 +272,8 @@ void Settings::_showScrollView() {
     _scrollView = cocos2d::ui::ScrollView::create();
     _scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
     _scrollView->setContentSize(Size(_languageBox->getContentSize().width, _bg->getContentSize().height));
-    _scrollView->setInnerContainerSize(Size(_languageBox->getContentSize().width, _languageBox->getContentSize().height * 10));
+    _scrollView->setInnerContainerSize(
+            Size(_languageBox->getContentSize().width, _languageBox->getContentSize().height * 10));
     _scrollView->setBackGroundImage(Variables::GRAY_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
     _scrollView->setBackGroundImageScale9Enabled(true);
     _scrollView->setBounceEnabled(true);
@@ -308,7 +312,9 @@ void Settings::_showScrollView() {
                             break;
                     }
                 });
-        languageButton->setPosition(Vec2(_scrollView->getInnerContainerSize().width / 2, _scrollView->getInnerContainerSize().height- 25.f - i * _languageBox->getContentSize().height));
+        languageButton->setPosition(Vec2(_scrollView->getInnerContainerSize().width / 2,
+                                         _scrollView->getInnerContainerSize().height - 25.f -
+                                         i * _languageBox->getContentSize().height));
         _scrollView->addChild(languageButton, 3);
 
     }

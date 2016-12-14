@@ -213,7 +213,7 @@ bool PausePopUp::init(std::string title) {
     _buttons = Node::create();
     _buttons->addChild(goToMenu);
     _buttons->addChild(play);
-    _buttons->setPosition(0, _musicButton->getPosition().y - goToMenu->getBoundingBox().size.height - 10.f);
+    _buttons->setPosition(0, - goToMenu->getContentSize().height / 2);
     this->addChild(_buttons, 2);
 
     return true;
