@@ -69,6 +69,8 @@ bool BattleScene::init() {
     origin = Director::getInstance()->getVisibleOrigin();
 
     _GLOBAL_SCALE = 1.f;
+    //disable multitouch
+    _touch = -1;
 
     _player = nullptr;
     _bullet_pull = Node::create();
@@ -146,6 +148,13 @@ void BattleScene::onPopScene() {
 }
 
 bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if (_touch < 0) {
+        _touch = touch->getID();
+    }
+    else {
+        return false;
+    }
+
     if (_isPaused)
         return false;
     const auto start = touch->getStartLocation();
@@ -157,6 +166,9 @@ bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event
 }
 
 bool BattleScene::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if (_touch != touch->getID()) {
+        return false;
+    }
 
     const auto start = touch->getStartLocation();
     const auto curr = touch->getLocation();
@@ -168,11 +180,19 @@ bool BattleScene::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event 
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
     _player->setAim(angle, power);
+
     return true;
 }
 
 
 bool BattleScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
+
+    if (_touch == touch->getID()) {
+        _touch = -1;
+    }
+    else {
+        return false;
+    }
 
     const auto start = touch->getStartLocation();
     const auto curr = touch->getLocation();
@@ -225,9 +245,9 @@ void BattleScene::initWorld() {
 
     _ui->initBattle(visibleSize, _player);
 
-    Producer *prod = new Producer("cre");
-
-    prod->startLevel(1);
+//    Producer *prod = new Producer("cre");
+//
+//    prod->startLevel(1);
 }
 
 float BattleScene::getGlobalScale() {

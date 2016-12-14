@@ -3,10 +3,6 @@
 
 USING_NS_CC;
 
-Player::Player() {
-
-}
-
 Player *Player::create(int id, int hp, std::string name) {
     Player *ret = new(std::nothrow) Player();
     if (ret && ret->init(id, hp, name)) {
@@ -36,15 +32,23 @@ bool Player::init(int id, int hp, std::string name) {
     auto size = cocos2d::Director::getInstance()->getVisibleSize();
 
     _name_view = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f,
-                                               cocos2d::Size(size.width / 2, 0.f));
-    _hp_view = HPBar::create();
-    _hp_view->setContentSize(cocos2d::Size(size.width / 2 - 100.f, 50.f));
+                                               cocos2d::Size(size.width / 2 - 70.f, 0.f));
+    _hp_view = HPBar::create(cocos2d::Size(size.width / 2 - 70.f, 50.f));
+    _hp_view->setContentSize(cocos2d::Size(size.width / 2 - 70.f, 50.f));
 
-    _shots_view = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 32.f, cocos2d::Size(size.width / 2, 0.f));
+    _shots_view = cocos2d::Label::createWithTTF(cocos2d::StringUtils::format("%d", _shotsCount), Variables::FONT_NAME,
+                                                32.f, cocos2d::Size(size.width / 2 - 70.f, 0.f));
 
-    _name_view->setPosition(size.width / 4, size.height - 40.f);
-    _hp_view->setPosition(15.f, size.height - 120.f);
-    _shots_view->setPosition(size.width / 4, size.height - 150.f);
+    _name_view->setAnchorPoint(Vec2::ZERO);
+    _hp_view->setAnchorPoint(Vec2::ZERO);
+    _shots_view->setAnchorPoint(Vec2::ZERO);
+
+    _name_view->setPosition(0, size.height - 40.f);
+    _hp_view->setPosition(0, size.height - 100.f);
+    _shots_view->setPosition(0, size.height - 150.f);
+
+
+    setHAlignment(TextHAlignment::LEFT);
 
     _name_view->setColor(cocos2d::Color3B::BLACK);
     _shots_view->setColor(cocos2d::Color3B::BLACK);
@@ -59,7 +63,6 @@ bool Player::init(int id, int hp, std::string name) {
 }
 
 void Player::updateView() {
-
     _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
 }
 
@@ -95,17 +98,15 @@ void Player::setHp(int diff) {
 }
 
 void Player::setHAlignment(cocos2d::TextHAlignment alignment) {
-
     _name_view->setHorizontalAlignment(alignment);
     _shots_view->setHorizontalAlignment(alignment);
     _hp_view->setAlignment(alignment != cocos2d::TextHAlignment::RIGHT);
-
 }
 
 
-HPBar *HPBar::create() {
+HPBar *HPBar::create(cocos2d::Size size) {
     HPBar *ret = new(std::nothrow) HPBar();
-    if (ret && ret->init()) {
+    if (ret && ret->init(size)) {
         ret->autorelease();
     } else {
         CC_SAFE_DELETE(ret);
@@ -113,72 +114,45 @@ HPBar *HPBar::create() {
     return ret;
 }
 
-bool HPBar::init() {
+bool HPBar::init(cocos2d::Size size) {
     if (!Node::init())
         return false;
-    auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    _size = Size(visibleSize.width / 2 - 100.f, 50.f);
-
-    _bar = Sprite::createWithSpriteFrameName("green_normal.png");
-    _bar->setAnchorPoint(Vec2(0, 0));
-    _bar->setPosition(Vec2(0, 0));
-
-    auto oWidth = _bar->getContentSize().width;
-    auto oHeight = _bar->getContentSize().height;
-    _scale = _size.width / oWidth;
-    _bar->setScale(_scale, _size.height / oHeight);
-    _state = HPState::FULL;
+    _prevSize = size;
+    _size = size;
     _hp = 100;
     _alignment = true;
-    this->addChild(_bar);
+    _state = NONE;
+    setHp(_hp);
 
     return true;
 }
 
 void HPBar::setHp(float hp) {
-    auto visibleSize = Director::getInstance()->getVisibleSize();
+
     _hp = hp;
     auto percents = hp / 100.f;
-    CCLOG("HP %f per %f", hp, percents);
+
     if (percents < 0.3f) {
-        if (_state != HPState::DANGER) {
-            this->removeAllChildren();
-            _state = HPState::DANGER;
-            _bar = Sprite::createWithSpriteFrameName("red_normal.png");
-            _bar->setAnchorPoint(Vec2(0, 0));
-            this->addChild(_bar);
-        }
-    } else if (percents < 0.6f && _state != HPState::NORMAL) {
-        if (_state != HPState::NORMAL) {
-            this->removeAllChildren();
-            _state = HPState::NORMAL;
-            _bar = Sprite::createWithSpriteFrameName("yellow_normal.png");
-            _bar->setAnchorPoint(Vec2(0, 0));
-            this->addChild(_bar);
-        }
-    } else if (percents >= 0.6f && _state != HPState::FULL) {
-        if (_state != HPState::FULL) {
-            this->removeAllChildren();
-            _state = HPState::FULL;
-            _bar = Sprite::createWithSpriteFrameName("green_normal.png");
-            _bar->setAnchorPoint(Vec2(0, 0));
-            this->addChild(_bar);
-        }
+            changeState(DANGER);
+    } else if (percents < 0.6f) {
+        changeState(NORMAL);
+    } else if (percents >= 0.6f) {
+        changeState(FULL);
     }
 
-    auto oWidth = _size.width;
-    auto oHeight = _bar->getContentSize().height;
+    float new_Size = percents * _size.width;
 
-    _size = Size(percents * _scale * visibleSize.width / 2 - 100.f, 50.f);
-    float x = _size.width / oWidth;
-    float y = _size.height / oHeight;
+    float x = new_Size / _spriteSize.width;
+    float y = _size.height / _spriteSize.height;
+
+    _prevSize = _bar->getContentSize();
 
     if (!_alignment) {
-        CCLOG("MOVETO x %f", oWidth - _size.width);
         _bar->runAction(
-                Spawn::createWithTwoActions(MoveTo::create(0.2f, Vec2(oWidth - _size.width, 0)),
-                                            ScaleTo::create(0.2f, x, y)));
+                Spawn::createWithTwoActions(
+                        MoveTo::create(0.2f, Vec2( _size.width - new_Size, 0)),
+                        ScaleTo::create(0.2f, x, y)));
     } else {
         _bar->runAction(ScaleTo::create(0.2f, x, y));
     }
@@ -187,4 +161,39 @@ void HPBar::setHp(float hp) {
 void HPBar::setAlignment(bool isLeft) {
     _alignment = isLeft;
     setHp(_hp);
+}
+
+void HPBar::changeState(HPState state) {
+    if(_state == state){
+        return;
+    }
+
+    this->removeAllChildren();
+    _state = state;
+
+    switch(state) {
+        case FULL: {
+            _bar = Sprite::createWithSpriteFrameName("green_normal.png");
+            break;
+        }
+        case NORMAL: {
+            _bar = Sprite::createWithSpriteFrameName("yellow_normal.png");
+            break;
+        }
+        case DANGER: {
+            _bar = Sprite::createWithSpriteFrameName("red_normal.png");
+            break;
+        }
+        default:{ return; }
+    }
+
+    _bar->setAnchorPoint(Vec2(0, 0));
+    _spriteSize = _bar->getContentSize();
+
+    float x = _prevSize.width / _spriteSize.width;
+    float y = _prevSize.height / _spriteSize.height;
+
+    _bar->setScale(x,y);
+
+    this->addChild(_bar);
 }

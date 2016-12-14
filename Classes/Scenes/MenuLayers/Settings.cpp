@@ -17,15 +17,20 @@ bool Settings::init() {
     }
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
+    auto black = LayerColor::create(Color4B(0, 0, 0, 160));
+    auto pos = Vec2(-Director::getInstance()->getVisibleSize().width / 2,
+                    -Director::getInstance()->getVisibleSize().height / 2);
+    black->setPosition(pos);
+    this->addChild(black);
+
     _bg = Sprite::createWithSpriteFrameName(Variables::BG1);
 
     _bg->setPosition(visibleSize.width / 2, visibleSize.height / 2);
 
+    _bg->setScale((visibleSize.width - 50.f) / _bg->getContentSize().width,
+                  (visibleSize.height - 50.f) / _bg->getContentSize().height);
+
     this->addChild(_bg, 1);
-
-    //TODO add language selection
-
-    //TODO add rate&review button
 
     auto title = cocos2d::Label::createWithTTF("SETTINGS", Variables::FONT_NAME,
                                                Variables::H_FONT_SIZE);
@@ -123,9 +128,66 @@ bool Settings::init() {
     auto language = cocos2d::Label::createWithTTF("LANGUAGE", Variables::FONT_NAME,
                                                   Variables::FONT_SIZE);
     language->setPosition(_bg->getBoundingBox().getMinX() + 150.f + language->getContentSize().width / 2,
-                          _bg->getBoundingBox().size.height / 2 + 50.f);
+                          3 * _bg->getBoundingBox().size.height / 4);
 
     this->addChild(language, 2);
+
+    _language = def->getStringForKey("LANGUAGE", "ENGLISH");
+
+    _languageBox = cocos2d::ui::Button::create();
+    _languageBox->loadTextureNormal(Variables::GRAY_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    _languageBox->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                _showScrollView();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    _languageBox->setPosition(Vec2(language->getPosition().x,
+                                   language->getPosition().y - _languageBox->getContentSize().height));
+    auto languageBox_title = cocos2d::Label::createWithTTF(_language.c_str(), Variables::FONT_NAME,
+                                                           Variables::FONT_SIZE);
+    languageBox_title->setColor(Color3B::BLACK);
+    languageBox_title->setPosition(_languageBox->getContentSize().width / 2,
+                                   _languageBox->getContentSize().height / 2);
+    _languageBox->addChild(languageBox_title, 4);
+
+    this->addChild(_languageBox, 3);
+
+    auto rate = cocos2d::ui::Button::create();
+    rate->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON,
+                            Variables::GREEN_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    rate->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                //TODO add action here
+            }
+                break;
+            default:
+                break;
+        }
+    });
+
+    rate->setPosition(Vec2(_languageBox->getPosition().x,
+                           _languageBox->getPosition().y - rate->getBoundingBox().size.height - 15.f));
+
+    auto rate_icon = Sprite::createWithSpriteFrameName(Variables::RATE_ICON);
+    rate_icon->setPosition(rate->getContentSize().width - rate_icon->getBoundingBox().size.width / 2 - 15.f,
+                           rate->getContentSize().height / 2);
+    rate->addChild(rate_icon, 5);
+
+    auto rate_title = cocos2d::Label::createWithTTF("RATE US", Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+    rate_title->setPosition((rate->getContentSize().width / 2 - rate_title->getContentSize().width / 2),
+                            rate->getContentSize().height / 2);
+    rate->addChild(rate_title, 4);
+
+    this->addChild(rate, 3);
 
 
     return true;
@@ -136,8 +198,8 @@ void Settings::onEnter() {
 }
 
 void Settings::onQuit() {
-    this->getParent()->addChild(MainMenu::create(), 4);
-    this->removeFromParent();
+    auto scene = (MainScene *) this->getParent();
+    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
 }
 
 void Settings::_reloadButtons() {
@@ -178,7 +240,7 @@ void Settings::_reloadButtons() {
     });
     _musicButton->setPosition(
             Vec2(_bg->getBoundingBox().getMaxX() - _musicButton->getBoundingBox().size.width / 2 - 100.f,
-                 _bg->getBoundingBox().size.height / 2 + _musicButton->getBoundingBox().size.height / 2 + 100.f));
+                 _bg->getBoundingBox().getMaxY() - 2 * _musicButton->getBoundingBox().size.height));
     this->addChild(_musicButton, 3);
 
     _effectsButton = cocos2d::ui::Button::create();
@@ -200,5 +262,56 @@ void Settings::_reloadButtons() {
             Vec2(_bg->getBoundingBox().getMaxX() - _effectsButton->getBoundingBox().size.width / 2 - 100.f,
                  _bg->getBoundingBox().size.height / 2 + _effectsButton->getBoundingBox().size.height / 2 - 100.f));
     this->addChild(_effectsButton, 3);
+}
+
+void Settings::_showScrollView() {
+
+    _scrollView = cocos2d::ui::ScrollView::create();
+    _scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
+    _scrollView->setContentSize(Size(_languageBox->getContentSize().width, _bg->getContentSize().height));
+    _scrollView->setInnerContainerSize(Size(_languageBox->getContentSize().width, _languageBox->getContentSize().height * 10));
+    _scrollView->setBackGroundImage(Variables::GRAY_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+    _scrollView->setBackGroundImageScale9Enabled(true);
+    _scrollView->setBounceEnabled(true);
+    _scrollView->setInertiaScrollEnabled(true);
+    _scrollView->setAnchorPoint(Vec2(0, 0));
+    _scrollView->setPosition(Vec2(_languageBox->getPosition().x - _scrollView->getContentSize().width / 2,
+                                  Director::getInstance()->getVisibleSize().height / 2 -
+                                  _scrollView->getContentSize().height / 2));
+    std::vector<std::string> language_list = {"ENGLISH",
+                                              "GERMAN",
+                                              "FRENCH",
+                                              "ITALIAN",
+                                              "SPANISH",
+                                              "PORTUGUESE",
+                                              "RUSSIAN",
+                                              "JAPANESE",
+                                              "CHINESE"
+    };
+    for (unsigned long i = 0; i < language_list.size(); i++) {
+        auto language = language_list.at(i);
+        auto languageButton = cocos2d::ui::Button::create();
+        languageButton->setTitleText(language);
+        languageButton->setTitleFontSize(Variables::FONT_SIZE);
+        languageButton->setTitleFontName(Variables::FONT_NAME);
+        languageButton->setColor(Color3B::BLACK);
+        languageButton->addTouchEventListener(
+                [&, language](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+                            def->setStringForKey("LANGUAGE", language);
+                            onQuit();
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                });
+        languageButton->setPosition(Vec2(_scrollView->getInnerContainerSize().width / 2, _scrollView->getInnerContainerSize().height- 25.f - i * _languageBox->getContentSize().height));
+        _scrollView->addChild(languageButton, 3);
+
+    }
+    this->addChild(_scrollView, 4);
 }
 

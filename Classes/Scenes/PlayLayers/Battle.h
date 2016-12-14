@@ -66,6 +66,7 @@ public:
     void showPopUp();
 
 protected:
+    int _touch;
     Hero *_player;
     int _stickmanCount;
     float _GLOBAL_SCALE;

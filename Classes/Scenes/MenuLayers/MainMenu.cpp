@@ -9,39 +9,60 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "MainMenu.h"
 #include "Settings.h"
-#include "EquipmentScene.h"
 
 USING_NS_CC;
 
-Scene *MainMenu::createScene() {
-    auto scene = Scene::create();
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui.plist");
-    MainMenu *layer = MainMenu::create();
-    BackgroundLayer *bg = BackgroundLayer::create();
-    EquipmentScene *eq = EquipmentScene::create();
-
-    scene->addChild(bg, 2);
-
-    scene->addChild(eq, 3);
-
-    scene->addChild(layer, 4);
-
-    return scene;
+MainScene *MainScene::create() {
+    MainScene *ret = new(std::nothrow) MainScene();
+    if (ret && ret->init()) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
 }
 
+bool MainScene::init() {
+    if (!Scene::init()) {
+        return false;
+    }
 
-void MainMenu::onEnter() {
-    Layer::onEnter();
-    SocketClient::destroyInstance();
-    this->setVisible(true);
+    _backgroundLayer = BackgroundLayer::create();
+    _equipmentScene = EquipmentScene::create();
+
+    this->addChild(_backgroundLayer, 2);
+
+    this->addChild(_equipmentScene, 3);
+
+    _main = MainMenu::create(_equipmentScene);
+
+    this->addChild(_main, 4);
+
+    return true;
 }
 
-void MainMenu::onPushScene(int id) {
-    auto scene = BattleScene::createScene(id);
-    Director::getInstance()->pushScene(scene);
+void MainScene::replaceMain(Layer *layer) {
+    this->removeChild(_main);
+    _main = layer;
+    this->addChild(_main, 4);
 }
 
-bool MainMenu::init() {
+EquipmentScene *MainScene::getEquipmentLayer() {
+    return _equipmentScene;
+}
+
+MainMenu *MainMenu::create(EquipmentScene *equipmentLayer) {
+    MainMenu *ret = new(std::nothrow) MainMenu();
+    if (ret && ret->init(equipmentLayer)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+
+}
+
+bool MainMenu::init(EquipmentScene *equipmentLayer) {
     if (!Layer::init()) {
         return false;
     }
@@ -59,8 +80,7 @@ bool MainMenu::init() {
     settingsButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                this->getParent()->addChild(Settings::create(), 3);
-                this->removeFromParent();
+                ((MainScene *) this->getParent())->replaceMain(Settings::create());
             }
                 break;
             default:
@@ -72,8 +92,8 @@ bool MainMenu::init() {
     this->addChild(settingsButton);
 
 
-    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
-    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+    _keyboardListener = cocos2d::EventListenerKeyboard::create();
+    _keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
         switch (keyCode) {
             case EventKeyboard::KeyCode::KEY_BREAK:
             case EventKeyboard::KeyCode::KEY_ESCAPE:
@@ -82,7 +102,7 @@ bool MainMenu::init() {
                     auto popUp = this->getChildByName("PopUp");
                     if (popUp == nullptr) {
 
-                        this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
+                        this->getEventDispatcher()->pauseEventListenersForTarget(this);
 
                         auto size = Director::getInstance()->getVisibleSize();
 
@@ -109,7 +129,7 @@ bool MainMenu::init() {
     };
 
 
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
 
     auto coins_bar = cocos2d::ui::Button::create();
     coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
@@ -157,7 +177,7 @@ bool MainMenu::init() {
     customize->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                //TODO add transition to equipment scene
+                //TODO add action
             }
                 break;
             default:
@@ -165,8 +185,9 @@ bool MainMenu::init() {
         }
     });
 
-    customize->setPosition(Vec2(chest->getPosition().x + customize->getBoundingBox().size.width / 2,
-                                chest->getPosition().y - 2 * customize->getBoundingBox().size.height));
+    auto pos = equipmentLayer->getButtonPosition();
+    customize->setPosition(Vec2(pos.x, pos.y + customize->getBoundingBox().size.height));
+
     auto customize_label = cocos2d::Label::createWithTTF("CUSTOMIZE", Variables::FONT_NAME,
                                                          Variables::FONT_SIZE);
     customize_label->setPosition(customize_label->getBoundingBox().size.width / 2 + 10.f,
@@ -176,6 +197,16 @@ bool MainMenu::init() {
     this->addChild(customize);
 
     return true;
+}
+
+void MainMenu::onEnter() {
+    Layer::onEnter();
+    SocketClient::destroyInstance();
+}
+
+void MainMenu::onPushScene(int id) {
+    auto scene = BattleScene::createScene(id);
+    Director::getInstance()->pushScene(scene);
 }
 
 void MainMenu::onMenuClick(int id) {
@@ -200,7 +231,7 @@ void MainMenu::onMenuClick(int id) {
 
             singleP->setPosition(
                     Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
-                         2 * _visibleSize.height / 3));
+                         3 * _visibleSize.height / 4));
             auto singleP_label = cocos2d::Label::createWithTTF("SINGLE PLAYER", Variables::FONT_NAME,
                                                                Variables::FONT_SIZE);
             singleP_label->setPosition(singleP->getContentSize().width / 2,
@@ -233,6 +264,7 @@ void MainMenu::onMenuClick(int id) {
             duel2P_label->setPosition(duel2P->getContentSize().width / 2,
                                       duel2P->getContentSize().height / 2);
             duel2P->addChild(duel2P_label, 4);
+
 
             _menu->addChild(duel2P);
 
@@ -284,12 +316,13 @@ void MainMenu::onMenuClick(int id) {
 
             singleP->setPosition(
                     Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
-                         2 * _visibleSize.height / 3));
+                         3 * _visibleSize.height / 4));
             auto singleP_label = cocos2d::Label::createWithTTF("WAVES", Variables::FONT_NAME,
                                                                Variables::FONT_SIZE);
             singleP_label->setPosition(singleP->getContentSize().width / 2,
                                        singleP->getContentSize().height / 2);
             singleP->addChild(singleP_label, 4);
+
 
             _menu->addChild(singleP);
 
@@ -318,6 +351,7 @@ void MainMenu::onMenuClick(int id) {
                                     duel->getContentSize().height / 2);
             duel->addChild(duel_label, 4);
 
+
             _menu->addChild(duel);
 
             auto appleB = cocos2d::ui::Button::create();
@@ -343,6 +377,7 @@ void MainMenu::onMenuClick(int id) {
             appleB_label->setPosition(appleB->getContentSize().width / 2,
                                       appleB->getContentSize().height / 2);
             appleB->addChild(appleB_label, 4);
+
 
             _menu->addChild(appleB);
 
@@ -529,13 +564,12 @@ void MultiplayerMainMenu::onQuit() {
     Director::getInstance()->popScene();
 }
 
-
 void MultiplayerMainMenu::onError(string message) {
     _errorMessage->setString(message);
 }
 
 void MultiplayerMainMenu::update(float dt) {
-    if (!_client->connected()) {
+    if (!_client->connected() && this->getChildByName("PopUp") == nullptr) {
         auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
                                                    Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
@@ -648,7 +682,6 @@ void RegisterMenu::onQuit() {
     this->removeFromParent();
 }
 
-
 LobbyLayer *LobbyLayer::_instance = nullptr;
 
 LobbyLayer *LobbyLayer::getInstance() {
@@ -666,10 +699,6 @@ cocos2d::Scene *LobbyLayer::createScene() {
     scene->addChild(bg, 2);
     scene->addChild(layer, 3);
     return scene;
-}
-
-LobbyLayer::LobbyLayer() {
-
 }
 
 void LobbyLayer::onEnter() {
@@ -839,7 +868,6 @@ void LobbyLayer::deleteInvite() {
     _inviteBox->removeAllChildren();
     _player2 = nullptr;
 }
-
 
 void LobbyLayer::receivePlayerInfo(string message) {
     auto name = JSONParser::parseAnswer(message, "name");

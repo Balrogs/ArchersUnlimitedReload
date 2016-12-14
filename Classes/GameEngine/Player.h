@@ -10,30 +10,29 @@
 enum HPState{
     FULL,
     NORMAL,
-    DANGER
+    DANGER,
+    NONE
 };
 
 class HPBar : public cocos2d::Node{
 public:
-    static HPBar* create();
-    bool init();
+    static HPBar* create(cocos2d::Size size);
+    bool init(cocos2d::Size size);
     void setHp(float hp);
     void setAlignment(bool alignment);
 protected:
     bool _alignment;
     float _hp;
-    float _scale;
+    cocos2d::Size _spriteSize;
+    cocos2d::Size _prevSize;
     cocos2d::Size _size;
     cocos2d::Sprite* _bar;
     HPState _state;
-
+    void changeState(HPState state);
 };
 
 class Player : public cocos2d::Node{
-
 protected:
-    Player();
-
     int _id;
     std::string _name;
     int _shotsCount;
@@ -42,8 +41,6 @@ protected:
     cocos2d::Label *_name_view;
     HPBar *_hp_view;
     cocos2d::Label *_shots_view;
-
-    cocos2d::TextHAlignment _alignment;
 
     void updateView();
 

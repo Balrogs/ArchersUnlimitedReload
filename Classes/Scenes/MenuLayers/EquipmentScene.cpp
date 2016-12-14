@@ -1,4 +1,4 @@
-//
+//s54
 // Created by igor on 05.10.16.
 //
 
@@ -21,7 +21,7 @@ bool EquipmentScene::init() {
 
     _hero = new HeroPreview();
     _hero->setScale(1.5f);
-    _hero->setPosition(stand->getContentSize().width / 2 , stand->getContentSize().height / 2);
+    _hero->setPosition(stand->getContentSize().width / 2, stand->getContentSize().height / 2);
     this->addChild(_hero, 2);
 
     return true;
@@ -32,6 +32,10 @@ void EquipmentScene::onEnter() {
 }
 
 void EquipmentScene::onQuit() {
-    this->getParent()->addChild(MainMenu::create(), 4);
+    this->getParent()->addChild(MainMenu::create(this), 4);
     this->removeFromParent();
+}
+
+cocos2d::Vec2 EquipmentScene::getButtonPosition() {
+    return Vec2(_hero->getPosition().x, _hero->getGlobalHeight("Head"));
 }

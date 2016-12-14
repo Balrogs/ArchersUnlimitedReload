@@ -7,20 +7,38 @@
 
 #include <GameEngine/Global/Misc/Views.h>
 #include "cocos2d.h"
+#include "EquipmentScene.h"
+#include "Scenes/Layers/BackgroundLayer.h"
 #include <ui/UIEditBox/UIEditBox.h>
 #include <GameEngine/Player.h>
 
-class MainMenu : public cocos2d::Layer {
+
+class MainScene : public cocos2d::Scene{
 public:
-    CREATE_FUNC(MainMenu);
+    static MainScene *create();
 
     bool init();
+
+    void replaceMain(cocos2d::Layer* layer);
+
+    EquipmentScene* getEquipmentLayer();
+
+private:
+    EquipmentScene *_equipmentScene;
+    cocos2d::Layer *_main;
+    BackgroundLayer *_backgroundLayer;
+};
+
+class MainMenu : public cocos2d::Layer {
+public:
+    static MainMenu *create(EquipmentScene* equipmentLayer);
+
+    bool init(EquipmentScene* equipmentLayer);
 
     void onEnter() override;
 
     void onPushScene(int id);
 
-    static cocos2d::Scene *createScene();
 private:
     cocos2d::Size _visibleSize;
     int _menuId;
@@ -63,7 +81,6 @@ class RegisterMenu : public cocos2d::Layer {
 public:
 
     RegisterMenu();
-
     void onQuit();
 
 protected:
@@ -72,7 +89,6 @@ protected:
     cocos2d::ui::EditBox *_editPassword;
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
-
 };
 
 
@@ -101,9 +117,8 @@ public:
 protected:
 
     static LobbyLayer *_instance;
-    Player *_player2;
 
-    LobbyLayer();
+    Player *_player2;
 
     void onEnter() override;
 

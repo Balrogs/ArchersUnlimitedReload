@@ -1,25 +1,33 @@
+#include <Scenes/MenuLayers/SplashScene.h>
 #include "AppDelegate.h"
 #include "Scenes/MenuLayers/MainMenu.h"
 
 USING_NS_CC;
+// WP resolutions
+/*
+480 × 800
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size smallResolutionSize = cocos2d::Size(512, 384);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
+768 × 1280
 
-AppDelegate::AppDelegate()
-{
+720 × 1280
+
+1080 x 1920
+
+ */
+static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size smallResolutionSize = cocos2d::Size(800, 480);
+static cocos2d::Size mediumResolutionSize = cocos2d::Size(1280, 720);
+static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
+
+AppDelegate::AppDelegate() {
 }
 
-AppDelegate::~AppDelegate() 
-{
+AppDelegate::~AppDelegate() {
 }
 
 // if you want a different context, modify the value of glContextAttrs
 // it will affect all platforms
-void AppDelegate::initGLContextAttrs()
-{
+void AppDelegate::initGLContextAttrs() {
     // set OpenGL context attributes: red,green,blue,alpha,depth,stencil
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
 
@@ -28,8 +36,7 @@ void AppDelegate::initGLContextAttrs()
 
 // if you want to use the package manager to install more packages,  
 // don't modify or remove this function
-static int register_all_packages()
-{
+static int register_all_packages() {
     return 0; //flag for packages manager
 }
 
@@ -37,9 +44,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    if(!glview) {
+    if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("ArchersUnlimited", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("ArchersUnlimited", cocos2d::Rect(0, 0, designResolutionSize.width,
+                                                                              designResolutionSize.height));
 #else
         glview = GLViewImpl::create("ArchersUnlimitedReload");
 #endif
@@ -53,7 +61,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::FIXED_WIDTH);
+    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height,
+                                    ResolutionPolicy::FIXED_WIDTH);
     auto frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
 
@@ -61,21 +70,21 @@ bool AppDelegate::applicationDidFinishLaunching() {
     std::vector<std::string> searchPaths;
 
 
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
+    if (frameSize.height > mediumResolutionSize.height) {
+        director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height,
+                                            largeResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("ipad");
     }
-    // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
-        director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
+        // if the frame's height is larger than the height of small size.
+    else if (frameSize.height > smallResolutionSize.height) {
+        director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolutionSize.height,
+                                            mediumResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("hd");
     }
-    // if the frame's height is smaller than the height of medium size.
-    else
-    {        
-        director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
+        // if the frame's height is smaller than the height of medium size.
+    else {
+        director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolutionSize.height,
+                                            smallResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("sd");
     }
     searchPaths.push_back("Background");
@@ -87,7 +96,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 
     // create a scene. it's an autorelease object
-    auto scene = MainMenu::createScene();
+    auto scene = SplashScene::createScene();
 
     // run
     director->runWithScene(scene);

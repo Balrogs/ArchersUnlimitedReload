@@ -4,6 +4,7 @@
 
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Scenes/PlayLayers/Battle.h>
+#include <GameEngine/Global/Variables.h>
 #include "BackgroundLayer.h"
 
 USING_NS_CC;
@@ -255,6 +256,15 @@ bool BackgroundLayer::init() {
     if (!LayerColor::initWithColor(Color4B::WHITE)) {
         return false;
     }
+
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    auto bg = Sprite::createWithSpriteFrameName(Variables::BG3);
+    bg->setScale(visibleSize.width / bg->getContentSize().width);
+    bg->setPosition(visibleSize.width / 2 , visibleSize.height - bg->getBoundingBox().size.height / 2);
+
+    this->addChild(bg, 1);
+    
     _id = 0;
     _parallax = nullptr;
 

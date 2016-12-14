@@ -94,9 +94,20 @@ public:
 
     static const std::string BG1;
     static const std::string BG2;
+    static const std::string BG3;
 
     static const std::string CHEST_BUTTON;
     static const std::string CHEST_PRESSED_BUTTON;
+
+    static const std::string GRAY_BUTTON;
+
+    static const std::string RATE_ICON;
+    static const std::string SINGLE_ICON;
+    static const std::string TWO_PLAYERS_ICON;
+    static const std::string MULTIPLAYER_ICON;
+    static const std::string APPLE_ICON;
+    static const std::string BLOCK_ICON;
+
 };
 
 

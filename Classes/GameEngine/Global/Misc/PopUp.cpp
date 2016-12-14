@@ -33,6 +33,9 @@ bool PopUp::init(std::string title) {
     if (!Node::init()) {
         return false;
     }
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    POPUP_SIZE = Size(visibleSize.width / 2, visibleSize.height - 100.f);
+
 
     auto black = LayerColor::create(Color4B(0, 0, 0, 160));
     auto pos = Vec2(-Director::getInstance()->getVisibleSize().width / 2,
@@ -41,13 +44,9 @@ bool PopUp::init(std::string title) {
     this->addChild(black);
 
     auto base = Sprite::createWithSpriteFrameName(Variables::BG2);
+    _scale = Vec2(POPUP_SIZE.width / base->getContentSize().width, POPUP_SIZE.height / base->getContentSize().height);
+    base->setScale(_scale.x, _scale.y);
     this->addChild(base);
-    POPUP_SIZE = base->getContentSize();
-
-//    auto titleBase = DrawNode::create();
-//    titleBase->drawSolidRect(Vec2(-POPUP_SIZE.width / 2, POPUP_SIZE.height / 2 - 40.f),
-//                             Vec2(POPUP_SIZE.width / 2, POPUP_SIZE.height / 2), Color4F(Color3B(242, 118, 38), 1.f));
-//    this->addChild(titleBase, 1);
 
     _title = Label::createWithTTF(title, Variables::FONT_NAME, Variables::H_FONT_SIZE);
     _title->setPosition(0.f, POPUP_SIZE.height / 2 - _title->getContentSize().height / 2 - 20.f);
@@ -214,7 +213,7 @@ bool PausePopUp::init(std::string title) {
     _buttons = Node::create();
     _buttons->addChild(goToMenu);
     _buttons->addChild(play);
-    _buttons->setPosition(0, _musicButton->getPosition().y - 3 * _musicButton->getBoundingBox().size.height / 2);
+    _buttons->setPosition(0, _musicButton->getPosition().y - goToMenu->getBoundingBox().size.height - 10.f);
     this->addChild(_buttons, 2);
 
     return true;
@@ -228,8 +227,6 @@ void PausePopUp::_reloadButtons() {
     if (_effectsButton != nullptr) {
         _effectsButton->removeFromParent();
     }
-
-    auto visibleSize = Director::getInstance()->getVisibleSize();
 
     string music = Variables::MUSIC_ON_BUTTON;
     string effects = Variables::EFFECTS_ON_BUTTON;

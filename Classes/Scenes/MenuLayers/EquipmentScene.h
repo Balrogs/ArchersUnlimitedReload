@@ -13,7 +13,7 @@ public:
     CREATE_FUNC(EquipmentScene);
 
     bool init();
-
+    cocos2d::Vec2 getButtonPosition();
 protected:
     cocos2d::Size _visibleSize;
 
@@ -21,7 +21,5 @@ protected:
 
     void onEnter() override;
     void onQuit();
-
-
 };
 #endif //ARCUNLIM_EQUIPMENTSCENE_H

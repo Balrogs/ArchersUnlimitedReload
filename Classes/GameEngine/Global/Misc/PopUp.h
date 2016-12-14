@@ -23,6 +23,7 @@ public:
     cocos2d::Size POPUP_SIZE;
 
 protected:
+    cocos2d::Vec2 _scale;
     cocos2d::Label *_title;
     cocos2d::Node *_buttons;
 

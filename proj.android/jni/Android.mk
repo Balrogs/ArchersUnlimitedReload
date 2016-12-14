@@ -17,6 +17,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/Layers/PauseScene.cpp\
                                  ../../Classes/Scenes/PlayLayers/GameOverScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/EquipmentScene.cpp\
+                                 ../../Classes/Scenes/MenuLayers/SplashScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/Randomizer.cpp \
                                  ../../Classes/Scenes/Layers/UI.cpp\
                                  ../../Classes/Scenes/Layers/BackgroundLayer.cpp\
@@ -65,7 +66,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Misc/SocketClient.cpp \
                                  ../../Classes/GameEngine/Global/Misc/JSONParser.cpp \
                                  ../../Classes/GameEngine/Global/Misc/Views.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/PopUp.cpp
+                                 ../../Classes/GameEngine/Global/Misc/PopUp.cpp \
+                                 ../../Classes/Localization/LocalizedStrings.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 
