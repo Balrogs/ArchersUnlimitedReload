@@ -4,6 +4,7 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/Layers/BackgroundLayer.h>
+#include <Localization/LocalizedStrings.h>
 #include "Battle.h"
 #include "AppleBattle.h"
 #include "DuelScene.h"
@@ -318,7 +319,7 @@ void BattleScene::showPopUp() {
     auto popUp = this->_ui->getChildByName("PopUp");
     if (popUp == nullptr) {
         pauseBattle();
-        popUp = PausePopUp::create("PAUSE");
+        popUp = PausePopUp::create(LocalizedStrings::getInstance()->getString("PAUSE"));
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
         this->_ui->addChild(popUp, 0, "PopUp");
     } else {

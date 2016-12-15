@@ -6,6 +6,7 @@
 #include <ui/UIButton.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/PopUp.h>
+#include <Localization/LocalizedStrings.h>
 #include "Settings.h"
 #include "MainMenu.h"
 
@@ -32,7 +33,7 @@ bool Settings::init() {
 
     this->addChild(_bg, 1);
 
-    auto title = cocos2d::Label::createWithTTF("SETTINGS", Variables::FONT_NAME,
+    auto title = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("SETTINGS"), Variables::FONT_NAME,
                                                Variables::H_FONT_SIZE);
     title->setPosition(_bg->getBoundingBox().getMinX() + 50.f + title->getContentSize().width / 2,
                        _bg->getBoundingBox().getMaxY() - title->getContentSize().height / 2 - 50.f);
@@ -55,7 +56,7 @@ bool Settings::init() {
     });
     removeAds->setPosition(Vec2(_bg->getBoundingBox().getMaxX() * 7 / 8 - removeAds->getBoundingBox().size.width / 2,
                                 title->getPosition().y));
-    auto ads_title = cocos2d::Label::createWithTTF("REMOVE ADS", Variables::FONT_NAME,
+    auto ads_title = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("REMOVE ADS"), Variables::FONT_NAME,
                                                    Variables::FONT_SIZE);
     ads_title->setPosition(removeAds->getContentSize().width - ads_title->getContentSize().width / 2 - 25.f,
                            removeAds->getContentSize().height / 2);
@@ -108,7 +109,7 @@ bool Settings::init() {
 
     _reloadButtons();
 
-    auto music = cocos2d::Label::createWithTTF("MUSIC:", Variables::FONT_NAME,
+    auto music = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("MUSIC"), Variables::FONT_NAME,
                                                Variables::FONT_SIZE);
     music->setPosition(
             Vec2(_musicButton->getBoundingBox().getMinX() - music->getBoundingBox().size.width / 2 - 50.f,
@@ -116,7 +117,7 @@ bool Settings::init() {
 
     this->addChild(music, 2);
 
-    auto sounds = cocos2d::Label::createWithTTF("SOUNDS:", Variables::FONT_NAME,
+    auto sounds = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("SOUNDS"), Variables::FONT_NAME,
                                                 Variables::FONT_SIZE);
     sounds->setPosition(
             Vec2(_effectsButton->getBoundingBox().getMinX() - sounds->getBoundingBox().size.width / 2 - 50.f,
@@ -153,7 +154,7 @@ bool Settings::init() {
 
     this->addChild(_languageBox, 3);
 
-    auto language = cocos2d::Label::createWithTTF("LANGUAGE", Variables::FONT_NAME,
+    auto language = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("LANGUAGE"), Variables::FONT_NAME,
                                                   Variables::FONT_SIZE);
     language->setPosition(_languageBox->getPosition().x,
                           _languageBox->getPosition().y + _languageBox->getBoundingBox().size.height / 2 +
@@ -184,7 +185,7 @@ bool Settings::init() {
                            rate->getContentSize().height / 2);
     rate->addChild(rate_icon, 5);
 
-    auto rate_title = cocos2d::Label::createWithTTF("RATE US", Variables::FONT_NAME,
+    auto rate_title = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("RATE US"), Variables::FONT_NAME,
                                                     Variables::FONT_SIZE);
     rate_title->setPosition((rate->getContentSize().width / 2 - rate_title->getContentSize().width / 2),
                             rate->getContentSize().height / 2);
@@ -282,6 +283,7 @@ void Settings::_showScrollView() {
     _scrollView->setPosition(Vec2(_languageBox->getPosition().x - _scrollView->getContentSize().width / 2,
                                   Director::getInstance()->getVisibleSize().height / 2 -
                                   _scrollView->getContentSize().height / 2));
+
     std::vector<std::string> language_list = {"ENGLISH",
                                               "GERMAN",
                                               "FRENCH",

@@ -7,6 +7,7 @@
 #include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/PopUp.h>
+#include <Localization/LocalizedStrings.h>
 #include "MainMenu.h"
 #include "Settings.h"
 
@@ -106,10 +107,11 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
                         auto size = Director::getInstance()->getVisibleSize();
 
-                        auto label = cocos2d::Label::createWithTTF("EXIT THE GAME?", Variables::FONT_NAME,
-                                                                   Variables::FONT_SIZE);
+                        auto label = cocos2d::Label::createWithTTF(
+                                LocalizedStrings::getInstance()->getString("EXIT THE GAME?"), Variables::FONT_NAME,
+                                Variables::FONT_SIZE);
                         label->setColor(cocos2d::Color3B::BLACK);
-                        popUp = MainMenuPopUp::create("ARE YOU SURE?",
+                        popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
                                                       label,
                                                       true);
 
@@ -188,7 +190,8 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     auto pos = equipmentLayer->getButtonPosition();
     customize->setPosition(Vec2(pos.x, pos.y + customize->getBoundingBox().size.height));
 
-    auto customize_label = cocos2d::Label::createWithTTF("CUSTOMIZE", Variables::FONT_NAME,
+    auto customize_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CUSTOMIZE"),
+                                                         Variables::FONT_NAME,
                                                          Variables::FONT_SIZE);
     customize_label->setPosition(customize_label->getBoundingBox().size.width / 2 + 10.f,
                                  customize->getContentSize().height / 2);
@@ -232,8 +235,9 @@ void MainMenu::onMenuClick(int id) {
             singleP->setPosition(
                     Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
                          3 * _visibleSize.height / 4));
-            auto singleP_label = cocos2d::Label::createWithTTF("SINGLE PLAYER", Variables::FONT_NAME,
-                                                               Variables::FONT_SIZE);
+            auto singleP_label = cocos2d::Label::createWithTTF(
+                    LocalizedStrings::getInstance()->getString("SINGLE PLAYER"), Variables::FONT_NAME,
+                    Variables::FONT_SIZE);
             singleP_label->setPosition(singleP->getContentSize().width / 2,
                                        singleP->getContentSize().height / 2);
             singleP->addChild(singleP_label, 4);
@@ -259,8 +263,9 @@ void MainMenu::onMenuClick(int id) {
                     Vec2(singleP->getPosition().x,
                          singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
                          duel2P->getBoundingBox().size.height / 2 - 15.f));
-            auto duel2P_label = cocos2d::Label::createWithTTF("DUEL 2 PLAYERS", Variables::FONT_NAME,
-                                                              Variables::FONT_SIZE);
+            auto duel2P_label = cocos2d::Label::createWithTTF(
+                    LocalizedStrings::getInstance()->getString("DUEL 2 PLAYERS"), Variables::FONT_NAME,
+                    Variables::FONT_SIZE);
             duel2P_label->setPosition(duel2P->getContentSize().width / 2,
                                       duel2P->getContentSize().height / 2);
             duel2P->addChild(duel2P_label, 4);
@@ -287,7 +292,8 @@ void MainMenu::onMenuClick(int id) {
             multiP->setPosition(
                     Vec2(duel2P->getPosition().x, duel2P->getPosition().y - duel2P->getBoundingBox().size.height / 2 -
                                                   multiP->getBoundingBox().size.height / 2 - 15.f));
-            auto multiP_label = cocos2d::Label::createWithTTF("MULTIPLAYER", Variables::FONT_NAME,
+            auto multiP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("MULTIPLAYER"),
+                                                              Variables::FONT_NAME,
                                                               Variables::FONT_SIZE);
             multiP_label->setPosition(multiP->getContentSize().width / 2,
                                       multiP->getContentSize().height / 2);
@@ -317,7 +323,7 @@ void MainMenu::onMenuClick(int id) {
             singleP->setPosition(
                     Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
                          3 * _visibleSize.height / 4));
-            auto singleP_label = cocos2d::Label::createWithTTF("WAVES", Variables::FONT_NAME,
+            auto singleP_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("WAVES"), Variables::FONT_NAME,
                                                                Variables::FONT_SIZE);
             singleP_label->setPosition(singleP->getContentSize().width / 2,
                                        singleP->getContentSize().height / 2);
@@ -345,7 +351,7 @@ void MainMenu::onMenuClick(int id) {
                     Vec2(singleP->getPosition().x,
                          singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
                          duel->getBoundingBox().size.height / 2 - 15.f));
-            auto duel_label = cocos2d::Label::createWithTTF("DUEL", Variables::FONT_NAME,
+            auto duel_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("DUEL"), Variables::FONT_NAME,
                                                             Variables::FONT_SIZE);
             duel_label->setPosition(duel->getContentSize().width / 2,
                                     duel->getContentSize().height / 2);
@@ -372,7 +378,7 @@ void MainMenu::onMenuClick(int id) {
             appleB->setPosition(
                     Vec2(duel->getPosition().x, duel->getPosition().y - duel->getBoundingBox().size.height / 2 -
                                                 appleB->getBoundingBox().size.height / 2 - 15.f));
-            auto appleB_label = cocos2d::Label::createWithTTF("APPLE", Variables::FONT_NAME,
+            auto appleB_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("APPLE"), Variables::FONT_NAME,
                                                               Variables::FONT_SIZE);
             appleB_label->setPosition(appleB->getContentSize().width / 2,
                                       appleB->getContentSize().height / 2);
@@ -524,7 +530,7 @@ void MultiplayerMainMenu::onEnter() {
         this->addChild(menu);
 
     } else {
-        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME, Variables::FONT_SIZE);
+        auto label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("CONNECTION ERROR"), Variables::FONT_NAME, Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("", label, false);
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
@@ -570,7 +576,7 @@ void MultiplayerMainMenu::onError(string message) {
 
 void MultiplayerMainMenu::update(float dt) {
     if (!_client->connected() && this->getChildByName("PopUp") == nullptr) {
-        auto label = cocos2d::Label::createWithTTF("CONNECTION ERROR", Variables::FONT_NAME,
+        auto label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("CONNECTION ERROR"), Variables::FONT_NAME,
                                                    Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("",

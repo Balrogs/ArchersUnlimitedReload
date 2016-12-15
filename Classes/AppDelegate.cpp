@@ -90,6 +90,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     searchPaths.push_back("Background");
     searchPaths.push_back("fonts");
     searchPaths.push_back("config");
+    searchPaths.push_back("localization");
     fileUtils->setSearchPaths(searchPaths);
     register_all_packages();
 

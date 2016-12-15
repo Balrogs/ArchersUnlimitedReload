@@ -3,15 +3,18 @@
 //
 
 #include <GameEngine/Objects/Environment/Ground.h>
+#include <Localization/LocalizedStrings.h>
 #include "DuelScene2P.h"
 
 USING_NS_CC;
 
 void DuelScene2P::initWorld() {
 
-    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, "Player 1");
+    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND,
+                          StringUtils::format("%s 1", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
 
-    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, "Player 2");
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
+                          StringUtils::format("%s 2", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
 
     _hero2->changeFacedir(-1);
     _player1 = _hero1->getPlayer();
@@ -43,14 +46,15 @@ void DuelScene2P::makeTurn(int id) {
         }
         _player = getHero(id);
         auto action = Sequence::create(
-                Spawn::createWithTwoActions(MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
-                              CallFunc::create(
-                                      [&, delay]() {
-                                          auto vec = Vec2(-_player->getPosition().x +
-                                                          visibleSize.width / 2, 0.f);
-                                          this->_bg->runAction(MoveTo::create(delay, vec));
-                                      }
-                              )
+                Spawn::createWithTwoActions(
+                        MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+                        CallFunc::create(
+                                [&, delay]() {
+                                    auto vec = Vec2(-_player->getPosition().x +
+                                                    visibleSize.width / 2, 0.f);
+                                    this->_bg->runAction(MoveTo::create(delay, vec));
+                                }
+                        )
                 ),
                 CallFunc::create(
                         [&]() {

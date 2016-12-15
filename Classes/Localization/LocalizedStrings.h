@@ -1,15 +1,22 @@
-//
-// Created by igor on 13.12.16.
-//
-
 #ifndef ARCHERSUNLIMITED_LOCALIZEDSTRINGS_H
 #define ARCHERSUNLIMITED_LOCALIZEDSTRINGS_H
 
+#include "rapidjson/document.h"
 
+using namespace rapidjson;
+using namespace std;
 
-const char * CCLocalizedString(const char * mKey,const char * mComment);
+class LocalizedStrings {
+public:
+    static LocalizedStrings *getInstance();
 
-void PurgeCCLocalizedStringCached();
+    void setLanguage(string language);
 
+    const char *getString(const char *message);
+
+private:
+    string _language;
+    string _document;
+};
 
 #endif //ARCHERSUNLIMITED_LOCALIZEDSTRINGS_H

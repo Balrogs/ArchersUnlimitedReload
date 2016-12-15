@@ -1,6 +1,7 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Objects/Environment/Ground.h>
+#include <Localization/LocalizedStrings.h>
 #include "DuelScene.h"
 
 USING_NS_CC;
@@ -12,7 +13,7 @@ void DuelScene::initWorld() {
 
     _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
 
-    auto target = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, "BOT");
+    auto target = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,   LocalizedStrings::getInstance()->getString("BOT"));
 
     _player1 = _player->getPlayer();
     _player2 = target->getPlayer();

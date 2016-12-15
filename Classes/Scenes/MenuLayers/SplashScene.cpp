@@ -1,6 +1,7 @@
 //
 // Created by igor on 13.12.16.
 //
+#include <Localization/LocalizedStrings.h>
 #include "MainMenu.h"
 #include "SplashScene.h"
 
@@ -83,7 +84,11 @@ bool SplashScene::init() {
 
     if(def->getStringForKey("LANGUAGE", "").length() == 0){
         def->setStringForKey("LANGUAGE", language.c_str());
+    } else {
+        language = def->getStringForKey("LANGUAGE", "");
     }
+
+    LocalizedStrings::getInstance()->setLanguage(language);
 
     this->scheduleOnce(schedule_selector(SplashScene::GoToMainMenuScene), 2.f);
 
