@@ -53,7 +53,7 @@ Scene *BattleScene::createScene(int type) {
     return scene;
 }
 
-const float  BattleScene::MAX_ARROW_POWER = 40.f;
+const float  BattleScene::MAX_ARROW_POWER = 50.f;
 const float  BattleScene::MIN_ARROW_POWER = 5.f;
 
 const float  BattleScene::G = -0.5f;

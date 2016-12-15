@@ -12,9 +12,6 @@ bool Ground::init(float y_pos, float width, std::string path) {
     if (!Node::init()) {
         return false;
     }
-    this->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(0.f, y_pos),
-                                                        Vec2(width, y_pos)));
-    this->getPhysicsBody()->setContactTestBitmask(true);
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 

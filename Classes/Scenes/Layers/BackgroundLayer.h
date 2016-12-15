@@ -39,6 +39,10 @@ public:
     void createDesert();
 
     void createGreenfield();
+private:
+    float GROUND;
+    cocos2d::Size _size;
+    cocos2d::DrawNode* _ground;
 };
 
 
