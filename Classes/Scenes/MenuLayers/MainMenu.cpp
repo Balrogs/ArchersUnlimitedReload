@@ -323,7 +323,8 @@ void MainMenu::onMenuClick(int id) {
             singleP->setPosition(
                     Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
                          3 * _visibleSize.height / 4));
-            auto singleP_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("WAVES"), Variables::FONT_NAME,
+            auto singleP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("WAVES"),
+                                                               Variables::FONT_NAME,
                                                                Variables::FONT_SIZE);
             singleP_label->setPosition(singleP->getContentSize().width / 2,
                                        singleP->getContentSize().height / 2);
@@ -351,7 +352,8 @@ void MainMenu::onMenuClick(int id) {
                     Vec2(singleP->getPosition().x,
                          singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
                          duel->getBoundingBox().size.height / 2 - 15.f));
-            auto duel_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("DUEL"), Variables::FONT_NAME,
+            auto duel_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"),
+                                                            Variables::FONT_NAME,
                                                             Variables::FONT_SIZE);
             duel_label->setPosition(duel->getContentSize().width / 2,
                                     duel->getContentSize().height / 2);
@@ -367,7 +369,7 @@ void MainMenu::onMenuClick(int id) {
             appleB->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
                 switch (type) {
                     case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        //   onPushScene(1);
+                        onPushScene(1);
                     }
                         break;
                     default:
@@ -378,7 +380,8 @@ void MainMenu::onMenuClick(int id) {
             appleB->setPosition(
                     Vec2(duel->getPosition().x, duel->getPosition().y - duel->getBoundingBox().size.height / 2 -
                                                 appleB->getBoundingBox().size.height / 2 - 15.f));
-            auto appleB_label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("APPLE"), Variables::FONT_NAME,
+            auto appleB_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"),
+                                                              Variables::FONT_NAME,
                                                               Variables::FONT_SIZE);
             appleB_label->setPosition(appleB->getContentSize().width / 2,
                                       appleB->getContentSize().height / 2);
@@ -530,7 +533,8 @@ void MultiplayerMainMenu::onEnter() {
         this->addChild(menu);
 
     } else {
-        auto label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("CONNECTION ERROR"), Variables::FONT_NAME, Variables::FONT_SIZE);
+        auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CONNECTION ERROR"),
+                                                   Variables::FONT_NAME, Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("", label, false);
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
@@ -576,7 +580,8 @@ void MultiplayerMainMenu::onError(string message) {
 
 void MultiplayerMainMenu::update(float dt) {
     if (!_client->connected() && this->getChildByName("PopUp") == nullptr) {
-        auto label = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("CONNECTION ERROR"), Variables::FONT_NAME,
+        auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CONNECTION ERROR"),
+                                                   Variables::FONT_NAME,
                                                    Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("",
