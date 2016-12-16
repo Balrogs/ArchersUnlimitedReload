@@ -94,9 +94,12 @@ const std::string Variables::COIN = "coin.png";
 
 const std::string Variables::VIDEO_BUTTON = "video.png";
 
+const std::string Variables::EVENT_BUTTON = "event.png";
+const std::string Variables::EVENT_PRESSED_BUTTON = "event_pressed.png";
+
 const std::string Variables::STAND = "stand.png";
 
-const std::string Variables::YELLOW_BUTTON = "yellow_normal";
+const std::string Variables::YELLOW_BUTTON = "yellow_normal.png";
 const std::string Variables::YELLOW_PRESSED_BUTTON = "yellow_pressed.png";
 
 const std::string Variables::RED_BUTTON = "red_normal.png";
@@ -111,7 +114,7 @@ const std::string Variables::GREEN_PRESSED_BUTTON = "green_pressed.png";
 
 const std::string Variables::BG1 = "bg1.png";
 const std::string Variables::BG2 = "bg2.png";
-const std::string Variables::BG3 = "akkaserver.jar.png";
+const std::string Variables::BG3 = "bg3.png";
 
 
 const std::string Variables::CHEST_BUTTON = "chest.png";

@@ -78,6 +78,10 @@ public:
 
     static const std::string VIDEO_BUTTON;
 
+    static const std::string EVENT_BUTTON;
+    static const std::string EVENT_PRESSED_BUTTON;
+
+
     static const std::string STAND;
 
     static const std::string YELLOW_BUTTON;

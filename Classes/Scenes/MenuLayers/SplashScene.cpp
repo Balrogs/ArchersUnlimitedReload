@@ -34,6 +34,9 @@ bool SplashScene::init() {
     this->addChild(backgroundSprite);
 
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("env.plist");
+
+
     LanguageType currentLanguageType = Application::getInstance()->getCurrentLanguage();
     std::string language;
 

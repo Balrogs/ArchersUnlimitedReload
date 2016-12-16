@@ -87,14 +87,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
                                             smallResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("sd");
     }
-    searchPaths.push_back("Background");
     searchPaths.push_back("fonts");
-    searchPaths.push_back("config");
     searchPaths.push_back("localization");
     fileUtils->setSearchPaths(searchPaths);
     register_all_packages();
-
-
 
     // create a scene. it's an autorelease object
     auto scene = SplashScene::createScene();
