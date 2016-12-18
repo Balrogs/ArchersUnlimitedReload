@@ -25,8 +25,11 @@ public:
 
     void addMoveArrows(Hero *player);
 
+    void setWarning(const char * message, cocos2d::Color3B color);
+
 protected:
 
+    cocos2d::Label* _warningLabel;
     std::vector<cocos2d::Rect> bounds;
 };
 

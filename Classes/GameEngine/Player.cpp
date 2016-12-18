@@ -103,6 +103,11 @@ void Player::setHAlignment(cocos2d::TextHAlignment alignment) {
     _hp_view->setAlignment(alignment != cocos2d::TextHAlignment::RIGHT);
 }
 
+void Player::nullShotsCount() {
+    _shotsCount = 0;
+    updateView();
+}
+
 
 HPBar *HPBar::create(cocos2d::Size size) {
     HPBar *ret = new(std::nothrow) HPBar();

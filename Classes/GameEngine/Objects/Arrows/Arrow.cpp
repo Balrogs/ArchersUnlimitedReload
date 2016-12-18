@@ -2,6 +2,7 @@
 #include <Scenes/PlayLayers/DuelScene.h>
 #include <Scenes/PlayLayers/AppleBattle.h>
 #include <GameEngine/Global/Variables.h>
+#include <GameEngine/Objects/Environment/Box.h>
 
 USING_NS_CC;
 
@@ -84,6 +85,11 @@ void Arrow::_disableArrow() {
 
     afterAction();
 
+    this->retain();
+    this->removeFromParent();
+    BattleScene::instance->getBackground()->addArrow(this);
+    this->release();
+
     this->unscheduleAllCallbacks();
 
     this->removeComponent(this->getPhysicsBody());
@@ -93,7 +99,6 @@ void Arrow::_disableArrow() {
                     DelayTime::create(10),
                     CallFunc::create(
                             [&]() {
-                                this->retain();
                                 this->removeFromParent();
                             }
                     ),
@@ -104,14 +109,42 @@ bool Arrow::processContact(Node *bone) {
     if (bone == nullptr) {
         return false;
     }
-    if (Apple *apple = dynamic_cast<Apple *>(bone)) {
+    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
+        if (Apple *apple = dynamic_cast<Apple *>(bone)) {
 
-        this->addDOChild(apple);
+            this->addDOChild(apple);
 
-        apple->hit();
+            appleb->setAppleHit();
+
+            return true;
+        }
+
+        if (Body *target = dynamic_cast<Body *>(bone->getParent()->getParent())) {
+            if (Hero *hero = dynamic_cast<Hero *>(bone->getParent()->getParent())) {
+                if (hero->getPlayer()->getId() == _player_id)
+                    return false;
+            }
+
+            _disableArrow();
+
+            appleb->setHit();
+
+            return true;
+        }
+    }
+
+
+    if (Box *box = dynamic_cast<Box *>(bone)) {
+
+        _disableArrow();
+
+        addToBox(box);
+
+        box->breakBox();
 
         return true;
     }
+
     if (Body *target = dynamic_cast<Body *>(bone->getParent()->getParent())) {
         if (Hero *hero = dynamic_cast<Hero *>(bone->getParent()->getParent())) {
             if (hero->getPlayer()->getId() == _player_id)
@@ -139,6 +172,45 @@ void Arrow::update() {
 }
 
 
+void Arrow::addToBox(cocos2d::Node *bone) {
+    const auto &position = this->getPosition();
+    const auto &rotation = this->getRotation();
+    _speedX /= 2;
+    _speedY /= 2;
+    if (rotation >= 180) {
+        _speedY -= BattleScene::G;
+    } else {
+        _speedY += BattleScene::G;
+
+    }
+    this->setPosition(position.x + _speedX, position.y + _speedY);
+
+
+    this->retain();
+    this->removeFromParentAndCleanup(true);
+    //position
+    auto scenePoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay);
+    auto globalPoint3 = new Vec3(scenePoint.x, scenePoint.y, 0.f);
+    bone->getWorldToNodeTransform().transformPoint(globalPoint3);
+    auto globalPoint = Vec2(globalPoint3->x, globalPoint3->y);
+
+    this->setPosition(globalPoint);
+
+    //rotation
+    auto head = Variables::translatePoint(Vec3(_head.x, _head.y, 0.f), _armatureDisplay,
+                                          bone);
+    auto tail = Variables::translatePoint(Vec3(_tail.x, _tail.y, 0.f), _armatureDisplay,
+                                          bone);
+    float x = head.x - tail.x;
+    float y = head.y - tail.y;
+    auto angle = std::atan2(y, x);
+
+    this->setRotation(-angle * dragonBones::RADIAN_TO_ANGLE);
+
+    bone->addChild(this, 0);
+    this->release();
+}
+
 void Arrow::addToNode(cocos2d::Node *bone) {
     if (DragonObject *target = dynamic_cast<DragonObject *>(bone->getParent()->getParent())) {
 
@@ -159,11 +231,11 @@ void Arrow::addToNode(cocos2d::Node *bone) {
         this->removeFromParentAndCleanup(true);
         //position
         auto scenePoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay);
-        if(target->getPosition().x > BattleScene::instance->visibleSize.width){
+        if (target->getPosition().x > BattleScene::instance->visibleSize.width) {
             auto player_pos = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), bone);
             scenePoint.x = player_pos.x;
         }
-        auto globalPoint3= new Vec3(scenePoint.x, scenePoint.y, 0.f);
+        auto globalPoint3 = new Vec3(scenePoint.x, scenePoint.y, 0.f);
         bone->getWorldToNodeTransform().transformPoint(globalPoint3);
         auto globalPoint = Vec2(globalPoint3->x, globalPoint3->y);
 
@@ -201,7 +273,7 @@ void Arrow::afterAction() {
 PowerArrow::PowerArrow(const std::string &armatureName, float radian, float power,
                        const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                              player_id) {
-    _damage=40.f;
+    _damage = 40.f;
 }
 
 
@@ -217,7 +289,7 @@ bool PowerArrow::processContact(Node *bone) {
 
         _disableArrow();
 
-      //  target->dealDamage(_damage);
+        //  target->dealDamage(_damage);
 
         target->hit(cocos2d::Vec2(_speedX, _speedY));
 
@@ -235,7 +307,7 @@ PowerArrow::~PowerArrow() {
 FrozenArrow::FrozenArrow(const std::string &armatureName, float radian, float power,
                          const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                                player_id) {
-    _damage=20.f;
+    _damage = 20.f;
 
 }
 

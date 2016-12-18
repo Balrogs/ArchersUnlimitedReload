@@ -73,6 +73,19 @@ bool InfiniteParallaxNode::init(int id) {
 
 void InfiniteParallaxNode::createGraveyard() {
 
+    _ground = DrawNode::create();
+
+    auto from = Vec2(_size.width, 0);
+    auto to = Vec2(_size.height, GROUND);
+
+    _ground->drawSolidRect(from, to, Color4F(Color4B(113, 18, 13, 255)));
+
+    _ground->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(from.x, to.y),
+                                                           to));
+    _ground->getPhysicsBody()->setContactTestBitmask(true);
+
+    this->addChild(_ground, 3, Point(1, 1), Point::ZERO);
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
     Clouds *cloud2 = Clouds::create(visibleSize.width * 3, "clouds2.png");
@@ -87,63 +100,7 @@ void InfiniteParallaxNode::createGraveyard() {
     auto y = visibleSize.height - 100.f;
     this->addChild(moon, 2, Point(0, 0), Point(visibleSize.width / 2 + 2 * moon->getBoundingBox().size.width, y));
 
-    //fences
-
-    auto f = Sprite::createWithSpriteFrameName("fence1.png");
-    auto fenceWidth = f->getBoundingBox().size.width / 2;
-    auto fenceYpos = 300.f;
-    unsigned int fencesQuantity = 30;
-    for (unsigned int i = 0; i < fencesQuantity; i++) {
-        auto random = RandomHelper::random_int(1, 3);
-        CCLOG("%d", random);
-        auto fence = Sprite::createWithSpriteFrameName("fence" + StringUtils::toString(random) + ".png");
-        if (fence == nullptr) {
-            continue;
-        }
-        fence->setAnchorPoint(Point::ZERO);
-        fence->setTag(1000 + i);
-        fence->setScale(0.4f);
-        if (random == 1) {
-            this->addChild(fence, 1, Point(0.2, 0.2),
-                           Point((-visibleSize.width / 2) + (i + 1) * fenceWidth, fenceYpos));
-        } else {
-            this->addChild(fence, 1, Point(0.2, 0.2),
-                           Point((-visibleSize.width / 2) + (i + 1) * fenceWidth, fenceYpos - 20.f));
-        }
-
-    }
-
-    //trees
-
-    unsigned int treesQuantity = 25;
-    for (unsigned int i = 0; i < treesQuantity; i++) {
-        auto tree = Sprite::createWithSpriteFrameName(
-                "tree" + StringUtils::toString(RandomHelper::random_int(1, 2)) + ".png");
-        tree->setAnchorPoint(Point::ZERO);
-        int randomZorder = RandomHelper::random_int(2, 3);
-        tree->setScale(2 * randomZorder / 10.f);
-        tree->setTag(2000 + i);
-
-        CCLOG("randomZorder %d Ratio %f", randomZorder, 0.1f + randomZorder / 7.f);
-        this->addChild(tree, randomZorder, Point(0.1f + randomZorder / 7.f, 0.1f + randomZorder / 7.f),
-                       Point((-visibleSize.width / 2) + (i + 1) * RandomHelper::random_int(100, 250),
-                             RandomHelper::random_real(fenceYpos - 150, fenceYpos - 20)));
-    }
-
-    //graves
-
-    unsigned int gravesQuantity = 15;
-    for (unsigned int i = 0; i < gravesQuantity; i++) {
-        auto grave = Sprite::createWithSpriteFrameName(
-                "grave" + StringUtils::toString(RandomHelper::random_int(1, 3)) + ".png");
-        grave->setAnchorPoint(Point::ZERO);
-        grave->setTag(3000 + i);
-        this->addChild(grave, 3, Point(0.4f, 0.4f),
-                       Point((-visibleSize.width / 2) + (i + 1) * RandomHelper::random_int(100, 250),
-                             RandomHelper::random_real(fenceYpos - 100, fenceYpos - 30)));
-    }
-
-
+    // TODO
 
     //grass
 
@@ -153,20 +110,33 @@ void InfiniteParallaxNode::createGraveyard() {
         auto grass = Sprite::createWithSpriteFrameName(
                 "grass" + StringUtils::toString(RandomHelper::random_int(1, 2)) + ".png");
         grass->setAnchorPoint(Point::ZERO);
-        int zOrder = RandomHelper::random_int(1, 2);
+        int zOrder = 4;
         float random_el = zOrder / 5.f + 0.2f + RandomHelper::random_real(0.2f, 0.4f);
-        grass->setScale(random_el);
-        grass->setTag(4000 + i);
+        grass->setTag(3000 + i);
+        grass->setScale(0.5f);
         prev_pos = prev_pos + RandomHelper::random_int(300, 450) + grass->getBoundingBox().size.width;
         this->addChild(grass, zOrder, Point(1.f, 1.f),
                        Point(prev_pos,
                              RandomHelper::random_real(
-                                     Director::getInstance()->getVisibleSize().height / 6,
-                                     Director::getInstance()->getVisibleSize().height / 6)));
+                                     GROUND - grass->getBoundingBox().size.height / 2,
+                                     GROUND)));
     }
 }
 
 void InfiniteParallaxNode::createDesert() {
+
+    _ground = DrawNode::create();
+
+    auto from = Vec2(_size.width, 0);
+    auto to = Vec2(_size.height, GROUND);
+
+    _ground->drawSolidRect(from, to, Color4F(Color4B(212, 200, 170, 255)));
+
+    _ground->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(from.x, to.y),
+                                                           to));
+    _ground->getPhysicsBody()->setContactTestBitmask(true);
+
+    this->addChild(_ground, 3, Point(1, 1), Point::ZERO);
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -185,7 +155,7 @@ void InfiniteParallaxNode::createDesert() {
         float random_el = RandomHelper::random_real(0.6f, 0.8f);
         mountain->setScale(random_el);
         mountain->setTag(1000 + i);
-        prev_pos = prev_pos + RandomHelper::random_int(150, 350) + mountain->getBoundingBox().size.width;
+        prev_pos = prev_pos + RandomHelper::random_int(50, 400) + mountain->getBoundingBox().size.width;
         this->addChild(mountain, zOrder, Point(0.15, 0.15),
                        Point(prev_pos,
                              mountains->getPosition().y));
@@ -202,24 +172,43 @@ void InfiniteParallaxNode::createDesert() {
 
     //trees
 
-    unsigned int treesFirstGeneration = 25;
+
+    unsigned int treesFirstGeneration = 35;
     prev_pos = -visibleSize.width * 2;
+    float y_pos = hills3->getPosition().y + hills3->getHeight() / 2;
     for (unsigned int i = 0; i < treesFirstGeneration; i++) {
         auto tree = Sprite::createWithSpriteFrameName(
                 "tree" + StringUtils::toString(RandomHelper::random_int(1, 2)) + ".png");
         tree->setAnchorPoint(Point::ZERO);
         int zOrder = 1;
-        float random_el = RandomHelper::random_real(0.6f, 0.8f);
+        float random_el = RandomHelper::random_real(0.2f, 0.4f);
         tree->setScale(random_el);
         tree->setTag(1000 + i);
-        prev_pos = prev_pos + RandomHelper::random_int(300, 450) + tree->getBoundingBox().size.width;
-        this->addChild(tree, zOrder, Point(random_el, random_el),
+        prev_pos = prev_pos + RandomHelper::random_int(100, 250) + tree->getBoundingBox().size.width;
+        this->addChild(tree, zOrder, Point(0.1f, 0.1f),
                        Point(prev_pos,
                              RandomHelper::random_real(
-                                     hills3->getPosition().y + hills3->getBoundingBox().size.height +
-                                     tree->getBoundingBox().size.height / 2,
-                                     hills3->getPosition().y + hills3->getBoundingBox().size.height +
-                                     tree->getBoundingBox().size.height)));
+                                     y_pos - tree->getBoundingBox().size.height,
+                                     y_pos + tree->getBoundingBox().size.height)));
+    }
+
+    unsigned int treesSecondGeneration = 15;
+    prev_pos = -visibleSize.width * 2;
+    for (unsigned int i = 0; i < treesSecondGeneration; i++) {
+        auto tree = Sprite::createWithSpriteFrameName(
+                "tree" + StringUtils::toString(RandomHelper::random_int(1, 2)) + ".png");
+        tree->setAnchorPoint(Point::ZERO);
+        int zOrder = 2;
+        float random_el = RandomHelper::random_real(0.8f, 1.2f);
+        tree->setScale(random_el);
+        tree->setTag(2000 + i);
+        prev_pos = prev_pos + RandomHelper::random_int(300, 700) + tree->getBoundingBox().size.width;
+        this->addChild(tree, zOrder, Point(0.2f, 0.2f),
+                       Point(prev_pos,
+                             RandomHelper::random_real(
+                                     GROUND,
+                                     GROUND +
+                                     tree->getBoundingBox().size.height / 3)));
     }
 
 }
@@ -231,7 +220,7 @@ void InfiniteParallaxNode::createGreenfield() {
     auto from = Vec2(_size.width, 0);
     auto to = Vec2(_size.height, GROUND);
 
-    _ground->drawSolidRect(from, to, Color4F(Color4B(89,123,62,255)));
+    _ground->drawSolidRect(from, to, Color4F(Color4B(89, 123, 62, 255)));
 
     _ground->setPhysicsBody(PhysicsBody::createEdgeSegment(Vec2(from.x, to.y),
                                                            to));
@@ -306,7 +295,7 @@ void InfiniteParallaxNode::createGreenfield() {
         grass->setAnchorPoint(Point::ZERO);
         int zOrder = 4;
         float random_el = zOrder / 5.f + 0.2f + RandomHelper::random_real(0.2f, 0.4f);
-        grass->setScale(0.5f, 1.f);
+        grass->setScale(0.5f);
         grass->setTag(3000 + i);
         prev_pos = prev_pos + RandomHelper::random_int(300, 450) + grass->getBoundingBox().size.width;
         this->addChild(grass, zOrder, Point(1.f, 1.f),
@@ -404,4 +393,8 @@ void BackgroundLayer::setPosition(float x, float y) {
 
 Vec3 BackgroundLayer::getPosition3D() const {
     return _parallax->getPosition3D();
+}
+
+void BackgroundLayer::addArrow(Node *arrow) {
+    _parallax->addChild(arrow, 10, Point(1, 1), Point::ZERO);
 }

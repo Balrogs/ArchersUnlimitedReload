@@ -1,7 +1,3 @@
-//
-// Created by igor on 05.12.16.
-//
-
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include <ui/UIButton.h>

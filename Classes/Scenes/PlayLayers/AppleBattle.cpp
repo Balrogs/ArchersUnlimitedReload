@@ -1,7 +1,6 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Global/WeaponSelector.h>
-#include <GameEngine/Objects/Environment/Ground.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Objects/Environment/Box.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;
@@ -12,13 +11,20 @@ void AppleBattle::initWorld() {
 
     _isTargetHitted = false;
 
+    _level = 8;
+    _shotsLimit = 5;
+
     initObjects();
 
     _ui->initApple(visibleSize, _player);
+
+    _nextLevelAction();
 }
 
 void AppleBattle::initObjects() {
 
+    _env = Node::create();
+    this->addChild(_env);
     _player = new AppleHero(50.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO");
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
@@ -30,8 +36,181 @@ void AppleBattle::initObjects() {
 }
 
 
-void AppleBattle::nextLevelAction() {
-    _GLOBAL_SCALE -= 0.05f;
+void AppleBattle::_nextLevelAction() {
+    _player->getPlayer()->nullShotsCount();
+    _env->removeAllChildren();
+    _ui->setWarning("SHOOT APPLE", Color3B::BLACK);
+    _level++;
+    switch (_level) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5: {
+            _GLOBAL_SCALE -= 0.05f;
+            break;
+        }
+        case 6: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(4);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            auto box2 = Box::create(4);
+            box2->setPosition(Vec2(visibleSize.width / 2, GROUND + box->getBoundingBox().size.height));
+            _env->addChild(box2);
+            break;
+        }
+        case 7: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(4);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            auto box2 = Box::create(4);
+            box2->setPosition(Vec2(visibleSize.width / 2, GROUND + box->getBoundingBox().size.height));
+            _env->addChild(box2);
+            auto box3 = Box::create(4);
+            box3->setPosition(Vec2(visibleSize.width / 2, GROUND + box2->getBoundingBox().size.height));
+            _env->addChild(box3);
+            break;
+        }
+        case 8: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(3);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 9: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            auto box2 = Box::create(2);
+            box2->setPosition(Vec2(visibleSize.width / 2 - box->getBoundingBox().size.width, GROUND));
+            _env->addChild(box2);
+            break;
+        }
+        case 10: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            auto box2 = Box::create(2);
+            box2->setPosition(Vec2(visibleSize.width / 2 - box->getBoundingBox().size.width, GROUND));
+            _env->addChild(box2);
+            auto box3 = Box::create(4);
+            box3->setPosition(Vec2(visibleSize.width / 2 - box2->getBoundingBox().size.width / 2, GROUND + box2->getBoundingBox().size.height ));
+            _env->addChild(box3);
+            break;
+        }
+        case 11: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 12: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 13: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 14: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 15: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 16: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 17: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 18: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 19: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 20: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 21: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 22: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 23: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 24: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 25: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(2);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        default:
+            break;
+    }
 
     _bullet_pull->removeAllChildren();
 
@@ -75,7 +254,16 @@ void AppleBattle::nextLevelAction() {
 }
 
 bool AppleBattle::isGameOver() {
-    return _isTargetHitted;
+    if (_level == 25)
+        return true;
+
+    if (_isAppleHitted) {
+        _isAppleHitted = false;
+        _nextLevelAction();
+        return false;
+    }
+
+    return _isTargetHitted || _player->getPlayer()->getShotsCount() - _shotsLimit == 0;
 }
 
 void AppleBattle::addApple() {
@@ -87,4 +275,18 @@ void AppleBattle::addApple() {
 
 void AppleBattle::setHit() {
     _isTargetHitted = true;
+}
+
+void AppleBattle::_enterFrameHandler(float passedTime) {
+    BattleScene::_enterFrameHandler(passedTime);
+    auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
+    if (shotsLeft == 1) {
+        _ui->setWarning(StringUtils::format("%d SHOT LEFT", shotsLeft).c_str(), Color3B::RED);
+    } else if (shotsLeft <= 2) {
+        _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::RED);
+    }
+}
+
+void AppleBattle::setAppleHit() {
+    _isAppleHitted = true;
 }

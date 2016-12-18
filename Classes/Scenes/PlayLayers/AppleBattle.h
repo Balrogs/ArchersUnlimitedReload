@@ -13,11 +13,17 @@ class AppleBattle : public BattleScene {
 public:
     CREATE_FUNC(AppleBattle);
 
-    void nextLevelAction();
-
     void setHit();
 
+    void setAppleHit();
+
 protected:
+
+    virtual void _enterFrameHandler(float passedTime) override;
+
+    cocos2d::Node* _env;
+
+    void _nextLevelAction();
 
     void addApple();
 
@@ -28,6 +34,10 @@ protected:
     bool isGameOver() override;
 
     bool _isTargetHitted;
+    bool _isAppleHitted;
+
+    int _level;
+    int _shotsLimit;
 };
 
 

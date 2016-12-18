@@ -2,4 +2,147 @@
 // Created by igor on 05.10.16.
 //
 
+#include <GameEngine/Global/Variables.h>
+#include <ui/UIButton.h>
+#include <Localization/LocalizedStrings.h>
+#include <GameEngine/Global/Misc/PopUp.h>
 #include "GameOverScene.h"
+
+GameOverScene *GameOverScene::create(Statistics *stats) {
+    GameOverScene *ret = new(std::nothrow) GameOverScene();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool GameOverScene::init(Statistics *stats) {
+    if (!Layer::init()) {
+        return false;
+    }
+
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    auto black = LayerColor::create(Color4B(0, 0, 0, 160));
+    this->addChild(black);
+
+    auto bg = Sprite::createWithSpriteFrameName(Variables::BG2);
+
+    bg->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+
+    bg->setScaleX((2 * visibleSize.width / 3) / bg->getContentSize().width);
+
+    this->addChild(bg, 1);
+
+    _title1 = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GAME OVER"),
+                                            Variables::FONT_NAME,
+                                            Variables::H_FONT_SIZE);
+    _title1->setPosition(visibleSize.width / 2,
+                         bg->getBoundingBox().getMaxY() - _title1->getContentSize().height / 2 - 50.f);
+    this->addChild(_title1, 2);
+
+
+    _title2 = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GAME OVER"),
+                                            Variables::FONT_NAME,
+                                            Variables::H_FONT_SIZE);
+    _title2->setPosition(_title1->getPosition().x - 10.f, _title1->getPosition().y + 10.f);
+    _title2->setColor(Color3B::RED);
+    this->addChild(_title2, 2);
+
+    this->schedule(SEL_SCHEDULE(&GameOverScene::update), 0.7f);
+
+    const auto keyboardListener = EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](EventKeyboard::KeyCode keyCode, Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
+    auto repeatButton = ui::Button::create();
+    repeatButton->loadTextures(Variables::AGAIN_BUTTON, Variables::AGAIN_PRESSED_BUTTON,
+                               Variables::AGAIN_BUTTON, ui::Widget::TextureResType::PLIST);
+    repeatButton->setScale(1.5f);
+    repeatButton->addTouchEventListener([&](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                // TODO add action with event support
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    repeatButton->setPosition(Vec2(visibleSize.width / 2,
+                                   repeatButton->getBoundingBox().size.height / 2 + bg->getBoundingBox().getMinY() +
+                                   25.f));
+    this->addChild(repeatButton, 3);
+
+    auto backButton = ui::Button::create();
+    backButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
+                             Variables::CLOSE_BUTTON_PATH, ui::Widget::TextureResType::PLIST);
+
+    backButton->addTouchEventListener([&](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                onQuit();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    backButton->setPosition(Vec2(repeatButton->getPosition().x - repeatButton->getBoundingBox().size.width / 2 -
+                                 backButton->getBoundingBox().size.width,
+                                 repeatButton->getPosition().y));
+    this->addChild(backButton, 3);
+
+    auto chestButton = ui::Button::create();
+    chestButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
+                              Variables::CLOSE_BUTTON_PATH, ui::Widget::TextureResType::PLIST);
+
+    chestButton->addTouchEventListener([&, visibleSize](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                // TODO CHECK coins and add action
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    chestButton->setPosition(Vec2(repeatButton->getPosition().x + repeatButton->getBoundingBox().size.width / 2 +
+                                  chestButton->getBoundingBox().size.width,
+                                  repeatButton->getPosition().y));
+
+    // TODO add coin button if enough coins
+
+    this->addChild(chestButton, 3);
+
+    this->addChild(stats, 3);
+
+    // TODO add button share utils::capturenode
+
+    return true;
+}
+
+void GameOverScene::onQuit() {
+    Director::getInstance()->popScene();
+}
+
+void GameOverScene::update(float dt) {
+    Node::update(dt);
+    auto tmpColor = _title1->getColor();
+    _title1->setColor(_title2->getColor());
+    _title2->setColor(tmpColor);
+}

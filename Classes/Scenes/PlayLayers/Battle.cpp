@@ -10,6 +10,8 @@
 #include "DuelScene.h"
 #include "DuelScene2P.h"
 #include "DuelSceneMultiplayer.h"
+#include "GameOverScene.h"
+#include "GameEngine/Statistics.h"
 
 USING_NS_CC;
 
@@ -38,8 +40,8 @@ Scene *BattleScene::createScene(int type) {
 
     UI *hud = UI::create();
 
-    int id = 3;
-    //int id = RandomHelper::random_int(1, 3);
+  //  int id = 1;
+    int id = RandomHelper::random_int(1, 3);
     BackgroundLayer *bg = BackgroundLayer::create(id);
 
     scene->addChild(bg, 2);
@@ -138,7 +140,7 @@ void BattleScene::removeTarget(cocos2d::Node *target) {
 
 void BattleScene::_enterFrameHandler(float passedTime) {
     if (isGameOver()) {
-        onPopScene();
+        _gameOver();
     }
     dragonBones::WorldClock::clock.advanceTime(passedTime);
 }
@@ -151,8 +153,7 @@ void BattleScene::onPopScene() {
 bool BattleScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
     if (_touch < 0) {
         _touch = touch->getID();
-    }
-    else {
+    } else {
         return false;
     }
 
@@ -190,8 +191,7 @@ bool BattleScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *
 
     if (_touch == touch->getID()) {
         _touch = -1;
-    }
-    else {
+    } else {
         return false;
     }
 
@@ -330,5 +330,20 @@ void BattleScene::showPopUp() {
 
 Hero *BattleScene::getPlayer() {
     return _player;
+}
+
+void BattleScene::_gameOver() {
+
+    this->_bg->removeSprites();
+
+    this->getEventDispatcher()->removeEventListenersForTarget(this);
+    this->getScheduler()->unscheduleAllForTarget(this);
+    this->getActionManager()->removeAllActionsFromTarget(this);
+
+    this->getParent()->addChild(GameOverScene::create(Statistics::create()), 5);
+}
+
+BackgroundLayer *BattleScene::getBackground() {
+    return _bg;
 }
 

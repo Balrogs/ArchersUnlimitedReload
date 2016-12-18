@@ -57,6 +57,8 @@ public:
 
     void addShotsCount();
 
+    void nullShotsCount();
+
     int getId();
 
     std::string getName();

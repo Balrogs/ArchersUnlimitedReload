@@ -36,6 +36,7 @@ protected:
     virtual void _disableArrow();
     virtual void afterAction();
 
+    void addToBox(cocos2d::Node *bone);
 };
 
 

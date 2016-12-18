@@ -19,9 +19,6 @@ bool Settings::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
     auto black = LayerColor::create(Color4B(0, 0, 0, 160));
-    auto pos = Vec2(-Director::getInstance()->getVisibleSize().width / 2,
-                    -Director::getInstance()->getVisibleSize().height / 2);
-    black->setPosition(pos);
     this->addChild(black);
 
     _bg = Sprite::createWithSpriteFrameName(Variables::BG1);

@@ -15,6 +15,7 @@ public:
     bool init(int type);
     void breakBox();
 private:
+    int _hp;
     bool _isBreakble;
     bool _isBroken;
     bool _isStatic;

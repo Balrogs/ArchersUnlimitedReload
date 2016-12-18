@@ -51,6 +51,8 @@ public:
 
     bool isPaused() const;
 
+    BackgroundLayer* getBackground();
+
     cocos2d::Vec2 getHeroPos(Hero *player);
 
     Hero* getPlayer();
@@ -66,6 +68,7 @@ public:
     void showPopUp();
 
 protected:
+
     int _touch;
     Hero *_player;
     int _stickmanCount;
@@ -96,6 +99,8 @@ protected:
     virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
 
     virtual bool isGameOver();
+
+    void _gameOver();
 
     void _pauseRecursive(cocos2d::Node *_node, bool _pause);
 

@@ -67,7 +67,7 @@ void Apple::hit() {
                     cocos2d::CallFunc::create(
                             [&]() {
                                 if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
-                                    appleb->nextLevelAction();
+                                    appleb->setAppleHit();
                                    // BattleScene::instance->removeChild(_emitter);
                                 }
                             }

@@ -44,8 +44,8 @@ const std::string Variables::NO_PRESSED_BUTTON_PATH = "no_pressed.png";
 const std::string Variables::BUTTON_PATH = "ok.png";
 const std::string Variables::PRESSED_BUTTON_PATH = "ok_pressed.png";
 
-const std::string Variables::CLOSE_BUTTON_PATH = "close.png";
-const std::string Variables::CLOSE_PRESSED_BUTTON_PATH = "close_pressed.png";
+const std::string Variables::CLOSE_BUTTON_PATH = "cancel.png";
+const std::string Variables::CLOSE_PRESSED_BUTTON_PATH = "cancel_pressed.png";
 
 const std::string Variables::BACK_PRESSED_BUTTON_PATH = "back_pressed.png";
 const std::string Variables::BACK_BUTTON_PATH = "back.png";
@@ -112,10 +112,12 @@ const std::string Variables::BLUE_PRESSED_BUTTON = "blue_pressed.png";
 const std::string Variables::GREEN_BUTTON = "green_normal.png";
 const std::string Variables::GREEN_PRESSED_BUTTON = "green_pressed.png";
 
+const std::string Variables::AGAIN_BUTTON = "again.png";
+const std::string Variables::AGAIN_PRESSED_BUTTON = "again_pressed.png";
+
 const std::string Variables::BG1 = "bg1.png";
 const std::string Variables::BG2 = "bg2.png";
 const std::string Variables::BG3 = "bg3.png";
-
 
 const std::string Variables::CHEST_BUTTON = "chest.png";
 const std::string Variables::CHEST_PRESSED_BUTTON = "chest_pressed.png";

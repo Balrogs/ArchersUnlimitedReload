@@ -65,6 +65,8 @@ public:
 
     void move(float delta);
 
+    void addArrow(Node* arrow);
+
 protected:
     InfiniteParallaxNode *_parallax;
     int _id;

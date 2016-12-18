@@ -96,6 +96,9 @@ public:
     static const std::string GREEN_BUTTON;
     static const std::string GREEN_PRESSED_BUTTON;
 
+    static const std::string AGAIN_BUTTON;
+    static const std::string AGAIN_PRESSED_BUTTON;
+
     static const std::string BG1;
     static const std::string BG2;
     static const std::string BG3;
