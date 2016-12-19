@@ -71,7 +71,7 @@ protected:
 
 class HeroBrainDuel : public Brain {
 public:
-    HeroBrainDuel(DuelHero *body, float upd);
+    HeroBrainDuel(Hero *body, float upd);
 
     bool isTargetNear() override;
 

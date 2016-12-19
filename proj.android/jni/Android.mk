@@ -67,7 +67,9 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Misc/JSONParser.cpp \
                                  ../../Classes/GameEngine/Global/Misc/Views.cpp \
                                  ../../Classes/GameEngine/Global/Misc/PopUp.cpp \
-                                 ../../Classes/Localization/LocalizedStrings.cpp
+                                 ../../Classes/Localization/LocalizedStrings.cpp \
+                                 ../../Classes/GameEngine/Objects/Environment/Box.cpp \
+                                 ../../Classes/GameEngine/Statistics.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 

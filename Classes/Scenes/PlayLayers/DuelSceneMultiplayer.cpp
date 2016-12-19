@@ -1,4 +1,3 @@
-
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <GameEngine/Global/Misc/PopUp.h>
@@ -7,9 +6,18 @@
 
 USING_NS_CC;
 
+DuelSceneMultiplayer *DuelSceneMultiplayer::create(Statistics *stats) {
+    DuelSceneMultiplayer *ret = new(std::nothrow) DuelSceneMultiplayer();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
 void DuelSceneMultiplayer::initWorld() {
     _isStarted = false;
-    _isGamePaused = false;
 
     _client = SocketClient::getInstance();
 
@@ -21,7 +29,7 @@ void DuelSceneMultiplayer::createPlayers(Player *player1, Player *player2) {
 }
 
 bool DuelSceneMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    if (_isStarted && !_isGamePaused && this->_turnId == _client->getDBPlayer()->getId()) {
+    if (_isStarted && this->_turnId == _client->getDBPlayer()->getId()) {
         return BattleScene::_touchHandlerBegin(touch, event);
     } else
         return false;
@@ -112,6 +120,9 @@ void DuelSceneMultiplayer::setPlayer(int id) {
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
+    _createEnvForStickman(_hero1, _stats->getPlayerEnvType());
+    _createEnvForStickman(_hero2, _stats->getTargetEnvType());
+
     _ui->initDuel(visibleSize, _hero1, _hero2);
 
     auto action = Sequence::create(
@@ -125,14 +136,16 @@ void DuelSceneMultiplayer::setPlayer(int id) {
 
 void DuelSceneMultiplayer::startGame() {
     _isStarted = true;
+    _startGame();
 }
 
 void DuelSceneMultiplayer::pauseGame() {
-    _isGamePaused = true;
+    BattleScene::pauseBattle();
+    // TO DO send game paused to server
 }
 
 void DuelSceneMultiplayer::resumeGame() {
-    _isGamePaused = false;
+    BattleScene::unPause();
 }
 
 void DuelSceneMultiplayer::abort() {

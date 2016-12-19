@@ -149,7 +149,18 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     coins_bar->setScale(0.5f);
     coins_bar->setPosition(Vec2(_visibleSize.width - coins_bar->getBoundingBox().size.width / 2 - 15.f,
                                 _visibleSize.height - coins_bar->getBoundingBox().size.height / 2 - 15.f));
-    //TODO add coins value
+
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+    auto coins = def->getIntegerForKey("COINS", 0);
+    _coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
+                                                    Variables::FONT_SIZE, Size(3 * coins_bar->getContentSize().width / 5, Variables::FONT_SIZE));
+    _coinsCount->setHorizontalAlignment(TextHAlignment::RIGHT);
+    _coinsCount->setColor(Color3B::WHITE);
+    _coinsCount->setAnchorPoint(Vec2(0, 0));
+    _coinsCount->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE / 2);
+
+    coins_bar->addChild(_coinsCount, 5);
 
     this->addChild(coins_bar);
 
@@ -204,6 +215,11 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
 void MainMenu::onEnter() {
     Layer::onEnter();
+
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+    auto coins = def->getIntegerForKey("COINS", 0);
+    _coinsCount->setString(StringUtils::toString(coins));
+
     SocketClient::destroyInstance();
 }
 

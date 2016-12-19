@@ -130,7 +130,7 @@ void Hero::update() {
 }
 
 void Hero::attack() {
-    CCLOG("Attacking: angle %f power %f",_aim->get_aimRadian(), _aim->get_aimPower());
+    CCLOG("Attacking: angle %f power %f", _aim->get_aimRadian(), _aim->get_aimPower());
     attack(_aim->get_aimRadian(), _aim->get_aimPower());
 }
 
@@ -148,29 +148,33 @@ void Hero::aim() {
             cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
             _shouldersDisplay).y);
 
-    float x = globalPoint.x - hero_pos.x;
+    while (!_aimRandomly(globalPoint, hero_pos)) {}
 
-    int period = (int) round(x / cocos2d::RandomHelper::random_real(16.f, 17.5f));
-
-    //auto power = cocos2d::RandomHelper::random_real(BattleScene::MIN_ARROW_POWER + 20.f ,BattleScene::MAX_ARROW_POWER);
-
-    auto power = BattleScene::MAX_ARROW_POWER;
-
-    auto angle = -x / (power * period);
-    CCLOG("AIMING: period %d x %f", period, x);
-    angle = (float) acos(angle);
-    angle = 360 * dragonBones::ANGLE_TO_RADIAN - angle;
-    _aim->set_aimRadian(angle);
-    _aim->set_aimPower(power);
     _updateAim();
 }
+
+bool Hero::_aimRandomly(Vec2 start, Vec2 destination) {
+    auto power = RandomHelper::random_real(BattleScene::MAX_ARROW_POWER - 5.f, BattleScene::MAX_ARROW_POWER);
+    auto x = destination.x - start.x + destination.y - BattleScene::instance->GROUND;
+    auto radian = (x + 20.f * power) / 90.f;
+    if (radian < 0) {
+        radian = 180 + radian;
+    }
+    if (radian > 180) {
+        return false;
+    }
+    _aim->set_aimRadian((180 - radian) * dragonBones::ANGLE_TO_RADIAN);
+    _aim->set_aimPower(power);
+    return true;
+}
+
 
 void Hero::attack(float radian, float power) {
     if (_isAttacking) {
         return;
     }
     _isAttacking = true;
-    radian = - radian;
+    radian = -radian;
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay);
@@ -252,14 +256,13 @@ void Hero::_fire(Arrow *arrow) {
     _shouldersDisplay->setRotation(0.f);
 
     _updateString();
-    setFaceDir();
+    // setFaceDir();
 }
 
 void Hero::_updateAim() {
     if (!_aim->is_aiming()) {
         return;
     }
-    CCLOG("AIM ANGLE : %f", _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay, this);
@@ -269,11 +272,11 @@ void Hero::_updateAim() {
 
     float angle = _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE;
 
-    if(_faceDir < 0)
+    if (_faceDir < 0)
         angle = 180 - angle;
 
     _aim->set_aimRadian(angle * dragonBones::ANGLE_TO_RADIAN);
-    _shouldersDisplay->setRotation(angle);
+    _shouldersDisplay->setRotation((int) angle);
 
     _shoulders->invalidUpdate("", true);
 
@@ -361,15 +364,16 @@ void Hero::_saveAim() {
 
 void Hero::setFaceDir() {
     int facedir = 1;
-    if(DuelScene2P* scene = dynamic_cast<DuelScene2P*>(BattleScene::instance)) {
-        if(scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x){
+    if (DuelScene2P *scene = dynamic_cast<DuelScene2P *>(BattleScene::instance)) {
+        if (scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x) {
             facedir = -1;
         }
     }
     changeFacedir(facedir);
 }
 
-DuelHero::DuelHero(float x_pos, float y_pos, Player* player): Hero(x_pos, y_pos, player) {
+
+DuelHero::DuelHero(float x_pos, float y_pos, Player *player) : Hero(x_pos, y_pos, player) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
 }
@@ -407,9 +411,9 @@ void DuelHero::move(int dir) {
 }
 
 
-
-
-AppleHero::AppleHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, Player::create(100, name)) {
+AppleHero::AppleHero(float x_pos, float y_pos, const char *name, int coins) : Hero(x_pos, y_pos,
+                                                                                   PlayerWithCoins::create(0, 100, name,
+                                                                                                           coins)) {
     _weaponIndex = 0;
     WEAPON_LIST.push_back("Arrow");
 }

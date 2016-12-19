@@ -1,7 +1,3 @@
-//
-// Created by igor on 22.09.16.
-//
-
 #ifndef ARCUNLIM_APPLEBATTLE_H
 #define ARCUNLIM_APPLEBATTLE_H
 
@@ -11,7 +7,8 @@
 class AppleBattle : public BattleScene {
 
 public:
-    CREATE_FUNC(AppleBattle);
+
+    static AppleBattle* create(Statistics* stats);
 
     void setHit();
 
@@ -19,7 +16,9 @@ public:
 
 protected:
 
-    virtual void _enterFrameHandler(float passedTime) override;
+    virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
+
+    virtual int _getGainedCoinsByActionType(int type) override ;
 
     cocos2d::Node* _env;
 
@@ -34,9 +33,9 @@ protected:
     bool isGameOver() override;
 
     bool _isTargetHitted;
+
     bool _isAppleHitted;
 
-    int _level;
     int _shotsLimit;
 };
 

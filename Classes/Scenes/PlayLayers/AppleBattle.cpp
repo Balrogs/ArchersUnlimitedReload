@@ -5,13 +5,22 @@
 
 USING_NS_CC;
 
+AppleBattle *AppleBattle::create(Statistics *stats) {
+    AppleBattle *ret = new(std::nothrow) AppleBattle();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
 void AppleBattle::initWorld() {
 
     _GLOBAL_SCALE = 1.f;
 
     _isTargetHitted = false;
 
-    _level = 8;
     _shotsLimit = 5;
 
     initObjects();
@@ -25,9 +34,11 @@ void AppleBattle::initObjects() {
 
     _env = Node::create();
     this->addChild(_env);
-    _player = new AppleHero(50.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO");
+    _player = new AppleHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO",
+                            _stats->getCoinsGained());
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
+    target->changeFacedir(-1);
     auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
 
     _targets.push_back(target);
@@ -40,14 +51,29 @@ void AppleBattle::_nextLevelAction() {
     _player->getPlayer()->nullShotsCount();
     _env->removeAllChildren();
     _ui->setWarning("SHOOT APPLE", Color3B::BLACK);
-    _level++;
-    switch (_level) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
+
+    switch (_stats->getLevel()) {
+        case 0: {
+            return;
+        }
+        case 1: {
+            _GLOBAL_SCALE = 0.95f;
+            break;
+        }
+        case 2: {
+            _GLOBAL_SCALE = 0.9f;
+            break;
+        }
+        case 3: {
+            _GLOBAL_SCALE = 0.85f;
+            break;
+        }
+        case 4: {
+            _GLOBAL_SCALE = 0.8f;
+            break;
+        }
         case 5: {
-            _GLOBAL_SCALE -= 0.05f;
+            _GLOBAL_SCALE = 0.75f;
             break;
         }
         case 6: {
@@ -99,7 +125,8 @@ void AppleBattle::_nextLevelAction() {
             box2->setPosition(Vec2(visibleSize.width / 2 - box->getBoundingBox().size.width, GROUND));
             _env->addChild(box2);
             auto box3 = Box::create(4);
-            box3->setPosition(Vec2(visibleSize.width / 2 - box2->getBoundingBox().size.width / 2, GROUND + box2->getBoundingBox().size.height ));
+            box3->setPosition(Vec2(visibleSize.width / 2 - box2->getBoundingBox().size.width / 2,
+                                   GROUND + box2->getBoundingBox().size.height));
             _env->addChild(box3);
             break;
         }
@@ -209,7 +236,7 @@ void AppleBattle::_nextLevelAction() {
             break;
         }
         default:
-            break;
+            return;
     }
 
     _bullet_pull->removeAllChildren();
@@ -220,7 +247,7 @@ void AppleBattle::_nextLevelAction() {
                             CallFunc::create(
                                     [&]() {
                                         _player->runAction(Spawn::createWithTwoActions(
-                                                MoveTo::create(1.f, Vec2(50.f * _GLOBAL_SCALE, AppleBattle::GROUND)),
+                                                MoveTo::create(1.f, Vec2(150.f * _GLOBAL_SCALE, AppleBattle::GROUND)),
                                                 ScaleTo::create(1.f, _GLOBAL_SCALE)));
                                     }
                             ),
@@ -233,6 +260,7 @@ void AppleBattle::_nextLevelAction() {
                                                                                                                _GLOBAL_SCALE,
                                                                                                                AppleBattle::GROUND)),
                                                                                            ScaleTo::create(1.f,
+                                                                                                           -_GLOBAL_SCALE,
                                                                                                            _GLOBAL_SCALE)));
                                     }
                             )
@@ -254,11 +282,12 @@ void AppleBattle::_nextLevelAction() {
 }
 
 bool AppleBattle::isGameOver() {
-    if (_level == 25)
+    if (_stats->getLevel() == 25)
         return true;
 
     if (_isAppleHitted) {
         _isAppleHitted = false;
+        _stats->increaseLevel(_stats->getLevel() + 1);
         _nextLevelAction();
         return false;
     }
@@ -277,16 +306,33 @@ void AppleBattle::setHit() {
     _isTargetHitted = true;
 }
 
-void AppleBattle::_enterFrameHandler(float passedTime) {
-    BattleScene::_enterFrameHandler(passedTime);
+void AppleBattle::setAppleHit() {
+    _isAppleHitted = true;
+}
+
+bool AppleBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
     auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
     if (shotsLeft == 1) {
         _ui->setWarning(StringUtils::format("%d SHOT LEFT", shotsLeft).c_str(), Color3B::RED);
     } else if (shotsLeft <= 2) {
         _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::RED);
+    } else {
+        _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::BLACK);
     }
+    return BattleScene::_touchHandlerEnd(touch, event);
 }
 
-void AppleBattle::setAppleHit() {
-    _isAppleHitted = true;
+int AppleBattle::_getGainedCoinsByActionType(int type) {
+    int value = 0;
+    switch (type) {
+        case 1: {
+            auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
+            value = 100 + 10 * _stats->getLevel() - 5 * shotsLeft;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    return value;
 }

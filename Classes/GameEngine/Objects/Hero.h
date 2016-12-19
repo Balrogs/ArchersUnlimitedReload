@@ -69,6 +69,7 @@ protected:
 
     void setFaceDir();
 
+    bool _aimRandomly(cocos2d::Vec2 start, cocos2d::Vec2 destination);
 };
 
 
@@ -86,7 +87,7 @@ public:
 
 class AppleHero : public Hero {
 public:
-    AppleHero(float x_pos, float y_pos, const char *name);
+    AppleHero(float x_pos, float y_pos, const char *name, int coins);
     void _saveAim() override;
 };
 

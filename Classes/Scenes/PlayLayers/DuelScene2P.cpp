@@ -1,12 +1,18 @@
-//
-// Created by igor on 17.11.16.
-//
-
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Localization/LocalizedStrings.h>
 #include "DuelScene2P.h"
 
 USING_NS_CC;
+
+DuelScene2P *DuelScene2P::create(Statistics *stats) {
+    DuelScene2P *ret = new(std::nothrow) DuelScene2P();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
 
 void DuelScene2P::initWorld() {
 
@@ -21,9 +27,13 @@ void DuelScene2P::initWorld() {
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
+    _createEnvForStickman(_hero1, _stats->getPlayerEnvType());
+    _createEnvForStickman(_hero2, _stats->getTargetEnvType());
+
     _ui->initDuel(visibleSize, _hero1, _hero2);
     _player = _hero1;
 
+    _startGame();
 }
 
 bool DuelScene2P::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {

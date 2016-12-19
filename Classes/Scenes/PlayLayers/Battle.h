@@ -7,6 +7,7 @@
 #include <GameEngine/Objects/Aim/Aim.h>
 #include <GameEngine/Objects/Brains/Brain.h>
 #include <GameEngine/Global/Misc/SocketClient.h>
+#include <GameEngine/Statistics.h>
 #include "cocos2d.h"
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
 #include "Scenes/Layers/UI.h"
@@ -14,11 +15,13 @@
 
 class BattleScene : public cocos2d::LayerColor {
 public:
+
     static cocos2d::Scene *createScene(int type);
+    static cocos2d::Scene *createScene(Statistics* stats);
 
-    virtual bool init();
+    static BattleScene* create(Statistics* stats);
 
-    CREATE_FUNC(BattleScene);
+    virtual bool init(Statistics* stats);
 
     static const float MAX_ARROW_POWER;
     static const float MIN_ARROW_POWER;
@@ -67,20 +70,30 @@ public:
 
     void showPopUp();
 
-protected:
+    virtual void addCoins(int value);
 
-    int _touch;
-    Hero *_player;
-    int _stickmanCount;
-    float _GLOBAL_SCALE;
+protected:
+    //layers
     UI *_ui;
     BackgroundLayer *_bg;
+
+    //disable multitouch variable
+    int _touch;
+
+    //initial vars
+    float _GLOBAL_SCALE;
     bool _isPaused;
+
+    // battle info
+    Statistics* _stats;
+
+    //children refs
+    Hero *_player;
+    int _stickmanCount;
 
     std::vector<Brain *> _brains;
     std::vector<cocos2d::Node *> _targets;
     cocos2d::Node *_bullet_pull;
-
 
     virtual void initWorld();
 
@@ -100,11 +113,13 @@ protected:
 
     virtual bool isGameOver();
 
+    void _createEnvForStickman(Body* stickman, int type);
+
     void _gameOver();
 
     void _pauseRecursive(cocos2d::Node *_node, bool _pause);
 
-
+    virtual int _getGainedCoinsByActionType(int type);
 };
 
 #endif // __BATTLE_H__

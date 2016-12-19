@@ -1,7 +1,3 @@
-//
-// Created by igor on 22.09.16.
-//
-
 #ifndef ARCUNLIM_DUELSCENE_H
 #define ARCUNLIM_DUELSCENE_H
 
@@ -11,15 +7,23 @@
 
 class DuelScene : public BattleScene {
 public:
-    CREATE_FUNC(DuelScene);
+
+    static DuelScene* create(Statistics* stats);
 
     virtual void makeTurn(int id);
 
 protected:
-
     int _turnId;
+
+    int _getGainedCoinsByActionType(int type) override;
+
     Player *_player1;
     Player *_player2;
+
+    Hero* _hero1;
+    Hero* _hero2;
+
+    bool _isStarted;
 
     SocketClient* _client;
 
@@ -30,6 +34,8 @@ protected:
     bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
     bool isGameOver() override;
+
+    void _startGame();
 
 };
 

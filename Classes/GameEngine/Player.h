@@ -7,31 +7,37 @@
 
 
 #include <cocos2d.h>
-enum HPState{
+
+enum HPState {
     FULL,
     NORMAL,
     DANGER,
     NONE
 };
 
-class HPBar : public cocos2d::Node{
+class HPBar : public cocos2d::Node {
 public:
-    static HPBar* create(cocos2d::Size size);
+    static HPBar *create(cocos2d::Size size);
+
     bool init(cocos2d::Size size);
+
     void setHp(float hp);
+
     void setAlignment(bool alignment);
+
 protected:
     bool _alignment;
     float _hp;
     cocos2d::Size _spriteSize;
     cocos2d::Size _prevSize;
     cocos2d::Size _size;
-    cocos2d::Sprite* _bar;
+    cocos2d::Sprite *_bar;
     HPState _state;
+
     void changeState(HPState state);
 };
 
-class Player : public cocos2d::Node{
+class Player : public cocos2d::Node {
 protected:
     int _id;
     std::string _name;
@@ -46,12 +52,13 @@ protected:
 
 public:
 
-    static Player* create(int id, int hp, std::string name);
-    static Player* create(int hp, std::string name);
+    static Player *create(int id, int hp, std::string name);
+
+    static Player *create(int hp, std::string name);
 
     virtual bool init(int id, int hp, std::string name);
 
-    void setHAlignment(cocos2d::TextHAlignment alignment);
+    virtual void setHAlignment(cocos2d::TextHAlignment alignment);
 
     int getShotsCount();
 
@@ -66,6 +73,23 @@ public:
     int getHp();
 
     void setHp(int diff);
+};
+
+class PlayerWithCoins : public Player {
+public:
+
+    static PlayerWithCoins *create(int id, int hp, std::string name, int coins);
+
+    static PlayerWithCoins *create(int hp, std::string name);
+
+    virtual bool init(int id, int hp, std::string name, int coins);
+
+    virtual void setHAlignment(cocos2d::TextHAlignment alignment) override;
+
+    void addGainedCoins(int newCount);
+
+protected:
+    cocos2d::Node* _coinsView;
 };
 
 

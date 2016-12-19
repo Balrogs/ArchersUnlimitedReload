@@ -178,7 +178,7 @@ void HeroBrain::attack() {
     _body->attack();
 }
 
-HeroBrainDuel::HeroBrainDuel(DuelHero *body, float upd) : Brain(body, 20.f, 2.f, upd) {
+HeroBrainDuel::HeroBrainDuel(Hero *body, float upd) : Brain(body, 20.f, 2.f, upd) {
     body->changeFacedir(-1);
 }
 
@@ -195,8 +195,17 @@ void HeroBrainDuel::update() {
     switch (state) {
         case IDLE: {
             _body->setState(ATTACKING);
-            _body->aim();
-            _body->attack();
+            _body->runAction(Sequence::create(
+                    CallFunc::create([&]() {
+                        _body->aim();
+                    }),
+                    DelayTime::create(1.f),
+                    CallFunc::create([&]() {
+                        _body->attack();
+                    }),
+                    NULL)
+
+            );
             break;
         }
         default:

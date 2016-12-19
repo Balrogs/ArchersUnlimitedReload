@@ -39,7 +39,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
-    this->schedule(SEL_SCHEDULE(&Arrow::update), 0.1f);
+    this->schedule(SEL_SCHEDULE(&Arrow::update), 0.05f);
 }
 
 Arrow::~Arrow() {
@@ -85,14 +85,10 @@ void Arrow::_disableArrow() {
 
     afterAction();
 
-    this->retain();
-    this->removeFromParent();
-    BattleScene::instance->getBackground()->addArrow(this);
-    this->release();
-
     this->unscheduleAllCallbacks();
 
-    this->removeComponent(this->getPhysicsBody());
+    if (this->getPhysicsBody() != nullptr)
+        this->removeComponent(this->getPhysicsBody());
 
     this->runAction(
             Sequence::create(
@@ -115,6 +111,8 @@ bool Arrow::processContact(Node *bone) {
             this->addDOChild(apple);
 
             appleb->setAppleHit();
+
+            BattleScene::instance->addCoins(1);
 
             return true;
         }
@@ -156,6 +154,8 @@ bool Arrow::processContact(Node *bone) {
         target->dealDamage(_damage);
 
         addToNode(bone);
+
+        BattleScene::instance->addCoins((int) _damage);
 
         return true;
     }

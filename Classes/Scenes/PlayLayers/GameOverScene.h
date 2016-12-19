@@ -1,7 +1,3 @@
-//
-// Created by igor on 05.10.16.
-//
-
 #ifndef ARCUNLIM_GAMEOVERSCENE_H
 #define ARCUNLIM_GAMEOVERSCENE_H
 
@@ -22,6 +18,7 @@ protected:
     Label* _title2;
     void onQuit();
     void update(float dt);
+    void _saveStats(Statistics* stats);
 };
 
 

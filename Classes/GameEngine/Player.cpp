@@ -6,7 +6,7 @@ USING_NS_CC;
 Player *Player::create(int id, int hp, std::string name) {
     Player *ret = new(std::nothrow) Player();
     if (ret && ret->init(id, hp, name)) {
-        ret->autorelease();
+        ret->retain();
     } else {
         CC_SAFE_DELETE(ret);
     }
@@ -63,7 +63,8 @@ bool Player::init(int id, int hp, std::string name) {
 }
 
 void Player::updateView() {
-    _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
+    if (this->getParent() != nullptr)
+        _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
 }
 
 
@@ -139,7 +140,7 @@ void HPBar::setHp(float hp) {
     auto percents = hp / 100.f;
 
     if (percents < 0.3f) {
-            changeState(DANGER);
+        changeState(DANGER);
     } else if (percents < 0.6f) {
         changeState(NORMAL);
     } else if (percents >= 0.6f) {
@@ -156,7 +157,7 @@ void HPBar::setHp(float hp) {
     if (!_alignment) {
         _bar->runAction(
                 Spawn::createWithTwoActions(
-                        MoveTo::create(0.2f, Vec2( _size.width - new_Size, 0)),
+                        MoveTo::create(0.2f, Vec2(_size.width - new_Size, 0)),
                         ScaleTo::create(0.2f, x, y)));
     } else {
         _bar->runAction(ScaleTo::create(0.2f, x, y));
@@ -169,14 +170,14 @@ void HPBar::setAlignment(bool isLeft) {
 }
 
 void HPBar::changeState(HPState state) {
-    if(_state == state){
+    if (_state == state) {
         return;
     }
 
     this->removeAllChildren();
     _state = state;
 
-    switch(state) {
+    switch (state) {
         case FULL: {
             _bar = Sprite::createWithSpriteFrameName("green_normal.png");
             break;
@@ -189,7 +190,9 @@ void HPBar::changeState(HPState state) {
             _bar = Sprite::createWithSpriteFrameName("red_normal.png");
             break;
         }
-        default:{ return; }
+        default: {
+            return;
+        }
     }
 
     _bar->setAnchorPoint(Vec2(0, 0));
@@ -198,7 +201,70 @@ void HPBar::changeState(HPState state) {
     float x = _prevSize.width / _spriteSize.width;
     float y = _prevSize.height / _spriteSize.height;
 
-    _bar->setScale(x,y);
+    _bar->setScale(x, y);
 
     this->addChild(_bar);
+}
+
+PlayerWithCoins *PlayerWithCoins::create(int id, int hp, std::string name, int coins) {
+    PlayerWithCoins *ret = new(std::nothrow) PlayerWithCoins();
+    if (ret && ret->init(id, hp, name, coins)) {
+        ret->retain();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+
+}
+
+PlayerWithCoins *PlayerWithCoins::create(int hp, std::string name) {
+    auto id = BattleScene::instance->getStickmanCount();
+    auto coins = 0;
+    return PlayerWithCoins::create(id, hp, name, coins);
+}
+
+bool PlayerWithCoins::init(int id, int hp, std::string name, int coins) {
+    if (!Player::init(id, hp, name)) {
+        return false;
+    }
+
+    _hp_view->setVisible(false);
+
+    auto size = cocos2d::Director::getInstance()->getVisibleSize();
+
+    _coinsView = Node::create();
+    _coinsView->setScale(0.5f);
+    _coinsView->setPosition(Vec2(_coinsView->getBoundingBox().size.width / 2,
+                                 size.height - _coinsView->getBoundingBox().size.height / 2 - 95.f));
+
+    auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
+
+    coin->setPosition(coin->getBoundingBox().size.width / 2, coin->getBoundingBox().size.height / 2);
+
+    _coinsView->addChild(coin, 2, "coin");
+
+    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
+                                                    Variables::H_FONT_SIZE);
+    coinsCount->setColor(Color3B::BLACK);
+
+    coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
+                            coin->getBoundingBox().size.height / 2);
+
+    _coinsView->addChild(coinsCount, 2, "count");
+
+    this->addChild(_coinsView, 1, "coins_view");
+
+    return true;
+}
+
+void PlayerWithCoins::setHAlignment(cocos2d::TextHAlignment alignment) {
+    Player::setHAlignment(alignment);
+}
+
+void PlayerWithCoins::addGainedCoins(int newCount) {
+    Node *coin = _coinsView->getChildByName("count");
+    Label *count = (Label *) _coinsView->getChildByName("count");
+    count->setString(StringUtils::toString(newCount));
+    count->setPosition(coin->getBoundingBox().size.width + 10.f,
+                       count->getPosition().y);
 }

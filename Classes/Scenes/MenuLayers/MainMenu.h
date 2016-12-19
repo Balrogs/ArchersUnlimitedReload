@@ -42,6 +42,7 @@ public:
 private:
     cocos2d::Size _visibleSize;
     int _menuId;
+    cocos2d::Label* _coinsCount;
     cocos2d::Node* _menu;
     void onMenuClick(int id);
 };

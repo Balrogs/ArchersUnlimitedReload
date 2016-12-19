@@ -55,7 +55,7 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     this->bounds.push_back(player1_view->getBoundingBox());
 
     auto player2_view = player2->getPlayer();
-    player2_view->setPosition(BattleScene::instance->visibleSize.width / 2 + 60.f, 0.f);
+    player2_view->setPosition(visibleSize.width / 2 + 60.f, 0.f);
     this->addChild(player2_view);
     this->bounds.push_back(player2_view->getBoundingBox());
 

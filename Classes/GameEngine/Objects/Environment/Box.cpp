@@ -22,11 +22,14 @@ bool Box::init(int type) {
         return false;
     }
 
-    int count = 4;
+    float stoneMass = 10.f;
+    float woodMass = 10.f;
+
     switch (type) {
         case 1: {
             _box = Sprite::createWithSpriteFrameName("elementStone014.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
@@ -36,6 +39,7 @@ bool Box::init(int type) {
         case 2: {
             _box = Sprite::createWithSpriteFrameName("elementStone025.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
@@ -45,6 +49,7 @@ bool Box::init(int type) {
         case 3: {
             _box = Sprite::createWithSpriteFrameName("elementStone026.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
@@ -56,6 +61,7 @@ bool Box::init(int type) {
             _brokenBox = Sprite::createWithSpriteFrameName("elementWood049.png");
             _brokenBox->retain();
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(woodMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = true;
             _isBroken = false;
@@ -72,6 +78,7 @@ bool Box::init(int type) {
                     Point(_box->getBoundingBox().getMaxX(), _box->getBoundingBox().getMinY())
             };
             auto physicsBody = cocos2d::PhysicsBody::createPolygon(points, 3);
+            physicsBody->setMass(woodMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = true;
             _isBroken = false;
