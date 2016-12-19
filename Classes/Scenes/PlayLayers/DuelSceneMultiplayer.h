@@ -1,7 +1,3 @@
-//
-// Created by igor on 17.11.16.
-//
-
 #ifndef ARCHERSUNLIMITED_DUELSCENEMULTIPLAYER_H
 #define ARCHERSUNLIMITED_DUELSCENEMULTIPLAYER_H
 
@@ -10,7 +6,8 @@
 
 class DuelSceneMultiplayer : public DuelScene2P {
 public:
-    CREATE_FUNC(DuelSceneMultiplayer);
+
+    static DuelSceneMultiplayer* create(Statistics* stats);
 
     void makeTurn(int id) override;
 

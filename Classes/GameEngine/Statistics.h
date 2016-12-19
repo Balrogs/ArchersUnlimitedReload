@@ -9,14 +9,37 @@
 
 USING_NS_CC;
 
-class Statistics : public Node {
+class Statistics {
 public:
-    static Statistics *create();
+    static Statistics *create(int type);
 
-    bool init();
+    bool init(int type);
+
+    int getLevel();
+
+    void increaseLevel(int level);
+
+    int getCoinsGained();
+
+    void increaseCoins(int diff);
+
+    long getTimeSpent();
+
+    void setTime(long timeSpent);
+
+    float getHp();
+
+    void setHp(float hp);
+
+    int getType();
 
 protected:
-
+    int _type;
+    int _level;
+    int _coinsGained;
+    long _timeSpent;
+    float _hp;
+    Node* _view;
 };
 
 

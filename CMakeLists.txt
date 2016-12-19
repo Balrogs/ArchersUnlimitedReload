@@ -304,6 +304,10 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/JSONParser.cpp
         Classes/GameEngine/Global/Misc/Views.cpp
         Classes/GameEngine/Global/Misc/PopUp.cpp
+        Classes/Scenes/MenuLayers/SplashScene.cpp
+        Classes/Localization/LocalizedStrings.cpp
+        Classes/GameEngine/Objects/Environment/Box.cpp
+        Classes/GameEngine/Statistics.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/DuelScene2P.h
@@ -312,7 +316,10 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/Views.h
         Classes/GameEngine/Global/Misc/PopUp.h
         Classes/GameEngine/Global/Misc/JSONParser.h
-        Classes/Scenes/MenuLayers/SplashScene.cpp Classes/Scenes/MenuLayers/SplashScene.h Classes/Localization/LocalizedStrings.cpp Classes/Localization/LocalizedStrings.h Classes/GameEngine/Objects/Environment/Box.cpp Classes/GameEngine/Objects/Environment/Box.h Classes/GameEngine/Statistics.cpp Classes/GameEngine/Statistics.h)
+        Classes/Scenes/MenuLayers/SplashScene.h
+        Classes/Localization/LocalizedStrings.h
+        Classes/GameEngine/Objects/Environment/Box.h
+        Classes/GameEngine/Statistics.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

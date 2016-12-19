@@ -85,11 +85,6 @@ void Arrow::_disableArrow() {
 
     afterAction();
 
-    this->retain();
-    this->removeFromParent();
-    BattleScene::instance->getBackground()->addArrow(this);
-    this->release();
-
     this->unscheduleAllCallbacks();
 
     this->removeComponent(this->getPhysicsBody());

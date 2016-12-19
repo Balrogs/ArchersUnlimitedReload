@@ -6,6 +6,17 @@
 
 USING_NS_CC;
 
+DuelScene *DuelScene::create(Statistics *stats) {
+    DuelScene *ret = new(std::nothrow) DuelScene();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+
 void DuelScene::initWorld() {
 
     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,

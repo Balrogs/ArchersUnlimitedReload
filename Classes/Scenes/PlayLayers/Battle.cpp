@@ -18,24 +18,25 @@ USING_NS_CC;
 Scene *BattleScene::createScene(int type) {
     auto scene = Scene::createWithPhysics();
     BattleScene *layer;
+    Statistics* stats = Statistics::create(type);
     switch (type) {
         case 0:
-            layer = BattleScene::create();
+            layer = BattleScene::create(stats);
             break;
         case 1:
-            layer = AppleBattle::create();
+            layer = AppleBattle::create(stats);
             break;
         case 2:
-            layer = DuelScene::create();
+            layer = DuelScene::create(stats);
             break;
         case 3:
-            layer = DuelScene2P::create();
+            layer = DuelScene2P::create(stats);
             break;
         case 4:
-            layer = DuelSceneMultiplayer::create();
+            layer = DuelSceneMultiplayer::create(stats);
             break;
         default:
-            layer = BattleScene::create();
+            layer = BattleScene::create(stats);
     }
 
     UI *hud = UI::create();
@@ -56,30 +57,88 @@ Scene *BattleScene::createScene(int type) {
     return scene;
 }
 
+cocos2d::Scene *BattleScene::createScene(Statistics *stats) {
+    auto scene = Scene::createWithPhysics();
+    BattleScene *layer;
+    switch (stats->getType()) {
+        case 0:
+            layer = BattleScene::create(stats);
+            break;
+        case 1:
+            layer = AppleBattle::create(stats);
+            break;
+        case 2:
+            layer = DuelScene::create(stats);
+            break;
+        case 3:
+            layer = DuelScene2P::create(stats);
+            break;
+        case 4:
+            layer = DuelSceneMultiplayer::create(stats);
+            break;
+        default:
+            layer = BattleScene::create(stats);
+    }
+
+    UI *hud = UI::create();
+
+    //  int id = 1;
+    int id = RandomHelper::random_int(1, 3);
+    BackgroundLayer *bg = BackgroundLayer::create(id);
+
+    scene->addChild(bg, 2);
+    scene->addChild(layer, 3);
+    scene->addChild(hud, 4);
+
+    layer->_ui = hud;
+    layer->_bg = bg;
+
+    layer->initWorld();
+
+    return scene;
+}
+
+
 const float  BattleScene::MAX_ARROW_POWER = 50.f;
 const float  BattleScene::MIN_ARROW_POWER = 5.f;
 
 const float  BattleScene::G = -0.5f;
 BattleScene *BattleScene::instance = nullptr;
 
-bool BattleScene::init() {
+BattleScene *BattleScene::create(Statistics* stats) {
+    BattleScene *ret = new(std::nothrow) BattleScene();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+
+bool BattleScene::init(Statistics* stats) {
     if (!LayerColor::init()) {
         return false;
     }
+
+    // global vars
     BattleScene::instance = this;
     GROUND = Director::getInstance()->getVisibleSize().height / 6;
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
-
     _GLOBAL_SCALE = 1.f;
+
     //disable multitouch
     _touch = -1;
 
+    //init battle info
+    _stats = stats;
+
+    //children initialization
     _player = nullptr;
     _bullet_pull = Node::create();
     _isPaused = false;
     this->addChild(_bullet_pull);
-
 
     const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
     factory.loadTextureAtlasData("texture.json");
@@ -340,10 +399,9 @@ void BattleScene::_gameOver() {
     this->getScheduler()->unscheduleAllForTarget(this);
     this->getActionManager()->removeAllActionsFromTarget(this);
 
-    this->getParent()->addChild(GameOverScene::create(Statistics::create()), 5);
+    this->getParent()->addChild(GameOverScene::create(_stats), 5);
 }
 
 BackgroundLayer *BattleScene::getBackground() {
     return _bg;
 }
-

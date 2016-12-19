@@ -1,4 +1,3 @@
-
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <GameEngine/Global/Misc/PopUp.h>
@@ -6,6 +5,16 @@
 #include "DuelSceneMultiplayer.h"
 
 USING_NS_CC;
+
+DuelSceneMultiplayer *DuelSceneMultiplayer::create(Statistics *stats) {
+    DuelSceneMultiplayer *ret = new(std::nothrow) DuelSceneMultiplayer();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
 
 void DuelSceneMultiplayer::initWorld() {
     _isStarted = false;

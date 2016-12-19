@@ -1,7 +1,3 @@
-//
-// Created by igor on 22.09.16.
-//
-
 #ifndef ARCUNLIM_DUELSCENE_H
 #define ARCUNLIM_DUELSCENE_H
 
@@ -11,7 +7,8 @@
 
 class DuelScene : public BattleScene {
 public:
-    CREATE_FUNC(DuelScene);
+
+    static DuelScene* create(Statistics* stats);
 
     virtual void makeTurn(int id);
 

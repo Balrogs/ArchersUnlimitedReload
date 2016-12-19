@@ -1,12 +1,18 @@
-//
-// Created by igor on 17.11.16.
-//
-
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Localization/LocalizedStrings.h>
 #include "DuelScene2P.h"
 
 USING_NS_CC;
+
+DuelScene2P *DuelScene2P::create(Statistics *stats) {
+    DuelScene2P *ret = new(std::nothrow) DuelScene2P();
+    if (ret && ret->init(stats)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
 
 void DuelScene2P::initWorld() {
 

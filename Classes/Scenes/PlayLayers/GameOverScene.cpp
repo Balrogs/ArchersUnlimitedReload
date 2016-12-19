@@ -1,12 +1,9 @@
-//
-// Created by igor on 05.10.16.
-//
-
 #include <GameEngine/Global/Variables.h>
 #include <ui/UIButton.h>
 #include <Localization/LocalizedStrings.h>
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "GameOverScene.h"
+#include "Battle.h"
 
 GameOverScene *GameOverScene::create(Statistics *stats) {
     GameOverScene *ret = new(std::nothrow) GameOverScene();
@@ -73,12 +70,12 @@ bool GameOverScene::init(Statistics *stats) {
     repeatButton->loadTextures(Variables::AGAIN_BUTTON, Variables::AGAIN_PRESSED_BUTTON,
                                Variables::AGAIN_BUTTON, ui::Widget::TextureResType::PLIST);
     repeatButton->setScale(1.5f);
-    repeatButton->addTouchEventListener([&](Ref *sender, ui::Widget::TouchEventType type) {
+    repeatButton->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
         switch (type) {
             case ui::Widget::TouchEventType::ENDED: {
-                // TODO add action with event support
-            }
+                Director::getInstance()->replaceScene(BattleScene::createScene(stats->getType()));
                 break;
+            }
             default:
                 break;
         }
@@ -96,8 +93,8 @@ bool GameOverScene::init(Statistics *stats) {
         switch (type) {
             case ui::Widget::TouchEventType::ENDED: {
                 onQuit();
-            }
                 break;
+            }
             default:
                 break;
         }
@@ -107,6 +104,29 @@ bool GameOverScene::init(Statistics *stats) {
                                  repeatButton->getPosition().y));
     this->addChild(backButton, 3);
 
+    auto continueButton = ui::Button::create();
+    continueButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
+                              Variables::CLOSE_BUTTON_PATH, ui::Widget::TextureResType::PLIST);
+
+    continueButton->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                // TODO CHECK coins and add action
+                Director::getInstance()->replaceScene(BattleScene::createScene(stats));
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    continueButton->setPosition(Vec2(repeatButton->getPosition().x + repeatButton->getBoundingBox().size.width / 2 +
+                                  continueButton->getBoundingBox().size.width,
+                                  repeatButton->getPosition().y));
+
+    // TODO add movie buttons
+
+    this->addChild(continueButton, 3);
+    
     auto chestButton = ui::Button::create();
     chestButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
                               Variables::CLOSE_BUTTON_PATH, ui::Widget::TextureResType::PLIST);
@@ -121,15 +141,13 @@ bool GameOverScene::init(Statistics *stats) {
                 break;
         }
     });
-    chestButton->setPosition(Vec2(repeatButton->getPosition().x + repeatButton->getBoundingBox().size.width / 2 +
-                                  chestButton->getBoundingBox().size.width,
-                                  repeatButton->getPosition().y));
+    chestButton->setPosition(Vec2(visibleSize.width / 2 , visibleSize.height / 2));
 
     // TODO add coin button if enough coins
 
     this->addChild(chestButton, 3);
 
-    this->addChild(stats, 3);
+  //  this->addChild(stats, 3);
 
     // TODO add button share utils::capturenode
 
