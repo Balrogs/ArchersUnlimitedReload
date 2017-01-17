@@ -39,10 +39,11 @@ void AppleBattle::initObjects() {
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     target->changeFacedir(-1);
-    auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
 
     _targets.push_back(target);
-    _targets.push_back(apple);
+
+    addApple();
+
     _brains.push_back(new PassiveBrain(target));
 }
 
@@ -297,7 +298,7 @@ bool AppleBattle::isGameOver() {
 
 void AppleBattle::addApple() {
     if (DragonObject *target = dynamic_cast<DragonObject *>(_targets[0])) {
-        auto apple = new Apple(_targets[0]->getPositionX(), target->getGlobalHeight("Head"));
+        auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
         _targets.push_back(apple);
     }
 }

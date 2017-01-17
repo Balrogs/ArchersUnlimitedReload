@@ -10,12 +10,13 @@ Apple::Apple(float x_pos, float y_pos) {
 
     auto texture = cocos2d::Sprite::createWithSpriteFrameName("apple.png");
 
-    this->setPosition(x_pos, y_pos);
     this->setScale(BattleScene::instance->getGlobalScale());
+    this->setPosition(x_pos, y_pos);
 
-    cocos2d::Size size = texture->getContentSize();
 
-    auto physicsBody = cocos2d::PhysicsBody::createCircle(size.width / 2,
+    cocos2d::Size size = texture->getBoundingBox().size;
+
+    auto physicsBody = cocos2d::PhysicsBody::createCircle(size.width / 2 * getScale(),
                                                           cocos2d::PHYSICSBODY_MATERIAL_DEFAULT);
     physicsBody->setTag(2);
     physicsBody->setContactTestBitmask(true);

@@ -321,33 +321,35 @@ void MainMenu::onMenuClick(int id) {
         }
         case 1 : {
 
-            auto singleP = cocos2d::ui::Button::create();
-            singleP->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                  cocos2d::ui::Widget::TextureResType::PLIST);
-
-            singleP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        //onPushScene(0);
-                    }
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-            singleP->setPosition(
-                    Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
-                         3 * _visibleSize.height / 4));
-            auto singleP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("WAVES"),
-                                                               Variables::FONT_NAME,
-                                                               Variables::FONT_SIZE);
-            singleP_label->setPosition(singleP->getContentSize().width / 2,
-                                       singleP->getContentSize().height / 2);
-            singleP->addChild(singleP_label, 4);
-
-
-            _menu->addChild(singleP);
+//            auto singleP = cocos2d::ui::Button::create();
+//            singleP->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
+//                                  cocos2d::ui::Widget::TextureResType::PLIST);
+//
+//            singleP->setEnabled(false);
+//
+//            singleP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//                switch (type) {
+//                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
+//                        //onPushScene(0);
+//                    }
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            });
+//
+//            singleP->setPosition(
+//                    Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
+//                         3 * _visibleSize.height / 4));
+//            auto singleP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("WAVES"),
+//                                                               Variables::FONT_NAME,
+//                                                               Variables::FONT_SIZE);
+//            singleP_label->setPosition(singleP->getContentSize().width / 2,
+//                                       singleP->getContentSize().height / 2);
+//            singleP->addChild(singleP_label, 4);
+//
+//
+//            _menu->addChild(singleP);
 
             auto duel = cocos2d::ui::Button::create();
             duel->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
@@ -365,9 +367,11 @@ void MainMenu::onMenuClick(int id) {
             });
 
             duel->setPosition(
-                    Vec2(singleP->getPosition().x,
-                         singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
-                         duel->getBoundingBox().size.height / 2 - 15.f));
+                    Vec2(_visibleSize.width - duel->getBoundingBox().size.width / 2 - 30.f,
+                         3 * _visibleSize.height / 4));
+//                    Vec2(singleP->getPosition().x,
+//                         singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
+//                         duel->getBoundingBox().size.height / 2 - 15.f));
             auto duel_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"),
                                                             Variables::FONT_NAME,
                                                             Variables::FONT_SIZE);

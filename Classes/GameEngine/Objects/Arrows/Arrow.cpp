@@ -27,7 +27,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
     _tail = Vec2(_armature->getBone("tail")->global.x, _armature->getBone("tail")->global.y);
 
     auto physicsBody = cocos2d::PhysicsBody::create();
-    physicsBody->addShape(PhysicsShapeEdgeSegment::create(_tail, _head));
+    physicsBody->addShape(PhysicsShapeEdgeSegment::create(_head, _head));
     physicsBody->setTag(1);
     physicsBody->setMoment(10.f);
     physicsBody->setContactTestBitmask(true);
@@ -80,9 +80,6 @@ void Arrow::update(float dt) {
 }
 
 void Arrow::_disableArrow() {
-
-    CCLOG("Disable Position : x %f  y : %f", getPosition().x, getPosition().y);
-
     afterAction();
 
     this->unscheduleAllCallbacks();
@@ -231,10 +228,7 @@ void Arrow::addToNode(cocos2d::Node *bone) {
         this->removeFromParentAndCleanup(true);
         //position
         auto scenePoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay);
-        if (target->getPosition().x > BattleScene::instance->visibleSize.width) {
-            auto player_pos = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), bone);
-            scenePoint.x = player_pos.x;
-        }
+        scenePoint.x += BattleScene::instance->getPosition().x;
         auto globalPoint3 = new Vec3(scenePoint.x, scenePoint.y, 0.f);
         bone->getWorldToNodeTransform().transformPoint(globalPoint3);
         auto globalPoint = Vec2(globalPoint3->x, globalPoint3->y);

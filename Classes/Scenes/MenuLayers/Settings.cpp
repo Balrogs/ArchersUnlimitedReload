@@ -269,7 +269,7 @@ void Settings::_showScrollView() {
 
     _scrollView = cocos2d::ui::ScrollView::create();
     _scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
-    _scrollView->setContentSize(Size(_languageBox->getContentSize().width, _bg->getContentSize().height));
+    _scrollView->setContentSize(Size(_languageBox->getContentSize().width, _bg->getContentSize().height * 0.8f));
     _scrollView->setInnerContainerSize(
             Size(_languageBox->getContentSize().width, _languageBox->getContentSize().height * 10));
     _scrollView->setBackGroundImage(Variables::GRAY_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);

@@ -124,7 +124,7 @@ bool HPBar::init(cocos2d::Size size) {
     if (!Node::init())
         return false;
 
-    _prevSize = size;
+    _prevSize = Size(0.f, 0.f);
     _size = size;
     _hp = 100;
     _alignment = true;
@@ -139,6 +139,7 @@ void HPBar::setHp(float hp) {
     _hp = hp;
     auto percents = hp / 100.f;
 
+
     if (percents < 0.3f) {
         changeState(DANGER);
     } else if (percents < 0.6f) {
@@ -147,12 +148,12 @@ void HPBar::setHp(float hp) {
         changeState(FULL);
     }
 
+    _prevSize = Size(_bar->getScaleX(), _bar->getScaleY());
+
     float new_Size = percents * _size.width;
 
     float x = new_Size / _spriteSize.width;
     float y = _size.height / _spriteSize.height;
-
-    _prevSize = _bar->getContentSize();
 
     if (!_alignment) {
         _bar->runAction(
@@ -197,11 +198,15 @@ void HPBar::changeState(HPState state) {
 
     _bar->setAnchorPoint(Vec2(0, 0));
     _spriteSize = _bar->getContentSize();
+    if (_prevSize.height == 0 || _prevSize.width == 0) {
+        _bar->setScale(_size.width / _spriteSize.width, _size.height / _spriteSize.height);
+    } else {
+        _bar->setScale(_prevSize.width, _prevSize.height);
+    }
 
-    float x = _prevSize.width / _spriteSize.width;
-    float y = _prevSize.height / _spriteSize.height;
-
-    _bar->setScale(x, y);
+    if(!_alignment){
+        _bar->setPosition(Vec2(_size.width - _bar->getContentSize().width, 0));
+    }
 
     this->addChild(_bar);
 }
