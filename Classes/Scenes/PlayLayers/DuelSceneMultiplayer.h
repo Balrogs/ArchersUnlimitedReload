@@ -37,7 +37,6 @@ protected:
 
     bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
-
 };
 
 

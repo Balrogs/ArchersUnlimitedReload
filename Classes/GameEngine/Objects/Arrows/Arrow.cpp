@@ -439,8 +439,7 @@ void DuelArrow::update(float dt) {
 DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
                      const cocos2d::Vec2 &position, int player_id) : Arrow(armatureName, radian, power, position,
                                                                            player_id) {
-    CCLOG("Power : %f radian : %f", power, radian * dragonBones::RADIAN_TO_ANGLE);
-    CCLOG("Position : x %f  y : %f", position.x, position.y);
+
     _damage = 15.f;
     lifePeriod = 0;
     if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
@@ -452,7 +451,6 @@ DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
 bool DuelArrow::processContact(cocos2d::Node *bone) {
     if (Arrow::processContact(bone))
         if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
-            CCLOG("PERIOD: %d SPEEDX : %f", lifePeriod, _speedX);
             duel->makeTurn(_player_id);
             return true;
         }

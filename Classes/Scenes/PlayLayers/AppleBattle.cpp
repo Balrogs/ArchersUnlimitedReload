@@ -34,7 +34,8 @@ void AppleBattle::initObjects() {
 
     _env = Node::create();
     this->addChild(_env);
-    _player = new AppleHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, "HERO",
+
+    _player = new AppleHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND,  _client->getDBPlayer()->getName().c_str(),
                             _stats->getCoinsGained());
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);

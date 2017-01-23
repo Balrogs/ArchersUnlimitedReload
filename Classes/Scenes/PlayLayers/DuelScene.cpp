@@ -26,6 +26,8 @@ void DuelScene::initWorld() {
 
     _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,   LocalizedStrings::getInstance()->getString("BOT"));
 
+    _hero2->changeFacedir(-1);
+
     _player1 = _player->getPlayer();
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);

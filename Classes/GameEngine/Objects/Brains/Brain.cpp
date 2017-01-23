@@ -179,7 +179,6 @@ void HeroBrain::attack() {
 }
 
 HeroBrainDuel::HeroBrainDuel(Hero *body, float upd) : Brain(body, 20.f, 2.f, upd) {
-    body->changeFacedir(-1);
 }
 
 bool HeroBrainDuel::isTargetNear() {

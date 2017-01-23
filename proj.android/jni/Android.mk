@@ -58,6 +58,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/dragonBones/textures/TextureData.cpp\
                                  ../../Classes/GameEngine/Objects/Environment/Apple.cpp\
                                  ../../Classes/Scenes/PlayLayers/AppleBattle.cpp\
+                                 ../../Classes/Scenes/PlayLayers/AppleMultiplayer.cpp\
                                  ../../Classes/Scenes/PlayLayers/DuelScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/MainMenu.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Ground.cpp \
@@ -70,6 +71,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Localization/LocalizedStrings.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Box.cpp \
                                  ../../Classes/GameEngine/Statistics.cpp
+
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 

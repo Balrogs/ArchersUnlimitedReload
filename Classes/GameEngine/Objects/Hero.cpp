@@ -130,8 +130,11 @@ void Hero::update() {
 }
 
 void Hero::attack() {
-    CCLOG("Attacking: angle %f power %f", _aim->get_aimRadian(), _aim->get_aimPower());
-    attack(_aim->get_aimRadian(), _aim->get_aimPower());
+    CCLOG("Attacking: angle %f power %f", _aim->get_aimRadian() *  dragonBones::RADIAN_TO_ANGLE, _aim->get_aimPower());
+    if(_faceDir > 0)
+        attack(_aim->get_aimRadian(), _aim->get_aimPower());
+    else
+        attack((180 * dragonBones::ANGLE_TO_RADIAN) - _aim->get_aimRadian(), _aim->get_aimPower());
 }
 
 void Hero::aim() {
@@ -158,14 +161,16 @@ bool Hero::_aimRandomly(Vec2 start, Vec2 destination) {
     auto x = destination.x - start.x + destination.y - BattleScene::instance->GROUND;
     auto radian = (x + 20.f * power) / 90.f;
     if (radian < 0) {
-        radian = 180 + radian;
+        radian = (-180 - radian);
+        CCLOG("BOT AIMING angle : %f", radian);
+        _aim->set_aimRadian(radian * dragonBones::ANGLE_TO_RADIAN);
+        _aim->set_aimPower(power);
+        return true;
     }
     if (radian > 180) {
         return false;
     }
-    _aim->set_aimRadian((180 - radian) * dragonBones::ANGLE_TO_RADIAN);
-    _aim->set_aimPower(power);
-    return true;
+
 }
 
 
@@ -174,7 +179,6 @@ void Hero::attack(float radian, float power) {
         return;
     }
     _isAttacking = true;
-    radian = -radian;
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay);
@@ -260,13 +264,11 @@ void Hero::_fire(Arrow *arrow) {
 }
 
 void Hero::_updateAim() {
+
     if (!_aim->is_aiming()) {
         return;
     }
-    const auto firePointBone = _shoulders->getSlot("Bow");
-    auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
-                                                 _shouldersDisplay, this);
-    _aim->set_aimPoint(globalPoint);
+
 
     _aimPowerState = _shoulders->getAnimation().gotoAndStopByTime(Variables::AIM_ANIMATION, _aim->get_aimPower() / 50);
 
@@ -279,6 +281,13 @@ void Hero::_updateAim() {
     _shouldersDisplay->setRotation((int) angle);
 
     _shoulders->invalidUpdate("", true);
+
+    const auto firePointBone = _shoulders->getSlot("Bow");
+    auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
+                                                 _shouldersDisplay, this);
+    _aim->set_aimPoint(globalPoint);
+
+    CCLOG("AIMING : %f grad : %f", _aim->get_aimPower(),  _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
 
     _updateString();
 }

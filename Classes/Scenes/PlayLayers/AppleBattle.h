@@ -5,7 +5,6 @@
 #include "Battle.h"
 
 class AppleBattle : public BattleScene {
-
 public:
 
     static AppleBattle* create(Statistics* stats);
@@ -15,6 +14,8 @@ public:
     void setAppleHit();
 
 protected:
+
+    SocketClient* _client;
 
     virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 

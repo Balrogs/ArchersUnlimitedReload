@@ -2,7 +2,6 @@
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
 #include <GameEngine/Global/Misc/PopUp.h>
-#include <GameEngine/Global/Variables.h>
 #include <Scenes/Layers/BackgroundLayer.h>
 #include <Localization/LocalizedStrings.h>
 #include "Battle.h"
@@ -11,7 +10,6 @@
 #include "DuelScene2P.h"
 #include "DuelSceneMultiplayer.h"
 #include "GameOverScene.h"
-#include "GameEngine/Statistics.h"
 
 USING_NS_CC;
 
@@ -263,7 +261,7 @@ bool BattleScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
     auto angle = std::atan2(y, x);
-    _player->attack(angle, power);
+    _player->attack(-angle, power);
     return true;
 }
 

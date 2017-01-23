@@ -319,7 +319,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/SplashScene.h
         Classes/Localization/LocalizedStrings.h
         Classes/GameEngine/Objects/Environment/Box.h
-        Classes/GameEngine/Statistics.h)
+        Classes/GameEngine/Statistics.h Classes/Scenes/PlayLayers/AppleMultiplayer.cpp Classes/Scenes/PlayLayers/AppleMultiplayer.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})
