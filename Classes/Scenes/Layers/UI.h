@@ -27,10 +27,13 @@ public:
 
     void setWarning(const char * message, cocos2d::Color3B color);
 
+    void initTest(Size visibleSize);
+
 protected:
 
     cocos2d::Label* _warningLabel;
     std::vector<cocos2d::Rect> bounds;
+
 };
 
 
