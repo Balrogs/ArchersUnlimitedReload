@@ -39,7 +39,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
-    this->schedule(SEL_SCHEDULE(&Arrow::update), 0.05f);
+    this->schedule(SEL_SCHEDULE(&Arrow::update), 0.f);
 }
 
 Arrow::~Arrow() {

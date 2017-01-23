@@ -99,10 +99,10 @@ cocos2d::Scene *BattleScene::createScene(Statistics *stats) {
 }
 
 
-const float  BattleScene::MAX_ARROW_POWER = 50.f;
-const float  BattleScene::MIN_ARROW_POWER = 5.f;
+const float  BattleScene::MAX_ARROW_POWER = 25.f;
+const float  BattleScene::MIN_ARROW_POWER = 1.f;
 
-const float  BattleScene::G = -0.5f;
+const float  BattleScene::G = -0.15f;
 BattleScene *BattleScene::instance = nullptr;
 
 BattleScene *BattleScene::create(Statistics *stats) {
