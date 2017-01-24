@@ -4,7 +4,7 @@
 
 #include <GameEngine/Global/Misc/Views.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
-#include <Scenes/PlayLayers/DuelSceneMultiplayer.h>
+#include <Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <Localization/LocalizedStrings.h>
@@ -224,7 +224,7 @@ void MainMenu::onEnter() {
 }
 
 void MainMenu::onPushScene(int id) {
-    auto scene = BattleScene::createScene(id);
+    auto scene = BattleParent::createScene(id);
     Director::getInstance()->pushScene(scene);
 }
 
@@ -829,10 +829,10 @@ void LobbyLayer::onEnter() {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 _client->enterRoom();
-                auto scene = BattleScene::createScene(4);
+                auto scene = BattleParent::createScene(4);
                 Director::getInstance()->pushScene(scene);
 
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleScene::instance)) {
+                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance())) {
                     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                                   _client->getDBPlayer()->getName());
                     gameScene->createPlayers(player1, LobbyLayer::getInstance()->_player2);

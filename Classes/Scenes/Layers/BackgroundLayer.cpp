@@ -45,7 +45,7 @@ bool InfiniteParallaxNode::init(int id) {
     }
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    GROUND = BattleScene::instance->GROUND;
+    GROUND = BattleScene::getInstance()->GROUND;
     _size = Size(-visibleSize.width * 5, visibleSize.width * 10);
     Ground *hills2 = Ground::create(GROUND, _size.height, "hills2.png");
 
@@ -140,7 +140,7 @@ void InfiniteParallaxNode::createDesert() {
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    Ground *mountains = Ground::create(BattleScene::instance->GROUND, visibleSize.width * 10, "mountain4.png");
+    Ground *mountains = Ground::create(BattleScene::getInstance()->GROUND, visibleSize.width * 10, "mountain4.png");
 
     this->addChild(mountains, 0, Point(0.1, 0.1), Point(0.f, visibleSize.height / 2));
 
@@ -162,7 +162,7 @@ void InfiniteParallaxNode::createDesert() {
     }
 
 
-    Ground *hills3 = Ground::create(BattleScene::instance->GROUND, visibleSize.width * 10, "hills3.png");
+    Ground *hills3 = Ground::create(BattleScene::getInstance()->GROUND, visibleSize.width * 10, "hills3.png");
 
     this->addChild(hills3, 0, Point(0.1, 0.1), Point(0.f, 12 * mountains->getPosition().y / 10 - hills3->getHeight()));
 

@@ -7,7 +7,7 @@ USING_NS_CC;
 
 Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, 1) {
     _player =  Player::create(100, "BOT");
-    _armature = BattleScene::instance->factory.buildArmature("Stickman");
+    _armature = BattleScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
     _armature->removeSlot(_armature->getSlot("Shoulders"));
     _armature->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);
@@ -34,7 +34,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     this->setPosition(_x_pos, _y_pos);
-    this->setScale(BattleScene::instance->getGlobalScale());
+    this->setScale(BattleScene::getInstance()->getGlobalScale());
     _updateAnimation();
 
 
@@ -42,9 +42,9 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
 
     this->addChild(_armatureDisplay);
 
-    BattleScene::instance->addChild(this, 2);
+    BattleScene::getInstance()->addChild(this, 2);
 
-    BattleScene::instance->addStickman();
+    BattleScene::getInstance()->addStickman();
 }
 
 Stickman::~Stickman() {
@@ -191,8 +191,8 @@ void Body::_updatePosition() {
         _speedY += BattleScene::G;
 
         this->setPosition(position.x, position.y + _speedY);
-        if (position.y < BattleScene::instance->GROUND) {
-            this->setPosition(position.x, BattleScene::instance->GROUND);
+        if (position.y < BattleScene::getInstance()->GROUND) {
+            this->setPosition(position.x, BattleScene::getInstance()->GROUND);
             _speedY = 0.f;
             _speedX = 0.f;
         }
@@ -200,9 +200,11 @@ void Body::_updatePosition() {
 }
 
 void Body::kill() {
-    BattleScene::instance->removeTarget(this);
+    if(BattleScene* battleScene = dynamic_cast<BattleScene*>(BattleParent::getInstance())){
+        battleScene->removeTarget(this);
+    }
     dragonBones::WorldClock::clock.remove(_armature);
-    BattleScene::instance->removeChild(this);
+    BattleParent::getInstance()->removeChild(this);
 }
 
 State Body::getState() {

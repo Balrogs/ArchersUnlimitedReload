@@ -88,7 +88,10 @@ bool Brain::isTargetNear() {
 
 
 void Brain::remove() {
-    BattleScene::instance->removeBrain(this);
+    if(BattleScene* battleScene = dynamic_cast<BattleScene*>(BattleParent::getInstance())){
+        battleScene->removeBrain(this);
+    }
+
     _body->kill();
 }
 

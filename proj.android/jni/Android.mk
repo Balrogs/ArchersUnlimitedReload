@@ -57,20 +57,23 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/dragonBones/parsers/JSONDataParser.cpp\
                                  ../../Classes/dragonBones/textures/TextureData.cpp\
                                  ../../Classes/GameEngine/Objects/Environment/Apple.cpp\
-                                 ../../Classes/Scenes/PlayLayers/AppleBattle.cpp\
-                                 ../../Classes/Scenes/PlayLayers/AppleMultiplayer.cpp\
-                                 ../../Classes/Scenes/PlayLayers/DuelScene.cpp\
+                                 ../../Classes/Scenes/PlayLayers/Apple/AppleBattle.cpp\
+                                 ../../Classes/Scenes/PlayLayers/Duel/DuelScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/MainMenu.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Ground.cpp \
-                                 ../../Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp \
-                                 ../../Classes/Scenes/PlayLayers/DuelScene2P.cpp \
+                                 ../../Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.cpp \
+                                 ../../Classes/Scenes/PlayLayers/Duel/DuelScene2P.cpp \
                                  ../../Classes/GameEngine/Global/Misc/SocketClient.cpp \
                                  ../../Classes/GameEngine/Global/Misc/JSONParser.cpp \
                                  ../../Classes/GameEngine/Global/Misc/Views.cpp \
                                  ../../Classes/GameEngine/Global/Misc/PopUp.cpp \
                                  ../../Classes/Localization/LocalizedStrings.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Box.cpp \
-                                 ../../Classes/GameEngine/Statistics.cpp
+                                 ../../Classes/GameEngine/Statistics.cpp \
+                                 ../../Classes/Scenes/PlayLayers/Apple/AppleMultiplayer.cpp \
+                                 ../../Classes/Scenes/PlayLayers/BattleParent.cpp \
+                                 ../../Classes/Scenes/PlayLayers/MultiplayerBattle.cpp \
+                                 ../../Classes/Scenes/PlayLayers/Apple/AppleParent.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

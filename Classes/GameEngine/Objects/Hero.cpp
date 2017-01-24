@@ -1,8 +1,9 @@
-#include <Scenes/PlayLayers/DuelScene.h>
-#include <Scenes/PlayLayers/DuelScene2P.h>
+#include <GameEngine/Objects/Aim/Aim.h>
+#include <GameEngine/Global/Variables.h>
+#include <Scenes/PlayLayers/BattleParent.h>
+#include <Scenes/PlayLayers/Duel/DuelScene2P.h>
 #include "Hero.h"
-#include "Scenes/PlayLayers/Battle.h"
-#include "GameEngine/Global/Variables.h"
+#include "Stickman.h"
 
 Hero::Hero(float x_pos, float y_pos) : Hero(x_pos, y_pos, Player::create(100, "HERO")) {
 }
@@ -33,7 +34,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
 
     _weaponName = WEAPON_LIST[_weaponIndex];
 
-    _armature = BattleScene::instance->factory.buildArmature("Stickman");
+    _armature = BattleParent::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);
@@ -116,9 +117,9 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
     this->setPosition(_x_pos, _y_pos);
-    this->setScale(BattleScene::instance->getGlobalScale());
-    BattleScene::instance->addChild(this);
-    BattleScene::instance->addStickman();
+    this->setScale(BattleParent::getInstance()->getGlobalScale());
+    BattleParent::getInstance()->addChild(this);
+    BattleParent::getInstance()->addStickman();
 
 }
 
@@ -130,7 +131,6 @@ void Hero::update() {
 }
 
 void Hero::attack() {
-    CCLOG("Attacking: angle %f power %f", _aim->get_aimRadian() *  dragonBones::RADIAN_TO_ANGLE, _aim->get_aimPower());
     if(_faceDir > 0)
         attack(_aim->get_aimRadian(), _aim->get_aimPower());
     else
@@ -144,7 +144,7 @@ void Hero::aim() {
             0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
     );
     _arrowDisplay->setVisible(true);
-    auto hero_pos = BattleScene::instance->getPlayerPos();
+    auto hero_pos = BattleParent::getInstance()->getPlayerPos();
 
     const auto firePointBone = _shoulders->getSlot("Bow");
     auto globalPoint = cocos2d::Vec2(this->getPosition().x, Variables::translatePoint(
@@ -157,12 +157,11 @@ void Hero::aim() {
 }
 
 bool Hero::_aimRandomly(Vec2 start, Vec2 destination) {
-    auto power = RandomHelper::random_real(BattleScene::MAX_ARROW_POWER - 5.f, BattleScene::MAX_ARROW_POWER);
-    auto x = destination.x - start.x + destination.y - BattleScene::instance->GROUND;
+    auto power = RandomHelper::random_real(BattleParent::MAX_ARROW_POWER - 5.f, BattleParent::MAX_ARROW_POWER);
+    auto x = destination.x - start.x + destination.y - BattleParent::getInstance()->GROUND;
     auto radian = (x + 20.f * power) / 90.f;
     if (radian < 0) {
         radian = (-180 - radian);
-        CCLOG("BOT AIMING angle : %f", radian);
         _aim->set_aimRadian(radian * dragonBones::ANGLE_TO_RADIAN);
         _aim->set_aimPower(power);
         return true;
@@ -240,7 +239,7 @@ void Hero::switchWeapon(int dest) {
         _weaponIndex = (unsigned int) WEAPON_LIST.size() - 1;
 
     _shoulders->getSlot("Arrow")->setChildArmature(
-            BattleScene::instance->factory.buildArmature(WEAPON_LIST[_weaponIndex]));
+            BattleParent::getInstance()->factory.buildArmature(WEAPON_LIST[_weaponIndex]));
     _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
     _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
 }
@@ -250,7 +249,7 @@ void Hero::_fire(Arrow *arrow) {
     UI::enableArrows(this, false);
     this->getPlayer()->addShotsCount();
     _saveAim();
-    BattleScene::instance->getBulletPull()->addChild(arrow);
+    BattleParent::getInstance()->getBulletPull()->addChild(arrow);
     _arrowDisplay->setVisible(false);
     _state = IDLE;
     _aimPowerState = _shoulders->getAnimation().fadeIn(
@@ -286,8 +285,6 @@ void Hero::_updateAim() {
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay, this);
     _aim->set_aimPoint(globalPoint);
-
-    CCLOG("AIMING : %f grad : %f", _aim->get_aimPower(),  _aim->get_aimRadian() * dragonBones::RADIAN_TO_ANGLE);
 
     _updateString();
 }
@@ -373,7 +370,7 @@ void Hero::_saveAim() {
 
 void Hero::setFaceDir() {
     int facedir = 1;
-    if (DuelScene2P *scene = dynamic_cast<DuelScene2P *>(BattleScene::instance)) {
+    if (DuelScene2P *scene = dynamic_cast<DuelScene2P *>(BattleParent::getInstance())) {
         if (scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x) {
             facedir = -1;
         }

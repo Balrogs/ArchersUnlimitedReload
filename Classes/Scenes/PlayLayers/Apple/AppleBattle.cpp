@@ -1,6 +1,6 @@
 #include <GameEngine/Objects/Environment/Apple.h>
-#include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Objects/Environment/Box.h>
+#include <GameEngine/Objects/Brains/Brain.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;
@@ -12,6 +12,9 @@ AppleBattle *AppleBattle::create(Statistics *stats) {
     } else {
         CC_SAFE_DELETE(ret);
     }
+
+    _instance = ret;
+
     return ret;
 }
 
@@ -22,6 +25,8 @@ void AppleBattle::initWorld() {
     _isTargetHitted = false;
 
     _shotsLimit = 5;
+
+    _completedShots = 0;
 
     initObjects();
 
@@ -42,16 +47,49 @@ void AppleBattle::initObjects() {
     target->changeFacedir(-1);
 
     _targets.push_back(target);
+    new PassiveBrain(target);
 
     addApple();
+}
 
-    _brains.push_back(new PassiveBrain(target));
+
+bool AppleBattle::isGameOver() {
+    if (_stats->getLevel() == 25)
+        return true;
+
+    if (_isAppleHitted) {
+        _isAppleHitted = false;
+        _stats->increaseLevel(_stats->getLevel() + 1);
+        _nextLevelAction();
+        return false;
+    }
+
+    return _isTargetHitted || _completedShots - _shotsLimit == 0;
+}
+
+
+
+int AppleBattle::_getGainedCoinsByActionType(int type) {
+    int value = 0;
+    switch (type) {
+        case 1: {
+            auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
+            value = 100 + 10 * _stats->getLevel() - 5 * shotsLeft;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    return value;
 }
 
 
 void AppleBattle::_nextLevelAction() {
-    _player->getPlayer()->nullShotsCount();
+    _completedShots = 0;
+
     _env->removeAllChildren();
+
     _ui->setWarning("SHOOT APPLE", Color3B::BLACK);
 
     switch (_stats->getLevel()) {
@@ -283,19 +321,6 @@ void AppleBattle::_nextLevelAction() {
 
 }
 
-bool AppleBattle::isGameOver() {
-    if (_stats->getLevel() == 25)
-        return true;
-
-    if (_isAppleHitted) {
-        _isAppleHitted = false;
-        _stats->increaseLevel(_stats->getLevel() + 1);
-        _nextLevelAction();
-        return false;
-    }
-
-    return _isTargetHitted || _player->getPlayer()->getShotsCount() - _shotsLimit == 0;
-}
 
 void AppleBattle::addApple() {
     if (DragonObject *target = dynamic_cast<DragonObject *>(_targets[0])) {
@@ -304,16 +329,10 @@ void AppleBattle::addApple() {
     }
 }
 
-void AppleBattle::setHit() {
-    _isTargetHitted = true;
-}
+void AppleBattle::completeShot() {
+    AppleParent::completeShot();
 
-void AppleBattle::setAppleHit() {
-    _isAppleHitted = true;
-}
-
-bool AppleBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
+    auto shotsLeft = _shotsLimit - _completedShots;
     if (shotsLeft == 1) {
         _ui->setWarning(StringUtils::format("%d SHOT LEFT", shotsLeft).c_str(), Color3B::RED);
     } else if (shotsLeft <= 2) {
@@ -321,20 +340,4 @@ bool AppleBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *
     } else {
         _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::BLACK);
     }
-    return BattleScene::_touchHandlerEnd(touch, event);
-}
-
-int AppleBattle::_getGainedCoinsByActionType(int type) {
-    int value = 0;
-    switch (type) {
-        case 1: {
-            auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
-            value = 100 + 10 * _stats->getLevel() - 5 * shotsLeft;
-            break;
-        }
-        default: {
-            break;
-        }
-    }
-    return value;
 }

@@ -3,9 +3,12 @@
 
 
 #include "AppleBattle.h"
+#include "Scenes/PlayLayers/MultiplayerBattle.h"
 
-class AppleMultiplayer: public AppleBattle {
+class AppleMultiplayer: public AppleParent, public MultiplayerBattle {
+public:
 
+protected:
 
 };
 

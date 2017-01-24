@@ -19,7 +19,7 @@ bool UI::init() {
     pause->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->showPopUp();
+                BattleScene::getInstance()->showPopUp();
                 break;
             default:
                 break;
@@ -110,8 +110,8 @@ void UI::addMoveArrows(Hero *player) {
     right_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->getPlayer()->move(1);
-                enableArrows(BattleScene::instance->getPlayer(), false);
+                BattleScene::getInstance()->getPlayer()->move(1);
+                enableArrows(BattleScene::getInstance()->getPlayer(), false);
                 break;
             default:
                 break;
@@ -121,8 +121,8 @@ void UI::addMoveArrows(Hero *player) {
     left_arrow->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::instance->getPlayer()->move(-1);
-                enableArrows(BattleScene::instance->getPlayer(), false);
+                BattleScene::getInstance()->getPlayer()->move(-1);
+                enableArrows(BattleScene::getInstance()->getPlayer(), false);
                 break;
             default:
                 break;
@@ -141,239 +141,239 @@ void UI::setWarning(const char *message, Color3B color) {
     _warningLabel->setColor(color);
     _warningLabel->setString(message);
 }
-
-void UI::initTest(cocos2d::Size visibleSize) {
-
-    auto maxspeed_label = cocos2d::Label::createWithTTF("MAX SPEED", Variables::FONT_NAME, 32.f);
-    maxspeed_label->setColor(Color3B::BLACK);
-    maxspeed_label->setPosition(
-            Vec2(visibleSize.width / 4, visibleSize.height - maxspeed_label->getBoundingBox().size.height / 2 - 25.f));
-    this->bounds.push_back(maxspeed_label->getBoundingBox());
-    this->addChild(maxspeed_label);
-
-    auto maxspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MAX_ARROW_POWER), Variables::FONT_NAME, 32.f);
-    maxspeed_value->setColor(Color3B::BLACK);
-    maxspeed_value->setPosition(
-            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 40.f));
-    this->bounds.push_back(maxspeed_value->getBoundingBox());
-    this->addChild(maxspeed_value);
-
-    auto arrow_maxspeed_up = cocos2d::ui::Button::create();
-    arrow_maxspeed_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                    Variables::DROP_LIST_BUTTON,
-                                    cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_maxspeed_up->setPosition(
-            Vec2(maxspeed_value->getPosition().x + 100.f,
-                 maxspeed_value->getPosition().y));
-    arrow_maxspeed_up->addTouchEventListener(
-            [&, maxspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED:
-                        BattleScene::MAX_ARROW_POWER += 1.f;
-                        maxspeed_value->setString(StringUtils::toString(BattleScene::MAX_ARROW_POWER));
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-    this->bounds.push_back(arrow_maxspeed_up->getBoundingBox());
-
-    this->addChild(arrow_maxspeed_up);
-
-    auto arrow_maxspeed_down = cocos2d::ui::Button::create();
-    arrow_maxspeed_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                      Variables::DROP_LIST_BUTTON,
-                                      cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_maxspeed_down->setPosition(
-            Vec2(maxspeed_value->getPosition().x - 100.f,
-                 maxspeed_value->getPosition().y));
-    arrow_maxspeed_down->addTouchEventListener([&, maxspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::MAX_ARROW_POWER -= 1.f;
-                maxspeed_value->setString(StringUtils::toString(BattleScene::MAX_ARROW_POWER));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_maxspeed_down->getBoundingBox());
-
-    this->addChild(arrow_maxspeed_down);
-
-    auto minspeed_label = cocos2d::Label::createWithTTF("MIN SPEED", Variables::FONT_NAME, 32.f);
-    minspeed_label->setColor(Color3B::BLACK);
-    minspeed_label->setPosition(
-            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 100.f));
-    this->bounds.push_back(minspeed_label->getBoundingBox());
-    this->addChild(minspeed_label);
-
-    auto minspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MIN_ARROW_POWER), Variables::FONT_NAME, 32.f);
-    minspeed_value->setColor(Color3B::BLACK);
-    minspeed_value->setPosition(
-            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 40.f));
-    this->bounds.push_back(minspeed_value->getBoundingBox());
-    this->addChild(minspeed_value);
-
-    auto arrow_minspeed_up = cocos2d::ui::Button::create();
-    arrow_minspeed_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                    Variables::DROP_LIST_BUTTON,
-                                    cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_minspeed_up->setPosition(
-            Vec2(minspeed_value->getPosition().x + 100.f,
-                 minspeed_value->getPosition().y));
-    arrow_minspeed_up->addTouchEventListener([&,minspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::MIN_ARROW_POWER += 1.f;
-                minspeed_value->setString(StringUtils::toString(BattleScene::MIN_ARROW_POWER));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_minspeed_up->getBoundingBox());
-
-    this->addChild(arrow_minspeed_up);
-
-    auto arrow_minspeed_down = cocos2d::ui::Button::create();
-    arrow_minspeed_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                      Variables::DROP_LIST_BUTTON,
-                                      cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_minspeed_down->setPosition(
-            Vec2(minspeed_value->getPosition().x - 100.f,
-                 minspeed_value->getPosition().y));
-    arrow_minspeed_down->addTouchEventListener([&,minspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::MIN_ARROW_POWER -= 1.f;
-                minspeed_value->setString(StringUtils::toString(BattleScene::MIN_ARROW_POWER));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_minspeed_down->getBoundingBox());
-
-    this->addChild(arrow_minspeed_down);
-
-    auto update_label = cocos2d::Label::createWithTTF("UPDATE", Variables::FONT_NAME, 32.f);
-    update_label->setColor(Color3B::BLACK);
-    update_label->setPosition(
-            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 100.f));
-    this->bounds.push_back(update_label->getBoundingBox());
-    this->addChild(update_label);
-
-    auto update_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
-    update_value->setColor(Color3B::BLACK);
-    update_value->setPosition(
-            Vec2(update_label->getPosition().x, update_label->getPosition().y - 40.f));
-    this->bounds.push_back(update_value->getBoundingBox());
-    this->addChild(update_value);
-
-    auto arrow_update_up = cocos2d::ui::Button::create();
-    arrow_update_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                    Variables::DROP_LIST_BUTTON,
-                                    cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_update_up->setPosition(
-            Vec2(update_value->getPosition().x + 100.f,
-                 update_value->getPosition().y));
-    arrow_update_up->addTouchEventListener([&,update_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::ARROW_UPDATE += 0.01f;
-                update_value->setString(StringUtils::toString(BattleScene::ARROW_UPDATE));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_update_up->getBoundingBox());
-
-    this->addChild(arrow_update_up);
-
-    auto arrow_update_down = cocos2d::ui::Button::create();
-    arrow_update_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                      Variables::DROP_LIST_BUTTON,
-                                      cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_update_down->setPosition(
-            Vec2(update_value->getPosition().x - 100.f,
-                 update_value->getPosition().y));
-    arrow_update_down->addTouchEventListener([&,update_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::ARROW_UPDATE -= 0.01f;
-                update_value->setString(StringUtils::toString(BattleScene::ARROW_UPDATE));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_update_down->getBoundingBox());
-
-    this->addChild(arrow_update_down);
-    auto gravity_label = cocos2d::Label::createWithTTF("GRAVITY", Variables::FONT_NAME, 32.f);
-    gravity_label->setColor(Color3B::BLACK);
-    gravity_label->setPosition(
-            Vec2(update_label->getPosition().x, update_label->getPosition().y - 100.f));
-    this->bounds.push_back(gravity_label->getBoundingBox());
-    this->addChild(gravity_label);
-
-    auto gravity_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
-    gravity_value->setColor(Color3B::BLACK);
-    gravity_value->setPosition(
-            Vec2(gravity_label->getPosition().x, gravity_label->getPosition().y - 40.f));
-    this->bounds.push_back(gravity_value->getBoundingBox());
-    this->addChild(gravity_value);
-
-    auto arrow_gravity_up = cocos2d::ui::Button::create();
-    arrow_gravity_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                  Variables::DROP_LIST_BUTTON,
-                                  cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_gravity_up->setPosition(
-            Vec2(gravity_value->getPosition().x + 100.f,
-                 gravity_value->getPosition().y));
-    arrow_gravity_up->addTouchEventListener([&,gravity_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::G += 0.05f;
-                gravity_value->setString(StringUtils::toString(BattleScene::G));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_gravity_up->getBoundingBox());
-
-    this->addChild(arrow_gravity_up);
-
-    auto arrow_gravity_down = cocos2d::ui::Button::create();
-    arrow_gravity_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
-                                    Variables::DROP_LIST_BUTTON,
-                                    cocos2d::ui::Widget::TextureResType::PLIST);
-    arrow_gravity_down->setPosition(
-            Vec2(gravity_value->getPosition().x - 100.f,
-                 gravity_value->getPosition().y));
-    arrow_gravity_down->addTouchEventListener([&,gravity_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED:
-                BattleScene::G -= 0.05f;
-                gravity_value->setString(StringUtils::toString(BattleScene::G));
-                break;
-            default:
-                break;
-        }
-    });
-
-    this->bounds.push_back(arrow_gravity_down->getBoundingBox());
-
-    this->addChild(arrow_gravity_down);
-
-}
+//
+//void UI::initTest(cocos2d::Size visibleSize) {
+//
+//    auto maxspeed_label = cocos2d::Label::createWithTTF("MAX SPEED", Variables::FONT_NAME, 32.f);
+//    maxspeed_label->setColor(Color3B::BLACK);
+//    maxspeed_label->setPosition(
+//            Vec2(visibleSize.width / 4, visibleSize.height - maxspeed_label->getBoundingBox().size.height / 2 - 25.f));
+//    this->bounds.push_back(maxspeed_label->getBoundingBox());
+//    this->addChild(maxspeed_label);
+//
+//    auto maxspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MAX_ARROW_POWER), Variables::FONT_NAME, 32.f);
+//    maxspeed_value->setColor(Color3B::BLACK);
+//    maxspeed_value->setPosition(
+//            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 40.f));
+//    this->bounds.push_back(maxspeed_value->getBoundingBox());
+//    this->addChild(maxspeed_value);
+//
+//    auto arrow_maxspeed_up = cocos2d::ui::Button::create();
+//    arrow_maxspeed_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                    Variables::DROP_LIST_BUTTON,
+//                                    cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_maxspeed_up->setPosition(
+//            Vec2(maxspeed_value->getPosition().x + 100.f,
+//                 maxspeed_value->getPosition().y));
+//    arrow_maxspeed_up->addTouchEventListener(
+//            [&, maxspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//                switch (type) {
+//                    case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                        BattleScene::MAX_ARROW_POWER += 1.f;
+//                        maxspeed_value->setString(StringUtils::toString(BattleScene::MAX_ARROW_POWER));
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            });
+//
+//    this->bounds.push_back(arrow_maxspeed_up->getBoundingBox());
+//
+//    this->addChild(arrow_maxspeed_up);
+//
+//    auto arrow_maxspeed_down = cocos2d::ui::Button::create();
+//    arrow_maxspeed_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                      Variables::DROP_LIST_BUTTON,
+//                                      cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_maxspeed_down->setPosition(
+//            Vec2(maxspeed_value->getPosition().x - 100.f,
+//                 maxspeed_value->getPosition().y));
+//    arrow_maxspeed_down->addTouchEventListener([&, maxspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::MAX_ARROW_POWER -= 1.f;
+//                maxspeed_value->setString(StringUtils::toString(BattleScene::MAX_ARROW_POWER));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_maxspeed_down->getBoundingBox());
+//
+//    this->addChild(arrow_maxspeed_down);
+//
+//    auto minspeed_label = cocos2d::Label::createWithTTF("MIN SPEED", Variables::FONT_NAME, 32.f);
+//    minspeed_label->setColor(Color3B::BLACK);
+//    minspeed_label->setPosition(
+//            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 100.f));
+//    this->bounds.push_back(minspeed_label->getBoundingBox());
+//    this->addChild(minspeed_label);
+//
+//    auto minspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MIN_ARROW_POWER), Variables::FONT_NAME, 32.f);
+//    minspeed_value->setColor(Color3B::BLACK);
+//    minspeed_value->setPosition(
+//            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 40.f));
+//    this->bounds.push_back(minspeed_value->getBoundingBox());
+//    this->addChild(minspeed_value);
+//
+//    auto arrow_minspeed_up = cocos2d::ui::Button::create();
+//    arrow_minspeed_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                    Variables::DROP_LIST_BUTTON,
+//                                    cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_minspeed_up->setPosition(
+//            Vec2(minspeed_value->getPosition().x + 100.f,
+//                 minspeed_value->getPosition().y));
+//    arrow_minspeed_up->addTouchEventListener([&,minspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::MIN_ARROW_POWER += 1.f;
+//                minspeed_value->setString(StringUtils::toString(BattleScene::MIN_ARROW_POWER));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_minspeed_up->getBoundingBox());
+//
+//    this->addChild(arrow_minspeed_up);
+//
+//    auto arrow_minspeed_down = cocos2d::ui::Button::create();
+//    arrow_minspeed_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                      Variables::DROP_LIST_BUTTON,
+//                                      cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_minspeed_down->setPosition(
+//            Vec2(minspeed_value->getPosition().x - 100.f,
+//                 minspeed_value->getPosition().y));
+//    arrow_minspeed_down->addTouchEventListener([&,minspeed_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::MIN_ARROW_POWER -= 1.f;
+//                minspeed_value->setString(StringUtils::toString(BattleScene::MIN_ARROW_POWER));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_minspeed_down->getBoundingBox());
+//
+//    this->addChild(arrow_minspeed_down);
+//
+//    auto update_label = cocos2d::Label::createWithTTF("UPDATE", Variables::FONT_NAME, 32.f);
+//    update_label->setColor(Color3B::BLACK);
+//    update_label->setPosition(
+//            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 100.f));
+//    this->bounds.push_back(update_label->getBoundingBox());
+//    this->addChild(update_label);
+//
+//    auto update_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
+//    update_value->setColor(Color3B::BLACK);
+//    update_value->setPosition(
+//            Vec2(update_label->getPosition().x, update_label->getPosition().y - 40.f));
+//    this->bounds.push_back(update_value->getBoundingBox());
+//    this->addChild(update_value);
+//
+//    auto arrow_update_up = cocos2d::ui::Button::create();
+//    arrow_update_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                    Variables::DROP_LIST_BUTTON,
+//                                    cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_update_up->setPosition(
+//            Vec2(update_value->getPosition().x + 100.f,
+//                 update_value->getPosition().y));
+//    arrow_update_up->addTouchEventListener([&,update_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::ARROW_UPDATE += 0.01f;
+//                update_value->setString(StringUtils::toString(BattleScene::ARROW_UPDATE));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_update_up->getBoundingBox());
+//
+//    this->addChild(arrow_update_up);
+//
+//    auto arrow_update_down = cocos2d::ui::Button::create();
+//    arrow_update_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                      Variables::DROP_LIST_BUTTON,
+//                                      cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_update_down->setPosition(
+//            Vec2(update_value->getPosition().x - 100.f,
+//                 update_value->getPosition().y));
+//    arrow_update_down->addTouchEventListener([&,update_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::ARROW_UPDATE -= 0.01f;
+//                update_value->setString(StringUtils::toString(BattleScene::ARROW_UPDATE));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_update_down->getBoundingBox());
+//
+//    this->addChild(arrow_update_down);
+//    auto gravity_label = cocos2d::Label::createWithTTF("GRAVITY", Variables::FONT_NAME, 32.f);
+//    gravity_label->setColor(Color3B::BLACK);
+//    gravity_label->setPosition(
+//            Vec2(update_label->getPosition().x, update_label->getPosition().y - 100.f));
+//    this->bounds.push_back(gravity_label->getBoundingBox());
+//    this->addChild(gravity_label);
+//
+//    auto gravity_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
+//    gravity_value->setColor(Color3B::BLACK);
+//    gravity_value->setPosition(
+//            Vec2(gravity_label->getPosition().x, gravity_label->getPosition().y - 40.f));
+//    this->bounds.push_back(gravity_value->getBoundingBox());
+//    this->addChild(gravity_value);
+//
+//    auto arrow_gravity_up = cocos2d::ui::Button::create();
+//    arrow_gravity_up->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                  Variables::DROP_LIST_BUTTON,
+//                                  cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_gravity_up->setPosition(
+//            Vec2(gravity_value->getPosition().x + 100.f,
+//                 gravity_value->getPosition().y));
+//    arrow_gravity_up->addTouchEventListener([&,gravity_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::G += 0.05f;
+//                gravity_value->setString(StringUtils::toString(BattleScene::G));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_gravity_up->getBoundingBox());
+//
+//    this->addChild(arrow_gravity_up);
+//
+//    auto arrow_gravity_down = cocos2d::ui::Button::create();
+//    arrow_gravity_down->loadTextures(Variables::DROP_LIST_BUTTON, Variables::DROP_LIST_PRESSED_BUTTON,
+//                                    Variables::DROP_LIST_BUTTON,
+//                                    cocos2d::ui::Widget::TextureResType::PLIST);
+//    arrow_gravity_down->setPosition(
+//            Vec2(gravity_value->getPosition().x - 100.f,
+//                 gravity_value->getPosition().y));
+//    arrow_gravity_down->addTouchEventListener([&,gravity_value](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED:
+//                BattleScene::G -= 0.05f;
+//                gravity_value->setString(StringUtils::toString(BattleScene::G));
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//
+//    this->bounds.push_back(arrow_gravity_down->getBoundingBox());
+//
+//    this->addChild(arrow_gravity_down);
+//
+//}

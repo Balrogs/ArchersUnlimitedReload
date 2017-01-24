@@ -1,6 +1,6 @@
 #include <GameEngine/Objects/Environment/Apple.h>
-#include <Scenes/PlayLayers/DuelScene.h>
-#include <Scenes/PlayLayers/AppleBattle.h>
+#include <Scenes/PlayLayers/Duel/DuelScene.h>
+#include <Scenes/PlayLayers/Apple/AppleBattle.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Objects/Environment/Box.h>
 
@@ -12,7 +12,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
     _speedX = std::cos(radian) * power;
     _speedY = -std::sin(radian) * power;
 
-    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
+    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleParent::getInstance())) {
         _x_limit = appleb->visibleSize.width;
     } else
         _x_limit = 0;
@@ -20,7 +20,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
     _player_id = player_id;
     _isActive = true;
 
-    _armature = BattleScene::instance->factory.buildArmature(armatureName);
+    _armature = BattleParent::getInstance()->factory.buildArmature(armatureName);
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
 
     _head = Vec2(_armature->getBone("head")->global.x, _armature->getBone("head")->global.y);
@@ -35,7 +35,7 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
 
     this->setPosition(position);
     this->setRotation(radian * dragonBones::RADIAN_TO_ANGLE);
-    this->setScale(BattleScene::instance->getGlobalScale());
+    this->setScale(BattleParent::getInstance()->getGlobalScale());
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
@@ -57,9 +57,9 @@ void Arrow::update(float dt) {
     const auto &rotation = this->getRotation();
 
     if (rotation >= 180) {
-        _speedY -= BattleScene::G;
+        _speedY -= BattleParent::G;
     } else {
-        _speedY += BattleScene::G;
+        _speedY += BattleParent::G;
 
     }
     this->setPosition(position.x + _speedX, position.y + _speedY);
@@ -69,7 +69,7 @@ void Arrow::update(float dt) {
 
     auto head = Variables::translatePoint(Vec3(_head.x, _head.y, 0.f), _armatureDisplay);
 
-    if (position.y < BattleScene::instance->GROUND + random || (_x_limit && head.x >= _x_limit - 3.f)) {
+    if (position.y < BattleParent::getInstance()->GROUND + random || (_x_limit && head.x >= _x_limit - 3.f)) {
         _disableArrow();
         return;
     }
@@ -80,6 +80,11 @@ void Arrow::update(float dt) {
 }
 
 void Arrow::_disableArrow() {
+
+    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleParent::getInstance())) {
+        appleb->completeShot();
+    }
+
     afterAction();
 
     this->unscheduleAllCallbacks();
@@ -102,14 +107,14 @@ bool Arrow::processContact(Node *bone) {
     if (bone == nullptr) {
         return false;
     }
-    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
+    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleParent::getInstance())) {
         if (Apple *apple = dynamic_cast<Apple *>(bone)) {
 
             this->addDOChild(apple);
 
             appleb->setAppleHit();
 
-            BattleScene::instance->addCoins(1);
+            BattleParent::getInstance()->addCoins(1);
 
             return true;
         }
@@ -152,7 +157,7 @@ bool Arrow::processContact(Node *bone) {
 
         addToNode(bone);
 
-        BattleScene::instance->addCoins((int) _damage);
+        BattleParent::getInstance()->addCoins((int) _damage);
 
         return true;
     }
@@ -175,9 +180,9 @@ void Arrow::addToBox(cocos2d::Node *bone) {
     _speedX /= 2;
     _speedY /= 2;
     if (rotation >= 180) {
-        _speedY -= BattleScene::G;
+        _speedY -= BattleParent::G;
     } else {
-        _speedY += BattleScene::G;
+        _speedY += BattleParent::G;
 
     }
     this->setPosition(position.x + _speedX, position.y + _speedY);
@@ -216,9 +221,9 @@ void Arrow::addToNode(cocos2d::Node *bone) {
         _speedX /= 2;
         _speedY /= 2;
         if (rotation >= 180) {
-            _speedY -= BattleScene::G;
+            _speedY -= BattleParent::G;
         } else {
-            _speedY += BattleScene::G;
+            _speedY += BattleParent::G;
 
         }
         this->setPosition(position.x + _speedX, position.y + _speedY);
@@ -228,7 +233,7 @@ void Arrow::addToNode(cocos2d::Node *bone) {
         this->removeFromParentAndCleanup(true);
         //position
         auto scenePoint = Variables::translatePoint(Vec3(0.f, 0.f, 0.f), _armatureDisplay);
-        scenePoint.x += BattleScene::instance->getPosition().x;
+        scenePoint.x += BattleParent::getInstance()->getPosition().x;
         auto globalPoint3 = new Vec3(scenePoint.x, scenePoint.y, 0.f);
         bone->getWorldToNodeTransform().transformPoint(globalPoint3);
         auto globalPoint = Vec2(globalPoint3->x, globalPoint3->y);
@@ -371,7 +376,7 @@ void BombArrow::afterAction() {
 
     _emitter->setPosition(this->getPosition());
 
-    BattleScene::instance->addChild(_emitter);
+    BattleParent::getInstance()->addChild(_emitter);
 }
 
 void BombArrow::_disableArrow() {
@@ -414,22 +419,23 @@ void DuelArrow::update(float dt) {
     const auto &rotation = this->getRotation();
 
     if (rotation >= 180) {
-        _speedY -= BattleScene::G;
+        _speedY -= BattleParent::G;
     } else {
-        _speedY += BattleScene::G;
+        _speedY += BattleParent::G;
 
     }
 
     this->setPosition(position.x + _speedX, position.y + _speedY);
     this->setRotation(std::atan2(-_speedY, _speedX) * dragonBones::RADIAN_TO_ANGLE);
 
-    DuelScene::instance->moveScene(_speedX);
+    if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance()))
+        duelScene->moveScene(_speedX);
 
     auto random = RandomHelper::random_real(0.f, 20.f);
 
-    if (position.y < BattleScene::instance->GROUND + random) {
+    if (position.y < BattleParent::getInstance()->GROUND + random) {
         _disableArrow();
-        if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
+        if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
             duel->makeTurn(_player_id);
         }
     }
@@ -442,15 +448,19 @@ DuelArrow::DuelArrow(const std::string &armatureName, float radian, float power,
 
     _damage = 15.f;
     lifePeriod = 0;
-    if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
-        duel->makeTurn(-1);
+
+
+    if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance())){
+        duelScene->makeTurn(-1);
+    } else {
+        BattleParent::getInstance()->onPopScene();
     }
 
 }
 
 bool DuelArrow::processContact(cocos2d::Node *bone) {
     if (Arrow::processContact(bone))
-        if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleScene::instance)) {
+        if (DuelScene *duel = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
             duel->makeTurn(_player_id);
             return true;
         }

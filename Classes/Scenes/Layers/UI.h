@@ -5,7 +5,9 @@
 #ifndef ARCUNLIM_UI_H
 #define ARCUNLIM_UI_H
 
+
 #include "cocos2d.h"
+#include <GameEngine/Objects/Hero.h>
 
 class UI : public cocos2d::LayerColor {
 public:
@@ -27,7 +29,7 @@ public:
 
     void setWarning(const char * message, cocos2d::Color3B color);
 
-    void initTest(Size visibleSize);
+    void initTest(cocos2d::Size visibleSize);
 
 protected:
 

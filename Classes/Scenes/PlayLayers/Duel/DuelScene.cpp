@@ -13,6 +13,9 @@ DuelScene *DuelScene::create(Statistics *stats) {
     } else {
         CC_SAFE_DELETE(ret);
     }
+
+    _instance = ret;
+
     return ret;
 }
 
@@ -24,15 +27,15 @@ void DuelScene::initWorld() {
 
     _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
 
-    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,   LocalizedStrings::getInstance()->getString("BOT"));
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
+                          LocalizedStrings::getInstance()->getString("BOT"));
 
     _hero2->changeFacedir(-1);
 
     _player1 = _player->getPlayer();
     _player2 = _hero2->getPlayer();
     _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
-    _targets.push_back(_hero2);
-    _brains.push_back(new HeroBrainDuel(_hero2, 0.f));
+    _brain = new HeroBrainDuel(_hero2, 0.f);
 
     _createEnvForStickman(_player, _stats->getPlayerEnvType());
     _createEnvForStickman(_hero2, _stats->getTargetEnvType());
@@ -47,13 +50,13 @@ void DuelScene::initWorld() {
 bool DuelScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
     if (this->_turnId == _player2->getId()) {
         makeTurn(-1);
-        return BattleScene::_touchHandlerBegin(touch, event);
+        return BattleParent::_touchHandlerBegin(touch, event);
     } else
         return false;
 }
 
 bool DuelScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    return BattleScene::_touchHandlerEnd(touch, event);
+    return BattleParent::_touchHandlerEnd(touch, event);
 }
 
 void DuelScene::makeTurn(int id) {
@@ -65,7 +68,7 @@ void DuelScene::makeTurn(int id) {
     if (this->_turnId != id) {
         float delay = 2.f;
         if (id == _player1->getId()) {
-            if (this->getPosition().x - _targets.at(0)->getPosition().x <= visibleSize.width / 2) {
+            if (this->getPosition().x - _hero2->getPosition().x <= visibleSize.width / 2) {
                 delay = 0.5f;
             }
             auto action = Sequence::create(
@@ -75,10 +78,10 @@ void DuelScene::makeTurn(int id) {
                             }
                     ),
                     Spawn::createWithTwoActions(
-                            MoveTo::create(delay, Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f)),
+                            MoveTo::create(delay, Vec2(-_hero2->getPosition().x + visibleSize.width / 2, 0.f)),
                             CallFunc::create(
                                     [&, delay]() {
-                                        auto vec = Vec2(-_targets.at(0)->getPosition().x + visibleSize.width / 2, 0.f);
+                                        auto vec = Vec2(-_hero2->getPosition().x + visibleSize.width / 2, 0.f);
                                         this->_bg->runAction(MoveTo::create(delay, vec));
                                     }
                             )
@@ -86,7 +89,7 @@ void DuelScene::makeTurn(int id) {
                     DelayTime::create(1),
                     CallFunc::create(
                             [&]() {
-                                _brains[0]->update();
+                                _brain->update();
                             }
                     ),
                     NULL
@@ -128,8 +131,16 @@ bool DuelScene::isGameOver() {
 
 void DuelScene::_startGame() {
     _isStarted = true;
+    // TODO add starting action
 }
 
 int DuelScene::_getGainedCoinsByActionType(int type) {
     return type;
 }
+
+void DuelScene::moveScene(float x) {
+    auto current_pos = this->getPosition();
+    this->setPosition(Vec2(current_pos.x - x, current_pos.y));
+    this->_bg->move(x);
+}
+

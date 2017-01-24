@@ -6,6 +6,7 @@
 #define ARCUNLIM_PRODUCER_H
 
 #include <GameEngine/Objects/Brains/Brain.h>
+#include "Scenes/PlayLayers/Battle.h"
 #include "cocos2d.h"
 
 class LevelElement {
@@ -38,6 +39,9 @@ public:
     void startLevel(int id);
 
 private:
+
+    BattleScene* _battleScene;
+
     void _addTarget(Body *target, Brain *brain);
 
     std::vector<Level *> _levels;

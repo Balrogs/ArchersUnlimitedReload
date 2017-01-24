@@ -1,7 +1,3 @@
-//
-// Created by igor on 08.09.16.
-//
-
 #include "Aim.h"
 #include "Scenes/PlayLayers/Battle.h"
 
@@ -23,7 +19,7 @@ void Aim::_update() {
     for (auto child : children) {
         if (DrawNode *aimP = dynamic_cast<DrawNode *>(child)) {
             aimP->setPosition(setPosition(i));
-            aimP->setScale( setScale(i) * BattleScene::instance->getGlobalScale());
+            aimP->setScale( setScale(i) * BattleScene::getInstance()->getGlobalScale());
             i++;
         };
     }
@@ -34,7 +30,7 @@ void Aim::_addAimPreview(float scale, const cocos2d::Vec2 &position, cocos2d::Co
     auto circle = DrawNode::create();
     circle->drawSolidCircle(Vec2(0, 0), 5.f, 10, 10, color);
     circle->setPosition(position);
-    circle->setScale(scale * BattleScene::instance->getGlobalScale());
+    circle->setScale(scale * BattleScene::getInstance()->getGlobalScale());
     this->addChild(circle);
 }
 

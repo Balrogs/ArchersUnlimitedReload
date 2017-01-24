@@ -1,7 +1,3 @@
-//
-// Created by igor on 08.09.16.
-//
-
 #ifndef DRAGONBONES_ARROW_H
 #define DRAGONBONES_ARROW_H
 

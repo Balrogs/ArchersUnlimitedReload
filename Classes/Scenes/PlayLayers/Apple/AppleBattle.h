@@ -2,30 +2,26 @@
 #define ARCUNLIM_APPLEBATTLE_H
 
 #include "cocos2d.h"
-#include "Battle.h"
+#include "Scenes/PlayLayers/BattleParent.h"
+#include "AppleParent.h"
 
-class AppleBattle : public BattleScene {
+
+class AppleBattle : public BattleParent, public AppleParent{
 public:
 
     static AppleBattle* create(Statistics* stats);
 
-    void setHit();
+    void _nextLevelAction() override;
 
-    void setAppleHit();
+    void addApple() override;
+
+    void completeShot() override;
 
 protected:
-
-    SocketClient* _client;
-
-    virtual bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
 
     virtual int _getGainedCoinsByActionType(int type) override ;
 
     cocos2d::Node* _env;
-
-    void _nextLevelAction();
-
-    void addApple();
 
     void initWorld() override;
 
@@ -33,11 +29,6 @@ protected:
 
     bool isGameOver() override;
 
-    bool _isTargetHitted;
-
-    bool _isAppleHitted;
-
-    int _shotsLimit;
 };
 
 

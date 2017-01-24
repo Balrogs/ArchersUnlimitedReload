@@ -105,17 +105,17 @@ bool PopUp::init(std::string title, cocos2d::Node *message, bool isTwoButtons) {
 
 void PopUp::noAction() {
     this->removeFromParent();
-    BattleScene::instance->unPause();
+    BattleScene::getInstance()->unPause();
 }
 
 void PopUp::yesAction() {
     this->removeFromParent();
-    BattleScene::instance->onPopScene();
+    BattleScene::getInstance()->onPopScene();
 }
 
 void PopUp::okAction() {
     this->removeFromParent();
-    BattleScene::instance->onPopScene();
+    BattleScene::getInstance()->onPopScene();
 }
 
 void MainMenuPopUp::noAction() {

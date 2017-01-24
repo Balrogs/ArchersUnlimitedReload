@@ -43,35 +43,35 @@ void Producer::startLevel(int id) {
 
                 switch (le->_type) {
                     case 0:
-                        target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::instance->GROUND,
+                        target = new Stickman(BattleScene::getInstance()->visibleSize.width + 150.f,
+                                              BattleScene::getInstance()->GROUND,
                                               0.3f,
                                               100.f);
                         brain = new PassiveBrain(target);
                         break;
                     case 1:
-                        target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::instance->GROUND,
+                        target = new Stickman(BattleScene::getInstance()->visibleSize.width + 150.f,
+                                              BattleScene::getInstance()->GROUND,
                                               0.3f,
                                               100.f);
                         brain = new Brain(target);
                         break;
                     case 2:
-                        target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::instance->GROUND,
+                        target = new Stickman(BattleScene::getInstance()->visibleSize.width + 150.f,
+                                              BattleScene::getInstance()->GROUND,
                                               0.25f,
                                               50.f);
                         brain = new FastBrain(target);
                         break;
                     case 3:
-                        target = new Stickman(BattleScene::instance->visibleSize.width + 150.f,
-                                              BattleScene::instance->GROUND,
+                        target = new Stickman(BattleScene::getInstance()->visibleSize.width + 150.f,
+                                              BattleScene::getInstance()->GROUND,
                                               0.5f,
                                               300.f);
                         brain = new StrengthBrain(target);
                         break;
                     case 4:
-                        target = new Hero(BattleScene::instance->visibleSize.width + 150.f, BattleScene::instance->GROUND, Player::create(100, "BOT"));
+                        target = new Hero(BattleScene::getInstance()->visibleSize.width + 150.f, BattleScene::getInstance()->GROUND, Player::create(100, "BOT"));
                         brain = new HeroBrain(target, 0.f);
                         break;
                     default:
@@ -79,7 +79,7 @@ void Producer::startLevel(int id) {
                 }
                 if(target != nullptr && brain != nullptr){
                     CallFunc *addtarg =  CallFunc::create(CC_CALLBACK_0(Producer::_addTarget, this, target, brain));
-                    BattleScene::instance->runAction(Sequence::create(pDelayTime, addtarg, NULL));
+                    BattleScene::getInstance()->runAction(Sequence::create(pDelayTime, addtarg, NULL));
                 }
             }
             break;
@@ -99,7 +99,7 @@ Producer::Producer(const char *path) {
 }
 
 void Producer::_addTarget(Body *target, Brain *brain) {
-    BattleScene::instance->addTarget(target);
-    BattleScene::instance->addBrain(brain);
+    _battleScene->addTarget(target);
+    _battleScene->addBrain(brain);
 }
 

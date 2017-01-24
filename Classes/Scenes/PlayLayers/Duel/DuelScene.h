@@ -2,17 +2,21 @@
 #define ARCUNLIM_DUELSCENE_H
 
 #include <GameEngine/Player.h>
-#include "Battle.h"
+#include <Scenes/PlayLayers/BattleParent.h>
+#include <GameEngine/Objects/Hero.h>
+#include <GameEngine/Objects/Brains/Brain.h>
 
-
-class DuelScene : public BattleScene {
+class DuelScene : public BattleParent {
 public:
 
-    static DuelScene* create(Statistics* stats);
+    static DuelScene *create(Statistics *stats);
 
     virtual void makeTurn(int id);
 
+    void moveScene(float x);
+
 protected:
+
     int _turnId;
 
     int _getGainedCoinsByActionType(int type) override;
@@ -20,12 +24,10 @@ protected:
     Player *_player1;
     Player *_player2;
 
-    Hero* _hero1;
-    Hero* _hero2;
+    Hero *_hero1;
+    Hero *_hero2;
 
     bool _isStarted;
-
-    SocketClient* _client;
 
     void initWorld() override;
 
@@ -37,6 +39,8 @@ protected:
 
     void _startGame();
 
+private:
+    Brain* _brain;
 };
 
 

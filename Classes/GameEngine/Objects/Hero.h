@@ -6,10 +6,8 @@
 #define DRAGONBONES_HERO_H
 
 #include <GameEngine/Objects/Arrows/Arrow.h>
-#include <GameEngine/Player.h>
+#include <GameEngine/Objects/Aim/Aim.h>
 #include "cocos2d.h"
-#include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
-#include "GameEngine/Objects/Aim/Aim.h"
 #include "Stickman.h"
 
 class Hero : public Body {

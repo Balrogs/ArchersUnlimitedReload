@@ -1,16 +1,11 @@
-//
-// Created by igor on 21.09.16.
-//
-
-#include <Scenes/PlayLayers/Battle.h>
-#include <Scenes/PlayLayers/AppleBattle.h>
+#include <Scenes/PlayLayers/Apple/AppleBattle.h>
 #include "Apple.h"
 
 Apple::Apple(float x_pos, float y_pos) {
 
     auto texture = cocos2d::Sprite::createWithSpriteFrameName("apple.png");
 
-    this->setScale(BattleScene::instance->getGlobalScale());
+    this->setScale(BattleParent::getInstance()->getGlobalScale());
     this->setPosition(x_pos, y_pos);
 
 
@@ -39,9 +34,9 @@ Apple::Apple(float x_pos, float y_pos) {
 //    _emitter->setAutoRemoveOnFinish(true);
 //    _emitter->setPosition(this->getPosition());
 //
-//    BattleScene::instance->addChild(_emitter, 1);
+//    BattleScene::getInstance()->addChild(_emitter, 1);
 
-    BattleScene::instance->addChild(this, 1);
+    BattleParent::getInstance()->addChild(this, 1);
 }
 
 Apple::~Apple() {
@@ -60,16 +55,16 @@ void Apple::hit() {
 //    this->getNodeToWorldTransform().transformPoint(pos);
 //    _emitter->setPosition(pos->x, pos->y);
 //
-//    BattleScene::instance->addChild(_emitter, 10);
+//    BattleScene::getInstance()->addChild(_emitter, 10);
 
     this->runAction(
             cocos2d::Sequence::create(
                     cocos2d::DelayTime::create(1.f),
                     cocos2d::CallFunc::create(
                             [&]() {
-                                if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleScene::instance)) {
+                                if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleParent::getInstance())) {
                                     appleb->setAppleHit();
-                                   // BattleScene::instance->removeChild(_emitter);
+                                   // BattleScene::getInstance()->removeChild(_emitter);
                                 }
                             }
                     ),

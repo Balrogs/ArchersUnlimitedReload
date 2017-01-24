@@ -12,7 +12,7 @@ AimPreview::AimPreview(float scale, const cocos2d::Vec2 &position) {
     circle->drawSolidCircle(Vec2(0, 0), 5.f, 10, 10, Color4F::BLACK);
     this->addChild(circle);
     this->setPosition(position);
-    this->setScale(scale * BattleScene::instance->getGlobalScale());
+    this->setScale(scale * BattleScene::getInstance()->getGlobalScale());
 }
 
 AimPreview::~AimPreview() {
@@ -20,7 +20,7 @@ AimPreview::~AimPreview() {
 
 void AimPreview::update(float scale, const cocos2d::Vec2 &position) {
     this->setPosition(position);
-    this->setScale(scale * BattleScene::instance->getGlobalScale());
+    this->setScale(scale * BattleScene::getInstance()->getGlobalScale());
 }
 
 void AimPreview::remove() {

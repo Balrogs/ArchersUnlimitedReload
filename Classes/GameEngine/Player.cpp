@@ -15,7 +15,7 @@ Player *Player::create(int id, int hp, std::string name) {
 }
 
 Player *Player::create(int hp, std::string name) {
-    auto id = BattleScene::instance->getStickmanCount();
+    auto id = BattleScene::getInstance()->getStickmanCount();
     return Player::create(id, hp, name);
 }
 
@@ -223,7 +223,7 @@ PlayerWithCoins *PlayerWithCoins::create(int id, int hp, std::string name, int c
 }
 
 PlayerWithCoins *PlayerWithCoins::create(int hp, std::string name) {
-    auto id = BattleScene::instance->getStickmanCount();
+    auto id = BattleScene::getInstance()->getStickmanCount();
     auto coins = 0;
     return PlayerWithCoins::create(id, hp, name, coins);
 }

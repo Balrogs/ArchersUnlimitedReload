@@ -11,6 +11,9 @@ DuelScene2P *DuelScene2P::create(Statistics *stats) {
     } else {
         CC_SAFE_DELETE(ret);
     }
+
+    _instance = ret;
+
     return ret;
 }
 
@@ -38,7 +41,7 @@ void DuelScene2P::initWorld() {
 
 bool DuelScene2P::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
     if (this->_turnId == _player->getPlayer()->getId()) {
-        return BattleScene::_touchHandlerBegin(touch, event);
+        return BattleParent::_touchHandlerBegin(touch, event);
     } else
         return false;
 }

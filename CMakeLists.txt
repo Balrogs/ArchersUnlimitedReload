@@ -158,8 +158,8 @@ set(GAME_SRC
         Classes/dragonBones/textures/TextureData.cpp
 
         Classes/GameEngine/Objects/Environment/Apple.cpp
-        Classes/Scenes/PlayLayers/AppleBattle.cpp
-        Classes/Scenes/PlayLayers/DuelScene.cpp
+        Classes/Scenes/PlayLayers/Apple/AppleBattle.cpp
+        Classes/Scenes/PlayLayers/Duel/DuelScene.cpp
         Classes/Scenes/MenuLayers/MainMenu.cpp
 
         Classes/GameEngine/Player.cpp
@@ -283,8 +283,8 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Variables.h
         Classes/GameEngine/Objects/Aim/AimPreview.h
         Classes/GameEngine/Objects/Environment/Apple.h
-        Classes/Scenes/PlayLayers/AppleBattle.h
-        Classes/Scenes/PlayLayers/DuelScene.h
+        Classes/Scenes/PlayLayers/Apple/AppleBattle.h
+        Classes/Scenes/PlayLayers/Duel/DuelScene.h
         Classes/Scenes/MenuLayers/MainMenu.h
         Classes/GameEngine/Global/Producer.h
         Classes/Scenes/Layers/PauseScene.h
@@ -299,8 +299,8 @@ set(GAME_HEADERS
   ${PLATFORM_SPECIFIC_HEADERS}
         Classes/GameEngine/Objects/Environment/Ground.cpp
         Classes/GameEngine/Global/Misc/SocketClient.cpp
-        Classes/Scenes/PlayLayers/DuelScene2P.cpp
-        Classes/Scenes/PlayLayers/DuelSceneMultiplayer.cpp
+        Classes/Scenes/PlayLayers/Duel/DuelScene2P.cpp
+        Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.cpp
         Classes/GameEngine/Global/Misc/JSONParser.cpp
         Classes/GameEngine/Global/Misc/Views.cpp
         Classes/GameEngine/Global/Misc/PopUp.cpp
@@ -308,10 +308,14 @@ set(GAME_HEADERS
         Classes/Localization/LocalizedStrings.cpp
         Classes/GameEngine/Objects/Environment/Box.cpp
         Classes/GameEngine/Statistics.cpp
+        Classes/Scenes/PlayLayers/Apple/AppleMultiplayer.cpp
+        Classes/Scenes/PlayLayers/BattleParent.cpp
+        Classes/Scenes/PlayLayers/MultiplayerBattle.cpp
+        Classes/Scenes/PlayLayers/Apple/AppleParent.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
-        Classes/Scenes/PlayLayers/DuelScene2P.h
-        Classes/Scenes/PlayLayers/DuelSceneMultiplayer.h
+        Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
+        Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h
         Classes/GameEngine/Global/Misc/SocketClient.h
         Classes/GameEngine/Global/Misc/Views.h
         Classes/GameEngine/Global/Misc/PopUp.h
@@ -319,7 +323,12 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/SplashScene.h
         Classes/Localization/LocalizedStrings.h
         Classes/GameEngine/Objects/Environment/Box.h
-        Classes/GameEngine/Statistics.h Classes/Scenes/PlayLayers/AppleMultiplayer.cpp Classes/Scenes/PlayLayers/AppleMultiplayer.h)
+        Classes/GameEngine/Statistics.h
+        Classes/Scenes/PlayLayers/Apple/AppleMultiplayer.h
+        Classes/Scenes/PlayLayers/MultiplayerBattle.h
+        Classes/Scenes/PlayLayers/Apple/AppleParent.h
+        Classes/Scenes/PlayLayers/BattleParent.h
+        )
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

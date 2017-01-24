@@ -13,7 +13,7 @@ WeaponSelector::WeaponSelector(Hero *hero) {
 
     _hero = hero;
 
-    cocos2d::Size visibleSize = BattleScene::instance->visibleSize;
+    cocos2d::Size visibleSize = BattleScene::getInstance()->visibleSize;
 
     _SIZE = cocos2d::Size(visibleSize.width / 6, visibleSize.width / 6);
 
@@ -116,7 +116,7 @@ cocos2d::Rect WeaponSelector::getBoundingBox() {
 
 bool WeaponSelector::checkCollisions(double angle, SelectorItem *node) {
 
-    cocos2d::Size visibleSize = BattleScene::instance->visibleSize;
+    cocos2d::Size visibleSize = BattleScene::getInstance()->visibleSize;
 
     double x = _radius * cos(dragonBones::ANGLE_TO_RADIAN * angle);
     double y = _radius * sin(dragonBones::ANGLE_TO_RADIAN * angle);
