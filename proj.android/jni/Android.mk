@@ -73,7 +73,10 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/PlayLayers/Apple/AppleMultiplayer.cpp \
                                  ../../Classes/Scenes/PlayLayers/BattleParent.cpp \
                                  ../../Classes/Scenes/PlayLayers/MultiplayerBattle.cpp \
-                                 ../../Classes/Scenes/PlayLayers/Apple/AppleParent.cpp
+                                 ../../Classes/Scenes/PlayLayers/Apple/AppleParent.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Lobby.cpp \
+                                 ../../Classes/Scenes/MenuLayers/RegisterMenu.cpp \
+                                 ../../Classes/Scenes/MenuLayers/MultiplayerMenu.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

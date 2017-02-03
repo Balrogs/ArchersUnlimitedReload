@@ -328,6 +328,9 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/MultiplayerBattle.h
         Classes/Scenes/PlayLayers/Apple/AppleParent.h
         Classes/Scenes/PlayLayers/BattleParent.h
+        Classes/Scenes/MenuLayers/RegisterMenu.h
+        Classes/Scenes/MenuLayers/Lobby.h
+        Classes/Scenes/MenuLayers/MultiplayerMenu.h
         )
 
 if( ANDROID )

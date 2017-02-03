@@ -8,8 +8,19 @@
 class AppleMultiplayer: public AppleParent, public MultiplayerBattle {
 public:
 
+    static AppleMultiplayer* create(Statistics* stats);
+
+    void _nextLevelAction() override;
+
+    void addApple() override;
+
 protected:
 
+    void initWorld() override;
+
+    void initObjects();
+
+    bool isGameOver() override;
 };
 
 
