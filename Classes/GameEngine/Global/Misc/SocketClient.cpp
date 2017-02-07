@@ -271,13 +271,17 @@ void SocketClient::_parseError(int error) {
     switch (error) {
         case -100: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                MultiplayerMenu::getInstance()->onError("Login failed! Incorrect name or password.");
+                if (auto multiP = dynamic_cast<MultiplayerMenu *>(MainScene::getInstance()->getMain())) {
+                    multiP->onError("Login failed! Incorrect name or password.");
+                }
             });
         }
             break;
         case -201: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                MultiplayerMenu::getInstance()->onError("Name is already taken!");
+                if (auto multiP = dynamic_cast<MultiplayerMenu *>(MainScene::getInstance()->getMain())) {
+                    multiP->onError("Name is already taken!");
+                }
             });
         }
             break;
@@ -306,8 +310,9 @@ void SocketClient::_parseError(int error) {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
                     gameScene->abort();
-                else
-                    Lobby::getInstance()->deleteInvite();
+                else if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->deleteInvite();
+                }
             });
         }
             break;
@@ -332,13 +337,17 @@ void SocketClient::_parseError(int error) {
             break;
         case -600: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                Lobby::getInstance()->receivePlayerInfo("ERROR");
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->receivePlayerInfo("ERROR");
+                }
             });
         }
             break;
         case -700: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                Lobby::getInstance()->joinLobby();
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->joinLobby();
+                }
             });
         }
             break;
@@ -359,7 +368,7 @@ DBPlayer *SocketClient::getDBPlayer() {
 }
 
 void SocketClient::_parseReply(string reply) {
-   // CCLOG(reply.c_str());
+    // CCLOG(reply.c_str());
     if (JSONParser::isError(reply)) {
         _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {
@@ -373,7 +382,7 @@ void SocketClient::_parseReply(string reply) {
                 _player->setId(JSONParser::parseInt(reply, "id"));
                 _player->setToken(JSONParser::parse(reply, "token"));
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                    cocos2d::Director::getInstance()->replaceScene(Lobby::createScene());
+                    MainScene::getInstance()->replaceMain(Lobby::create());
                 });
             }
                 return;
@@ -389,7 +398,9 @@ void SocketClient::_parseReply(string reply) {
                 return;
             case 9: {
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                    Lobby::getInstance()->receivePlayerInfo(reply);
+                    if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                        lobby->receivePlayerInfo(reply);
+                    }
                 });
             }
                 return;
@@ -398,8 +409,11 @@ void SocketClient::_parseReply(string reply) {
         }
         if (!JSONParser::parseAnswer(reply, "player_name").empty()) {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                Lobby::getInstance()->receiveInvite(reply);
-                _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->receiveInvite(reply);
+                    _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
+                }
+
             });
         }
     }

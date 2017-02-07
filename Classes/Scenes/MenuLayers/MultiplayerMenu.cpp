@@ -4,36 +4,14 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "MultiplayerMenu.h"
 #include "RegisterMenu.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
-MultiplayerMenu *MultiplayerMenu::_instance = nullptr;
-
-cocos2d::Scene *MultiplayerMenu::createScene() {
-    auto scene = Scene::create();
-    MultiplayerMenu *layer = new MultiplayerMenu();
-    BackgroundLayer *bg = BackgroundLayer::create();
-
-    scene->addChild(bg, 2);
-    scene->addChild(layer, 3);
-
-    //TODO add equipment layer without controls
-    return scene;
-}
-
-MultiplayerMenu *MultiplayerMenu::getInstance() {
-    if (_instance == nullptr) {
-        _instance = new MultiplayerMenu();
+bool MultiplayerMenu::init() {
+    if(!Layer::init()){
+        return false;
     }
-    return _instance;
-}
-
-MultiplayerMenu::MultiplayerMenu() {
-    this->schedule(SEL_SCHEDULE(&MultiplayerMenu::update), 1.f);
-}
-
-void MultiplayerMenu::onEnter() {
-    Node::onEnter();
 
     this->removeAllChildren();
     this->getEventDispatcher()->removeEventListenersForTarget(this);
@@ -132,13 +110,16 @@ void MultiplayerMenu::onEnter() {
     }
 
     _client->login();
+
+    this->schedule(SEL_SCHEDULE(&MultiplayerMenu::update), 1.f);
+
+    return true;
 }
 
 void MultiplayerMenu::onPushScene(int id) {
     switch (id) {
         case 2: {
-            this->getParent()->addChild(RegisterMenu::create(), 3);
-            this->removeFromParent();
+            ((MainScene *) this->getParent())->replaceMain(RegisterMenu::create());
         }
             break;
         case 3: {
@@ -159,7 +140,8 @@ void MultiplayerMenu::onPushScene(int id) {
 }
 
 void MultiplayerMenu::onQuit() {
-    Director::getInstance()->popScene();
+    auto scene = (MainScene *) this->getParent();
+    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
 }
 
 void MultiplayerMenu::onError(string message) {

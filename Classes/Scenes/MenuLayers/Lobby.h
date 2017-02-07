@@ -12,12 +12,9 @@
 
 class Lobby : public MultiplayerMenu {
 public:
-
-    static cocos2d::Scene *createScene();
-
-    static Lobby *getInstance();
-
     CREATE_FUNC(Lobby);
+
+    bool init();
 
     void receiveInvite(string message);
 
@@ -33,11 +30,7 @@ public:
 
 protected:
 
-    static Lobby *_instance;
-
     Player *_player2;
-
-    void onEnter() override;
 
 private:
 

@@ -9,28 +9,10 @@
 
 USING_NS_CC;
 
-
-Lobby *Lobby::_instance = nullptr;
-
-Lobby *Lobby::getInstance() {
-    if (_instance == nullptr) {
-        _instance = new Lobby();
-    }
-    return _instance;
+bool Lobby::init() {
+if(!Layer::init()){
+    return false;
 }
-
-cocos2d::Scene *Lobby::createScene() {
-    auto scene = Scene::create();
-    Lobby *layer = Lobby::getInstance();
-    BackgroundLayer *bg = BackgroundLayer::create();
-
-    scene->addChild(bg, 2);
-    scene->addChild(layer, 3);
-    return scene;
-}
-
-void Lobby::onEnter() {
-    Node::onEnter();
 
     this->removeAllChildren();
     this->getEventDispatcher()->removeEventListenersForTarget(this);
@@ -132,7 +114,7 @@ void Lobby::onEnter() {
                 if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance())) {
                     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                                   _client->getDBPlayer()->getName());
-                    gameScene->createPlayers(player1, Lobby::getInstance()->_player2);
+                    gameScene->createPlayers(player1, this->_player2);
                 }
             }
                 break;
@@ -180,6 +162,8 @@ void Lobby::onEnter() {
     _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+
+    return true;
 }
 
 void Lobby::receiveInvite(string message) {

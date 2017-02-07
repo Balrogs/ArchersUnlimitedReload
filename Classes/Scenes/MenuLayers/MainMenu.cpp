@@ -10,6 +10,13 @@
 
 USING_NS_CC;
 
+
+MainScene* MainScene::_instance = nullptr;
+
+MainScene *MainScene::getInstance() {
+    return _instance;
+}
+
 MainScene *MainScene::create() {
     MainScene *ret = new(std::nothrow) MainScene();
     if (ret && ret->init()) {
@@ -17,6 +24,7 @@ MainScene *MainScene::create() {
     } else {
         CC_SAFE_DELETE(ret);
     }
+    _instance = ret;
     return ret;
 }
 
@@ -47,6 +55,10 @@ void MainScene::replaceMain(Layer *layer) {
 
 EquipmentScene *MainScene::getEquipmentLayer() {
     return _equipmentScene;
+}
+
+cocos2d::Layer *MainScene::getMain() {
+    return _main;
 }
 
 MainMenu *MainMenu::create(EquipmentScene *equipmentLayer) {
@@ -293,8 +305,7 @@ void MainMenu::onMenuClick(int id) {
             multiP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
                 switch (type) {
                     case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        auto scene = MultiplayerMenu::createScene();
-                        Director::getInstance()->pushScene(scene);
+                        ((MainScene *) this->getParent())->replaceMain(MultiplayerMenu::create());
                     }
                         break;
                     default:

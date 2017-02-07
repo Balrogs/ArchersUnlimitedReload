@@ -8,23 +8,16 @@
 
 class MultiplayerMenu : public cocos2d::Layer {
 public:
-    static cocos2d::Scene *createScene();
-
-    static MultiplayerMenu *getInstance();
 
     CREATE_FUNC(MultiplayerMenu);
+
+    bool init();
 
     virtual void onError(string message);
 
     virtual void onQuit();
 
 protected:
-    static MultiplayerMenu *_instance;
-
-    MultiplayerMenu();
-
-    void onEnter();
-
     void onPushScene(int id);
 
     void update(float dt);

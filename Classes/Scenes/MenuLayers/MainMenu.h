@@ -15,6 +15,8 @@
 
 class MainScene : public cocos2d::Scene{
 public:
+    static MainScene* getInstance();
+
     static MainScene *create();
 
     bool init();
@@ -23,7 +25,11 @@ public:
 
     EquipmentScene* getEquipmentLayer();
 
+    cocos2d::Layer *getMain();
+
 private:
+    static MainScene *_instance;
+
     EquipmentScene *_equipmentScene;
     cocos2d::Layer *_main;
     BackgroundLayer *_backgroundLayer;
