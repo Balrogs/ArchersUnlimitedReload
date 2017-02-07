@@ -76,7 +76,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/PlayLayers/Apple/AppleParent.cpp \
                                  ../../Classes/Scenes/MenuLayers/Lobby.cpp \
                                  ../../Classes/Scenes/MenuLayers/RegisterMenu.cpp \
-                                 ../../Classes/Scenes/MenuLayers/MultiplayerMenu.cpp
+                                 ../../Classes/Scenes/MenuLayers/MultiplayerMenu.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/DBPlayer.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

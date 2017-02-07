@@ -130,14 +130,12 @@ void MultiplayerMenu::onEnter() {
         popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
         this->addChild(popUp, 0, "PopUp");
     }
+
+    _client->login();
 }
 
 void MultiplayerMenu::onPushScene(int id) {
     switch (id) {
-        case 1: {
-            _client->login();
-        }
-            break;
         case 2: {
             this->getParent()->addChild(RegisterMenu::create(), 3);
             this->removeFromParent();

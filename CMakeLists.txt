@@ -312,6 +312,10 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/BattleParent.cpp
         Classes/Scenes/PlayLayers/MultiplayerBattle.cpp
         Classes/Scenes/PlayLayers/Apple/AppleParent.cpp
+        Classes/Scenes/MenuLayers/RegisterMenu.cpp
+        Classes/Scenes/MenuLayers/Lobby.cpp
+        Classes/Scenes/MenuLayers/MultiplayerMenu.cpp
+        Classes/GameEngine/Global/Misc/DBPlayer.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -331,7 +335,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/RegisterMenu.h
         Classes/Scenes/MenuLayers/Lobby.h
         Classes/Scenes/MenuLayers/MultiplayerMenu.h
-        )
+        Classes/GameEngine/Global/Misc/DBPlayer.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})
