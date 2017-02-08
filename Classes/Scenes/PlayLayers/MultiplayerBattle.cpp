@@ -15,24 +15,34 @@ void MultiplayerBattle::receiveAction(float angle, float power, int id) {
 }
 
 void MultiplayerBattle::setPlayer(int id) {
+    _playerId = _player1->getId();
     switch (id) {
         case 1: {
             _hero1 = new DuelHero(visibleSize.width / 2, BattleParent::GROUND, _player1);
             _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, BattleParent::GROUND, _player2);
-            _player = _hero1;
+            auto action = Sequence::create(
+                    MoveTo::create(0.f, Vec2(-_hero1->getPosition().x + visibleSize.width / 2, 0.f)),
+                    NULL
+            );
+            this->runAction(action);
         }
 
             break;
         case 2: {
             _hero1 = new DuelHero(visibleSize.width / 2, BattleParent::GROUND, _player2);
             _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, BattleParent::GROUND, _player1);
-            _player = _hero2;
+            auto action = Sequence::create(
+                    MoveTo::create(0.f, Vec2(-_hero2->getPosition().x + visibleSize.width / 2, 0.f)),
+                    NULL
+            );
+            this->runAction(action);
         }
             break;
         default:
             break;
     }
 
+    _player = _hero1;
     _hero2->changeFacedir(-1);
     _player1 = _hero1->getPlayer();
     _player2 = _hero2->getPlayer();
@@ -40,12 +50,6 @@ void MultiplayerBattle::setPlayer(int id) {
 
     _createEnvForStickman(_hero1, _stats->getPlayerEnvType());
     _createEnvForStickman(_hero2, _stats->getTargetEnvType());
-
-    auto action = Sequence::create(
-            MoveTo::create(0.f, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
-            NULL
-    );
-    this->runAction(action);
 
     this->_turnId = _hero1->getPlayer()->getId();
 }
@@ -65,9 +69,11 @@ void MultiplayerBattle::resumeGame() {
 }
 
 void MultiplayerBattle::abort() {
-    this->addChild(PopUp::create("GAME OVER",
-                                 cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", Variables::FONT_NAME,
-                                                               20.f)), 10, "PopUp");
+    auto popUp = PopUp::create("GAME OVER",
+                               cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", Variables::FONT_NAME,
+                                                             20.f));
+    popUp->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(popUp, 10, "PopUp");
 }
 
 void MultiplayerBattle::onEnter() {
@@ -76,6 +82,12 @@ void MultiplayerBattle::onEnter() {
 }
 
 bool MultiplayerBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if (_touch == touch->getID()) {
+        _touch = -1;
+    } else {
+        return false;
+    }
+
     const auto start = touch->getStartLocation();
     const auto curr = touch->getLocation();
     float x = start.x - curr.x;
@@ -85,12 +97,16 @@ bool MultiplayerBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::E
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
     auto angle = std::atan2(y, x);
-    _hero1->attack(angle, power);
-    _client->action(angle, power, 1);
+    _player->attack(-angle, power);
+    _client->action(-angle, power, 1);
     return true;
 }
 
 void MultiplayerBattle::onPopScene() {
     _client->gameOver(-1, 1);
     BattleParent::onPopScene();
+}
+
+int MultiplayerBattle::getPlayerId() {
+    return _playerId;
 }

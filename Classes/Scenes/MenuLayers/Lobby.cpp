@@ -10,9 +10,9 @@
 USING_NS_CC;
 
 bool Lobby::init() {
-if(!Layer::init()){
-    return false;
-}
+    if(!Layer::init()){
+        return false;
+    }
 
     this->removeAllChildren();
     this->getEventDispatcher()->removeEventListenersForTarget(this);
@@ -74,7 +74,8 @@ if(!Layer::init()){
     _findPlayerButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                _client->enterLobby();
+                //TODO  pass type
+                _client->enterLobby(1);
                 _findPlayerButton->setVisible(false);
             }
                 break;

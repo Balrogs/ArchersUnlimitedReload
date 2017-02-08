@@ -23,7 +23,11 @@ public:
 
     virtual void onPopScene();
 
+    int getPlayerId() override;
+
 protected:
+
+    int _playerId;
 
     void onEnter();
 

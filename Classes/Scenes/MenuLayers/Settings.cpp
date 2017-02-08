@@ -1,11 +1,6 @@
-//
-// Created by igor on 13.10.16.
-//
-
 #include <Scenes/Layers/BackgroundLayer.h>
 #include <ui/UIButton.h>
 #include <GameEngine/Global/Variables.h>
-#include <GameEngine/Global/Misc/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include "Settings.h"
 #include "MainMenu.h"

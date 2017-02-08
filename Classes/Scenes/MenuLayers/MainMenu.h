@@ -23,6 +23,10 @@ public:
 
     void replaceMain(cocos2d::Layer* layer);
 
+    void pushMain(cocos2d::Layer* layer);
+
+    void popMain();
+
     EquipmentScene* getEquipmentLayer();
 
     cocos2d::Layer *getMain();
@@ -33,6 +37,8 @@ private:
     EquipmentScene *_equipmentScene;
     cocos2d::Layer *_main;
     BackgroundLayer *_backgroundLayer;
+
+    std::stack<cocos2d::Layer *> _mainStack;
 };
 
 class MainMenu : public cocos2d::Layer {

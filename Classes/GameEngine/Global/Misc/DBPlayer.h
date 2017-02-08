@@ -26,6 +26,7 @@ public:
     string getPassword() ;
     int getRoomId() ;
     int getCountry() ;
+    bool canLogin();
 
     void setId(int id);
     void setRoomId(int roomId);

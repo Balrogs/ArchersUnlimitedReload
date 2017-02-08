@@ -109,3 +109,7 @@ int DBPlayer::getCountry() {
     return _country;
 }
 
+bool DBPlayer::canLogin() {
+    return !_password.empty();
+}
+

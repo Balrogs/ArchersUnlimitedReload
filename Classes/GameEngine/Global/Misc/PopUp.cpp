@@ -1,6 +1,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include <ui/UIButton.h>
+#include <Scenes/MenuLayers/MainMenu.h>
 #include "PopUp.h"
 
 USING_NS_CC;
@@ -134,7 +135,8 @@ void MainMenuPopUp::yesAction() {
 
 void MainMenuPopUp::okAction() {
     this->removeFromParent();
-    Director::getInstance()->popScene();
+    auto scene = MainScene::getInstance();
+    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
 }
 
 MainMenuPopUp *MainMenuPopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {

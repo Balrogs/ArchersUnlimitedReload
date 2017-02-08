@@ -15,6 +15,8 @@ public:
 
     void moveScene(float x);
 
+    virtual int getPlayerId();
+
 protected:
 
     int _turnId;

@@ -428,9 +428,10 @@ void DuelArrow::update(float dt) {
     this->setPosition(position.x + _speedX, position.y + _speedY);
     this->setRotation(std::atan2(-_speedY, _speedX) * dragonBones::RADIAN_TO_ANGLE);
 
-    if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance()))
-        duelScene->moveScene(_speedX);
-
+    if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
+        if(duelScene->getPlayerId() == _player_id)
+            duelScene->moveScene(_speedX);
+    }
     auto random = RandomHelper::random_real(0.f, 20.f);
 
     if (position.y < BattleParent::getInstance()->GROUND + random) {

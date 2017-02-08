@@ -18,7 +18,7 @@ public:
     virtual void onQuit();
 
 protected:
-    void onPushScene(int id);
+    void onMenuClick(int id);
 
     void update(float dt);
 

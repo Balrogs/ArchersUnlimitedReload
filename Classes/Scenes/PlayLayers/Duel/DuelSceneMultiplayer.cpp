@@ -38,13 +38,12 @@ void DuelSceneMultiplayer::makeTurn(int id) {
         this->_turnId = id;
         return;
     }
-
     if (this->_turnId != id) {
         float delay = 2.f;
         if (this->getPosition().x >= visibleSize.width / 2) {
             delay = 0.5f;
         }
-        auto player = getHero(id);
+        _player = getHero(id);
         auto action = Sequence::create(
                 Spawn::createWithTwoActions(
                         MoveTo::create(delay, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
@@ -57,15 +56,19 @@ void DuelSceneMultiplayer::makeTurn(int id) {
                         )),
                 CallFunc::create(
                         [&]() {
-                            if (player->getPlayer()->getId() == _player->getPlayer()->getId())
-                                UI::enableArrows(player, true);
-                            this->_turnId = player->getPlayer()->getId();
+                            if (_player->getPlayer()->getId() == _player->getPlayer()->getId())
+                                UI::enableArrows(_player, true);
+                            setTurnId(_player->getPlayer()->getId());
                         }
                 ),
                 NULL
         );
         this->runAction(action);
     }
+}
+
+void DuelSceneMultiplayer::setTurnId(int id) {
+    this->_turnId = id;
 }
 
 void DuelSceneMultiplayer::setPlayer(int id) {

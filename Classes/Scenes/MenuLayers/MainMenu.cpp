@@ -7,6 +7,7 @@
 #include "MainMenu.h"
 #include "Settings.h"
 #include "MultiplayerMenu.h"
+#include "Loading.h"
 
 USING_NS_CC;
 
@@ -42,15 +43,29 @@ bool MainScene::init() {
 
     _main = MainMenu::create(_equipmentScene);
 
-    this->addChild(_main, 4);
+    pushMain(_main);
 
     return true;
 }
 
 void MainScene::replaceMain(Layer *layer) {
-    this->removeChild(_main);
+    while(_mainStack.size()){
+        popMain();
+    }
+    pushMain(layer);
+}
+
+void MainScene::pushMain(Layer *layer) {
     _main = layer;
+    _mainStack.push(_main);
     this->addChild(_main, 4);
+}
+
+void MainScene::popMain() {
+    if(!_mainStack.empty()){
+        this->removeChild(_mainStack.top());
+        _mainStack.pop();
+    }
 }
 
 EquipmentScene *MainScene::getEquipmentLayer() {
@@ -305,7 +320,12 @@ void MainMenu::onMenuClick(int id) {
             multiP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
                 switch (type) {
                     case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        ((MainScene *) this->getParent())->replaceMain(MultiplayerMenu::create());
+                        if(SocketClient::getInstance()->connected() && SocketClient::getInstance()->getDBPlayer()->canLogin()){
+                            SocketClient::getInstance()->login();
+                            MainScene::getInstance()->pushMain(Loading::create());
+                        } else {
+                            MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
+                        }
                     }
                         break;
                     default:
@@ -338,7 +358,7 @@ void MainMenu::onMenuClick(int id) {
 //            singleP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
 //                switch (type) {
 //                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-//                        //onPushScene(0);
+//                        //onMenuClick(0);
 //                    }
 //                        break;
 //                    default:

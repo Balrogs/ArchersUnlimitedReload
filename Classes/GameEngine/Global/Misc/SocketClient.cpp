@@ -30,7 +30,8 @@ void SocketClient::destroyInstance() {
 
 SocketClient::SocketClient() {
     _sock = -1;
-    _port = 1234;
+    _port = 8888;
+    // _address = "127.0.0.1";
     _address = "188.120.237.20";
     _isConnected = false;
     _player = new DBPlayer();
@@ -133,8 +134,10 @@ void SocketClient::login() {
 void SocketClient::registerUser(string name, int country, string password) {
     _player = new DBPlayer(-1, password, name, country);
     char x[256];
-    sprintf(x, "{\"name\":\"%s\",\"country\":%s,\"password\":\"%s\",\"code\":2}", name.c_str(),
-            cocos2d::StringUtils::toString(country).c_str(), password.c_str());
+    sprintf(x, "{\"name\":\"%s\",\"country\":%d,\"password\":\"%s\",\"code\":2}",
+            name.c_str(),
+            country,
+            password.c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -144,23 +147,23 @@ void SocketClient::registerUser(string name, int country, string password) {
 void SocketClient::enterRoom() {
     char x[256];
     sprintf(x,
-            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":4}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            "{\"player_id\":%d,\"room_id\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":4}",
+            _player->getId(),
+            _player->getRoomId(),
+            _player->getId(),
             _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
 }
 
-void SocketClient::enterLobby() {
+void SocketClient::enterLobby(int lobbyId) {
     char x[256];
     sprintf(x,
-            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":40}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            "{\"player_id\":%d,\"lobby_id\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":40}",
+            _player->getId(),
+            lobbyId,
+            _player->getId(),
             _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
@@ -170,10 +173,10 @@ void SocketClient::enterLobby() {
 void SocketClient::denyInvite() {
     char x[256];
     sprintf(x,
-            "{\"player_id\":%s,\"room_id\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"},\"code\":41}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            "{\"player_id\":%d,\"room_id\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":41}",
+            _player->getId(),
+            _player->getRoomId(),
+            _player->getId(),
             _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
@@ -184,11 +187,11 @@ void SocketClient::denyInvite() {
 void SocketClient::gameOver(int winner_id, int v_type) {
     char x[256];
     sprintf(x,
-            "{\"winner_id\":%s, \"room_id\":%s,\"v_type\":%s,\"token\":{\"id\":%s,\"token\":\"%s\"} ,\"code\":7}",
-            cocos2d::StringUtils::toString(winner_id).c_str(),
-            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
-            cocos2d::StringUtils::toString(v_type).c_str(),
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            "{\"winner_id\":%d, \"room_id\":%d,\"v_type\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"} ,\"code\":7}",
+            winner_id,
+            _player->getRoomId(),
+            v_type,
+            _player->getId(),
             _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
@@ -198,13 +201,13 @@ void SocketClient::gameOver(int winner_id, int v_type) {
 void SocketClient::action(float angle, float power, int type) {
     char x[256];
     sprintf(x,
-            "{\"player_id\":%s,\"room_id\":%s,\"angle\":%s, \"power\":%s, \"arrow\":\"%s\", \"token\":{\"id\":%s,\"token\":\"%s\"}, \"code\":6}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
-            cocos2d::StringUtils::toString(_player->getRoomId()).c_str(),
-            cocos2d::StringUtils::toString(angle).c_str(),
-            cocos2d::StringUtils::toString(power).c_str(),
-            cocos2d::StringUtils::toString(type).c_str(),
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
+            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f, \"arrow\":\"%d\", \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":6}",
+            _player->getId(),
+            _player->getRoomId(),
+            angle,
+            power,
+            type,
+            _player->getId(),
             _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
@@ -215,8 +218,9 @@ void SocketClient::action(float angle, float power, int type) {
 void SocketClient::invite(int playerId) {
     char x[256];
     sprintf(x,
-            "{\"id\":%s,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(), _player->getPassword().c_str());
+            "{\"id\":%d,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
+            _player->getId(),
+            _player->getPassword().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -225,9 +229,9 @@ void SocketClient::invite(int playerId) {
 void SocketClient::addToFriends(int friendId) {
     char x[256];
     sprintf(x,
-            "{\"id\":%s, \"friend_id\":%s, \"code\":11}",
-            cocos2d::StringUtils::toString(_player->getId()).c_str(),
-            cocos2d::StringUtils::toString(friendId).c_str());
+            "{\"id\":%d, \"friend_id\":%d, \"code\":11}",
+            _player->getId(),
+            friendId);
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -236,8 +240,9 @@ void SocketClient::addToFriends(int friendId) {
 void SocketClient::getPlayerInfo(int s_type, string playerName) {
     char x[256];
     sprintf(x,
-            "{\"s_type\":%s, \"name\":\"%s\",\"code\":9}",
-            cocos2d::StringUtils::toString(s_type).c_str(), playerName.c_str());
+            "{\"s_type\":%d, \"name\":\"%s\",\"code\":9}",
+            s_type,
+            playerName.c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -368,7 +373,6 @@ DBPlayer *SocketClient::getDBPlayer() {
 }
 
 void SocketClient::_parseReply(string reply) {
-    // CCLOG(reply.c_str());
     if (JSONParser::isError(reply)) {
         _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {
