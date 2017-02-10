@@ -44,6 +44,8 @@ private:
     cocos2d::Node *_playerInfoBox;
     cocos2d::Node *_playerGlobalStatisticsBox;
     cocos2d::Node *_playerCountryStatisticsBox;
+
+    void _reloadInviteBox(bool isEmpty);
 };
 
 

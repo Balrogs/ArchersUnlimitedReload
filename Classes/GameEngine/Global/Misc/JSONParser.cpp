@@ -74,3 +74,9 @@ int JSONParser::parseIntAnswer(string message, string key) {
     }
     return 0;
 }
+
+bool JSONParser::isValid(string message) {
+    Document document;
+    document.Parse(message.c_str());
+    return !document.HasParseError();
+}

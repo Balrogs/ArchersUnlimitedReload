@@ -221,3 +221,8 @@ void RegisterMenu::_showScrollView() {
     }
     this->addChild(_scrollView, 4);
 }
+
+void RegisterMenu::onError(string message) {
+    _errorMessage->setString(message);
+    _editPassword->setText("");
+}

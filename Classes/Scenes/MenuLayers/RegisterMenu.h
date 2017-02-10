@@ -10,6 +10,8 @@ public:
 
     bool init();
 
+    void onError(string message);
+
 protected:
     cocos2d::Size _visibleSize;
     cocos2d::Sprite *_bg;

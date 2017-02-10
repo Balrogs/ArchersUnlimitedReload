@@ -1,7 +1,6 @@
 #include <GameEngine/Global/Variables.h>
 #include <ui/UIButton.h>
 #include <Localization/LocalizedStrings.h>
-#include <GameEngine/Global/Misc/PopUp.h>
 #include "GameOverScene.h"
 #include "Battle.h"
 
@@ -190,4 +189,12 @@ void GameOverScene::_saveStats(Statistics *stats) {
     auto battles = def->getIntegerForKey("BATTLES_COUNT", 0);
     def->setIntegerForKey("COINS", coins + stats->getCoinsGained());
     def->setIntegerForKey("BATTLES_COUNT", battles + 1);
+}
+
+void GameOverScene::_loadButtons() {
+
+}
+
+void MultiPlayerGameOverScene::_loadButtons() {
+
 }

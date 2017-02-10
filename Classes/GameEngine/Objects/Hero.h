@@ -24,6 +24,8 @@ public:
 
     void setAim(float angle, float power);
 
+    bool checkAimDiff(float angle, float power);
+
     virtual void switchWeapon(int dest);
 
     void update() override;

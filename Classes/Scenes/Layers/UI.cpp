@@ -3,6 +3,7 @@
 #include <GameEngine/Global/WeaponSelector.h>
 #include <ui/UIButton.h>
 #include <GameEngine/Global/Variables.h>
+#include <Scenes/PlayLayers/MultiplayerBattle.h>
 
 USING_NS_CC;
 
@@ -111,6 +112,9 @@ void UI::addMoveArrows(Hero *player) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
                 BattleScene::getInstance()->getPlayer()->move(1);
+                if(auto multiP = dynamic_cast<MultiplayerBattle*>( BattleScene::getInstance())){
+                    multiP->movePlayer(1);
+                }
                 enableArrows(BattleScene::getInstance()->getPlayer(), false);
                 break;
             default:
@@ -122,6 +126,9 @@ void UI::addMoveArrows(Hero *player) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
                 BattleScene::getInstance()->getPlayer()->move(-1);
+                if(auto multiP = dynamic_cast<MultiplayerBattle*>( BattleScene::getInstance())){
+                    multiP->movePlayer(-1);
+                }
                 enableArrows(BattleScene::getInstance()->getPlayer(), false);
                 break;
             default:

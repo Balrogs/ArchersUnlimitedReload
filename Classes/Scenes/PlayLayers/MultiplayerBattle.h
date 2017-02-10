@@ -11,6 +11,10 @@ public:
 
     virtual void receiveAction(float angle, float power, int id);
 
+    virtual void receiveMove(int dir, int id);
+
+    virtual void receiveAim(float angle, float power, int id);
+
     virtual void setPlayer(int id);
 
     virtual void startGame();
@@ -23,6 +27,8 @@ public:
 
     virtual void onPopScene();
 
+    virtual void movePlayer(int dir);
+
     int getPlayerId() override;
 
 protected:
@@ -32,6 +38,8 @@ protected:
     void onEnter();
 
     bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) override;
+
+    bool _touchHandlerMove(const Touch *touch, Event *event) override;
 };
 
 

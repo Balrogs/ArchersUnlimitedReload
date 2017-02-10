@@ -3,6 +3,8 @@
 #include <Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h>
 #include <Scenes/MenuLayers/MultiplayerMenu.h>
 #include <Scenes/MenuLayers/Lobby.h>
+#include <Scenes/MenuLayers/Loading.h>
+#include <Scenes/MenuLayers/RegisterMenu.h>
 #include "JSONParser.h"
 
 static SocketClient *instance = nullptr;
@@ -89,7 +91,7 @@ bool SocketClient::sendMessage(string data) {
 */
 void SocketClient::receive() {
 
-    char buffer[512];
+    char buffer[1024];
     string reply;
 
     //Receive a reply from the server
@@ -99,15 +101,16 @@ void SocketClient::receive() {
 
     reply = buffer;
     reply = reply.substr(0, reply.find_last_of('}') + 1);
-
-    auto ind = reply.find_first_of("}");
-    for (; ind > 0 && ind + 1 < reply.length(); ind = reply.find_first_of("}", ind + 1)) {
-        if (reply.at(ind + 1) == '{') {
-            _buffer.push_back(reply.substr(0, ind + 1));
-            reply = reply.substr(ind + 1);
+    string tmp;
+    auto i = reply.find_first_of("}");
+    for (;reply.length() > 0; i = reply.find_first_of("}")) {
+        tmp.append(reply.substr(0, i + 1));
+        reply = reply.substr(i + 1);
+        if (reply.length() <= 0 || reply.at(0) == '{') {
+            _buffer.push_back(tmp);
+            tmp.clear();
         }
     }
-    _buffer.push_back(reply);
 
     for (long i = _buffer.size() - 1; i >= 0; i--) {
         auto message = _buffer[i];
@@ -198,15 +201,60 @@ void SocketClient::gameOver(int winner_id, int v_type) {
     t.detach();
 }
 
-void SocketClient::action(float angle, float power, int type) {
+void SocketClient::action(float angle, float power) {
     char x[256];
     sprintf(x,
-            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f, \"arrow\":\"%d\", \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":6}",
+            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f, \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":60}",
             _player->getId(),
             _player->getRoomId(),
             angle,
             power,
-            type,
+            _player->getId(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+
+}
+
+void SocketClient::move(int dir) {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%d,\"room_id\":%d,\"dir\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":61}",
+            _player->getId(),
+            _player->getRoomId(),
+            dir,
+            _player->getId(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+
+}
+
+void SocketClient::aim(float angle, float power) {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f, \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":62}",
+            _player->getId(),
+            _player->getRoomId(),
+            angle,
+            power,
+            _player->getId(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+
+}
+
+void SocketClient::changeArrow(string arrow) {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%d,\"room_id\":%d, \"arrow\":\"%s\", \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":60}",
+            _player->getId(),
+            _player->getRoomId(),
+            arrow.c_str(),
             _player->getId(),
             _player->getToken().c_str());
     string message = x;
@@ -279,12 +327,17 @@ void SocketClient::_parseError(int error) {
                 if (auto multiP = dynamic_cast<MultiplayerMenu *>(MainScene::getInstance()->getMain())) {
                     multiP->onError("Login failed! Incorrect name or password.");
                 }
+                if (auto loading = dynamic_cast<Loading *>(MainScene::getInstance()->getMain())) {
+                    auto multiP = MultiplayerMenu::create();
+                    MainScene::getInstance()->replaceMain(multiP);
+                    multiP->onError("Login failed! Incorrect name or password.");
+                }
             });
         }
             break;
         case -201: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto multiP = dynamic_cast<MultiplayerMenu *>(MainScene::getInstance()->getMain())) {
+                if (auto multiP = dynamic_cast<RegisterMenu *>(MainScene::getInstance()->getMain())) {
                     multiP->onError("Name is already taken!");
                 }
             });
@@ -292,7 +345,7 @@ void SocketClient::_parseError(int error) {
             break;
         case -301: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance())) {
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance())) {
                     gameScene->startGame();
                 }
             });
@@ -300,20 +353,20 @@ void SocketClient::_parseError(int error) {
             break;
         case -302: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                     gameScene->pauseGame();
             });
         }
             break;
         case -303: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                     gameScene->resumeGame();
             });
         }
         case -304: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                     gameScene->abort();
                 else if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
                     lobby->deleteInvite();
@@ -328,14 +381,14 @@ void SocketClient::_parseError(int error) {
             break;
         case -501: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                     gameScene->setPlayer(1);
             });
         }
             break;
         case -502: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                     gameScene->setPlayer(2);
             });
         }
@@ -373,6 +426,10 @@ DBPlayer *SocketClient::getDBPlayer() {
 }
 
 void SocketClient::_parseReply(string reply) {
+    if(!JSONParser::isValid(reply)){
+        return;
+    }
+
     if (JSONParser::isError(reply)) {
         _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {
@@ -390,13 +447,32 @@ void SocketClient::_parseReply(string reply) {
                 });
             }
                 return;
-            case 6: {
+            case 60: {
                 auto power = JSONParser::parseFloat(reply, "power");
                 auto angle = JSONParser::parseFloat(reply, "angle");
                 auto id = JSONParser::parseIntAnswer(reply, "id");
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-                    if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance()))
+                    if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
                         gameScene->receiveAction(angle, power, id);
+                });
+            }
+                return;
+            case 61: {
+                auto dir = JSONParser::parseInt(reply, "dir");
+                auto id = JSONParser::parseIntAnswer(reply, "id");
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
+                        gameScene->receiveMove(dir, id);
+                });
+            }
+                return;
+            case 62: {
+                auto power = JSONParser::parseFloat(reply, "power");
+                auto angle = JSONParser::parseFloat(reply, "angle");
+                auto id = JSONParser::parseIntAnswer(reply, "id");
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
+                        gameScene->receiveAim(angle, power, id);
                 });
             }
                 return;

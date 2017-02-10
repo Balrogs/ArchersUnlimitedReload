@@ -11,7 +11,7 @@ public:
 
     static GameOverScene *create(Statistics* stats);
 
-    bool init(Statistics* stats);
+    virtual bool init(Statistics* stats);
 
 protected:
     Label* _title1;
@@ -19,7 +19,13 @@ protected:
     void onQuit();
     void update(float dt);
     void _saveStats(Statistics* stats);
+    virtual void _loadButtons();
 };
 
+class MultiPlayerGameOverScene : public GameOverScene {
+
+protected:
+    virtual void _loadButtons() override;
+};
 
 #endif //ARCUNLIM_GAMEOVERSCENE_H

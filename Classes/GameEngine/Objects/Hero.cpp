@@ -290,9 +290,17 @@ void Hero::_updateAim() {
 }
 
 void Hero::setAim(float angle, float power) {
+    if(!_aim->is_aiming()){
+        startAim();
+    }
     _aim->set_aimRadian(-angle);
     _aim->set_aimPower(power);
     _updateAim();
+}
+
+
+bool Hero::checkAimDiff(float angle, float power) {
+    return  _aim->get_aimRadian() - angle > 0.1f || _aim->get_aimPower() - power > 1.f;
 }
 
 void Hero::startAim() {

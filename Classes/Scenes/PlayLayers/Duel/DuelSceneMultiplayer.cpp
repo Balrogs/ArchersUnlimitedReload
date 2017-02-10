@@ -56,7 +56,7 @@ void DuelSceneMultiplayer::makeTurn(int id) {
                         )),
                 CallFunc::create(
                         [&]() {
-                            if (_player->getPlayer()->getId() == _player->getPlayer()->getId())
+                            if (_player->getPlayer()->getId() == _playerId)
                                 UI::enableArrows(_player, true);
                             setTurnId(_player->getPlayer()->getId());
                         }

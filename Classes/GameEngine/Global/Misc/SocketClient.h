@@ -50,8 +50,14 @@ public:
     void denyInvite();
 
     void enterLobby(int lobbyId);
-    // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "arrow":"nikita lox", "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
-    void action(float angle, float power, int type);
+    // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
+    void action(float angle, float power);
+    // {"player_id":0,"room_id":1,"dir":1, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
+    void move(int dir);
+    // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
+    void aim(float angle, float power);
+    // {"player_id":0,"room_id":1,"arrow":"name", "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
+    void changeArrow(string arrow);
     // {"player_id":1, "room_id":1,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"},"code":4}
     void invite(int playerId);
     // {"id":0, "friend_id":1, "code":11}
@@ -60,6 +66,7 @@ public:
     void getPlayerInfo(int s_type, string playerName);
     //{"winner_id":0, "room_id":1,"v_type":0,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"} ,"code":7}
     void gameOver(int winner_id, int v_type);
+
 };
 
 

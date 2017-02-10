@@ -14,6 +14,10 @@ public:
 
     void addApple() override;
 
+    void setPlayer(int id) override;
+
+    void makeTurn(int id);
+
 protected:
 
     void initWorld() override;
@@ -21,6 +25,10 @@ protected:
     void initObjects();
 
     bool isGameOver() override;
+
+    void setTurnId(int id);
+
+    bool _touchHandlerBegin(const Touch *touch, Event *event) override;
 };
 
 

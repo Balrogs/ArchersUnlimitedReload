@@ -180,6 +180,24 @@ void Lobby::receiveInvite(string message) {
 void Lobby::deleteInvite() {
     _inviteBox->removeAllChildren();
     _player2 = nullptr;
+
+    _findPlayerButton = cocos2d::ui::Button::create();
+    _findPlayerButton->loadTextures(Variables::FIND_BUTTON, Variables::FIND_PRESSED_BUTTON,
+                                    Variables::FIND_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    _findPlayerButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                //TODO  pass type
+                _client->enterLobby(1);
+                _findPlayerButton->setVisible(false);
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    _inviteBox->addChild(_findPlayerButton);
 }
 
 void Lobby::receivePlayerInfo(string message) {

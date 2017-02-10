@@ -1,6 +1,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "MultiplayerBattle.h"
+#include <math.h>
 
 void MultiplayerBattle::createPlayers(Player *player1, Player *player2) {
     _player1 = player1;
@@ -11,6 +12,19 @@ void MultiplayerBattle::createPlayers(Player *player1, Player *player2) {
 void MultiplayerBattle::receiveAction(float angle, float power, int id) {
     if (id != _client->getDBPlayer()->getId()) {
         _player->attack(angle, power);
+    }
+}
+
+void MultiplayerBattle::receiveMove(int dir, int id) {
+    if (id != _client->getDBPlayer()->getId()) {
+        _player->move(dir);
+    }
+}
+
+void MultiplayerBattle::receiveAim(float angle, float power, int id) {
+    if (id != _client->getDBPlayer()->getId()) {
+//        CCLOG("RECEIVED : angle : %f , power : %f",angle, power);
+//        _player->setAim(angle, power);
     }
 }
 
@@ -70,10 +84,10 @@ void MultiplayerBattle::resumeGame() {
 
 void MultiplayerBattle::abort() {
     auto popUp = PopUp::create("GAME OVER",
-                               cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", Variables::FONT_NAME,
-                                                             20.f));
+                               cocos2d::Label::createWithTTF("OPPONENT HAS LEFT THE GAME", Variables::FONT_NAME, 20.f),
+                               false);
     popUp->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-    this->addChild(popUp, 10, "PopUp");
+    this->_ui->addChild(popUp, 0, "PopUp");
 }
 
 void MultiplayerBattle::onEnter() {
@@ -96,9 +110,36 @@ bool MultiplayerBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::E
     power = power / 10;
     power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
+    auto angle = - std::atan2(y, x);
+
+    // round values
+    float k = std::pow(10, 5);
+    power =  roundf(power * k) / k;
+    angle =  roundf(angle * k) / k;
+
+    _player->attack(angle, power);
+
+    _client->action(angle, power);
+
+    return true;
+}
+
+bool MultiplayerBattle::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if (_touch != touch->getID()) {
+        return false;
+    }
+
+    const auto start = touch->getStartLocation();
+    const auto curr = touch->getLocation();
+    float x = start.x - curr.x;
+    float y = start.y - curr.y;
     auto angle = std::atan2(y, x);
-    _player->attack(-angle, power);
-    _client->action(-angle, power, 1);
+    auto power = std::sqrt(x * x + y * y);
+    power = power / 10;
+    power = (power > MAX_ARROW_POWER) ? MAX_ARROW_POWER : power;
+    power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
+    _player->setAim(angle, power);
+    _client->aim(angle, power);
     return true;
 }
 
@@ -109,4 +150,8 @@ void MultiplayerBattle::onPopScene() {
 
 int MultiplayerBattle::getPlayerId() {
     return _playerId;
+}
+
+void MultiplayerBattle::movePlayer(int dir) {
+    _client->move(dir);
 }
