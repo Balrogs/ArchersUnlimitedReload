@@ -1,6 +1,7 @@
 #include "BattleParent.h"
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <Localization/LocalizedStrings.h>
+#include <Scenes/PlayLayers/Apple/AppleMultiplayer.h>
 #include "Battle.h"
 #include "Scenes/PlayLayers/Apple/AppleBattle.h"
 #include "Scenes/PlayLayers/Duel/DuelScene.h"
@@ -46,6 +47,9 @@ cocos2d::Scene *BattleParent::createScene(Statistics *stats) {
             break;
         case 4:
             layer = DuelSceneMultiplayer::create(stats);
+            break;
+        case 5:
+            layer = AppleMultiplayer::create(stats);
             break;
         default:
             layer = BattleScene::create(stats);

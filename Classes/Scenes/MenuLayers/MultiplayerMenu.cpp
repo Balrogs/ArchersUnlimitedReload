@@ -17,7 +17,7 @@ bool MultiplayerMenu::init() {
     this->getEventDispatcher()->removeEventListenersForTarget(this);
 
     auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
-    auto visibleSize = Director::getInstance()->getVisibleSize();
+    _visibleSize = Director::getInstance()->getVisibleSize();
 
     _client = SocketClient::getInstance();
 
@@ -25,17 +25,17 @@ bool MultiplayerMenu::init() {
 
         auto bg = Sprite::createWithSpriteFrameName(Variables::BG1);
 
-        bg->setScale((visibleSize.width / 3) / bg->getContentSize().width,
-                     (visibleSize.height / 3) / bg->getContentSize().height);
+        bg->setScale((_visibleSize.width / 3) / bg->getContentSize().width,
+                     (_visibleSize.height / 3) / bg->getContentSize().height);
 
-        bg->setPosition(visibleSize.width / 2, 4 * visibleSize.height / 5 - bg->getBoundingBox().size.height / 2);
+        bg->setPosition(_visibleSize.width / 2, 4 * _visibleSize.height / 5 - bg->getBoundingBox().size.height / 2);
 
         this->addChild(bg, 1);
 
         auto editBoxSize = Size(3 * bg->getBoundingBox().size.width / 4, bg->getBoundingBox().size.height / 5);
 
         _editName = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
-        _editName->setPosition(Vec2(visibleOrigin.x + visibleSize.width / 2,
+        _editName->setPosition(Vec2(visibleOrigin.x + _visibleSize.width / 2,
                                     bg->getBoundingBox().getMaxY() - 3 * editBoxSize.height / 2));
         _editName->setFontName(Variables::FONT_NAME.c_str());
         _editName->setFontColor(Color3B::BLACK);
@@ -82,7 +82,7 @@ bool MultiplayerMenu::init() {
             }
         });
         backButton->setPosition(Vec2(backButton->getBoundingBox().size.width / 2 + 15.f,
-                                     visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
+                                     _visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
         this->addChild(backButton, 3);
 
         const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
@@ -161,7 +161,7 @@ bool MultiplayerMenu::init() {
                                                    Variables::FONT_NAME, Variables::FONT_SIZE);
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("", label, false);
-        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
         this->addChild(popUp, 0, "PopUp");
     }
 
@@ -197,6 +197,10 @@ void MultiplayerMenu::onMenuClick(int id) {
 }
 
 void MultiplayerMenu::onQuit() {
+    if(auto popUp = this->getChildByName("PopUp")){
+        popUp->removeFromParent();
+        return;
+    }
     auto scene = (MainScene *) this->getParent();
     scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
 }
@@ -213,8 +217,8 @@ void MultiplayerMenu::update(float dt) {
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("",
                                            label);
-        auto visibleSize = Director::getInstance()->getVisibleSize();
-        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        auto _visibleSize = Director::getInstance()->getVisibleSize();
+        popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
         this->addChild(popUp, 0, "PopUp");
     }
 }

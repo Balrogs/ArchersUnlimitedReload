@@ -274,12 +274,12 @@ void SocketClient::invite(int playerId) {
     t.detach();
 }
 
-void SocketClient::addToFriends(int friendId) {
+void SocketClient::addToFriends(string name) {
     char x[256];
     sprintf(x,
-            "{\"id\":%d, \"friend_id\":%d, \"code\":11}",
+            "{\"id\":%d, \"friend_name\":%s, \"code\":11}",
             _player->getId(),
-            friendId);
+            name.c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();

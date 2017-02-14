@@ -2,6 +2,8 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include <ui/UIButton.h>
 #include <Scenes/MenuLayers/MainMenu.h>
+#include <Scenes/MenuLayers/Lobby.h>
+#include <Localization/LocalizedStrings.h>
 #include "PopUp.h"
 
 USING_NS_CC;
@@ -284,4 +286,172 @@ void PausePopUp::noAction() {
 
 void PausePopUp::yesAction() {
     PopUp::yesAction();
+}
+
+
+void InvitePopUp::noAction() {
+    if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
+        lobby->denyInvite();
+    }
+    this->removeFromParent();
+}
+
+void InvitePopUp::yesAction() {
+    if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
+        lobby->acceptInvite();
+    }
+    this->removeFromParent();
+}
+
+void InvitePopUp::okAction() {
+
+}
+
+InvitePopUp *InvitePopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {
+    InvitePopUp *ret = new(std::nothrow) InvitePopUp();
+    if (ret && ret->init(title, message, isTwoButtons)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+InvitePopUp *InvitePopUp::create(std::string title, cocos2d::Node *message) {
+    InvitePopUp *ret = new(std::nothrow) InvitePopUp();
+    if (ret && ret->init(title, message)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+GameTypePopUp *GameTypePopUp::create() {
+    GameTypePopUp *ret = new(std::nothrow) GameTypePopUp();
+    if (ret && ret->init()) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool GameTypePopUp::init() {
+    if (!PopUp::init(LocalizedStrings::getInstance()->getString("CHOOSE GAME"))) {
+        return false;
+    }
+
+    auto duel = ui::Button::create();
+    duel->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
+                           cocos2d::ui::Widget::TextureResType::PLIST);
+    duel->setPosition(Vec2(0.f, 0.f));
+
+    duel->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
+                    lobby->startSearch(4);
+                }
+                this->removeFromParent();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+
+    auto duelTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"), Variables::FONT_NAME,
+                                                       Variables::FONT_SIZE);
+    duelTitle->setPosition(duel->getContentSize().width / 2,
+                               duel->getContentSize().height / 2);
+    duel->addChild(duelTitle, 4);
+
+    this->addChild(duel);
+
+    auto apple = ui::Button::create();
+    apple->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
+                       cocos2d::ui::Widget::TextureResType::PLIST);
+    apple->setPosition(Vec2(0.f, duel->getPosition().y - 3 * duel->getBoundingBox().size.height / 2));
+
+    apple->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
+                    lobby->startSearch(5);
+                }
+                this->removeFromParent();
+            }
+                break;
+            default:
+                break;
+        }
+    });
+
+    auto appleTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"), Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+    appleTitle->setPosition(apple->getContentSize().width / 2,
+                           apple->getContentSize().height / 2);
+    apple->addChild(appleTitle, 4);
+
+    this->addChild(apple);
+
+    return true;
+
+}
+
+InputNamePopUp *InputNamePopUp::create() {
+    InputNamePopUp *ret = new(std::nothrow) InputNamePopUp();
+    if (ret && ret->init()) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool InputNamePopUp::init() {
+    if (!PopUp::init(LocalizedStrings::getInstance()->getString("INPUT NAME"))) {
+        return false;
+    }
+
+    auto editBoxSize = Size(3 * POPUP_SIZE.width / 4, 1.1f * Variables::H_FONT_SIZE);
+
+    _editName = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
+    _editName->setPosition(Vec2(0, 0));
+    _editName->setFontName(Variables::FONT_NAME.c_str());
+    _editName->setFontColor(Color3B::BLACK);
+    _editName->setFontSize((int)Variables::H_FONT_SIZE);
+    _editName->setMaxLength(12);
+    _editName->setPlaceHolder(LocalizedStrings::getInstance()->getString("NAME"));
+    _editName->setPlaceholderFontColor(Color3B::BLACK);
+    _editName->setPlaceholderFontSize((int)Variables::H_FONT_SIZE);
+    _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
+    _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
+    this->addChild(_editName, 3);
+
+
+    auto ok = ui::Button::create();
+    ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
+                     cocos2d::ui::Widget::TextureResType::PLIST);
+    ok->addTouchEventListener(CC_CALLBACK_0(InputNamePopUp::okAction, this));
+
+    _buttons = Node::create();
+    _buttons->addChild(ok);
+    _buttons->setPosition(0, -POPUP_SIZE.height / 2 + ok->getBoundingBox().size.height / 2 + 25.f);
+
+    this->addChild(_buttons, 2);
+    return true;
+}
+
+void InputNamePopUp::okAction() {
+    auto name  = string(_editName->getText());
+    if(name.length() < 3){
+        if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
+            lobby->addFriend(name);
+        }
+        this->removeFromParent();
+    } else {
+        _errorMessage ->setString(LocalizedStrings::getInstance()->getString("NAME IS EMPTY"));
+    }
 }

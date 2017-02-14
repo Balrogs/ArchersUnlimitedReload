@@ -25,6 +25,7 @@ protected:
     cocos2d::Label *_errorMessage;
     SocketClient *_client;
 
+    cocos2d::Size _visibleSize;
 private:
     cocos2d::ui::EditBox *_editName;
     cocos2d::ui::EditBox *_editPassword;

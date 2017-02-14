@@ -7,6 +7,7 @@
 
 #include "cocos2d.h"
 #include "ui/UIButton.h"
+#include "ui/UIEditBox/UIEditBox.h"
 
 class PopUp : public cocos2d::Node {
 public:
@@ -65,5 +66,38 @@ protected:
 
     virtual void yesAction();
 };
+
+class InvitePopUp : public PopUp {
+public:
+    static InvitePopUp *create(std::string title, cocos2d::Node *message, bool isTwoButtons) ;
+
+    static InvitePopUp *create(std::string title, cocos2d::Node *message);
+
+protected:
+    void noAction() override ;
+
+    void yesAction() override;
+
+    void okAction() override;
+};
+
+class GameTypePopUp : public PopUp {
+public:
+    static GameTypePopUp *create();
+    bool init();
+};
+
+class InputNamePopUp : public PopUp {
+public:
+    static InputNamePopUp *create();
+    bool init();
+
+protected:
+    cocos2d::Label *_errorMessage;
+    cocos2d::ui::EditBox *_editName;
+
+    virtual void okAction() override;
+};
+
 
 #endif //ARCHERSUNLIMITED_POPUP_H

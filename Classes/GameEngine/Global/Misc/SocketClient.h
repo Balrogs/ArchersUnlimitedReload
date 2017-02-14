@@ -61,7 +61,7 @@ public:
     // {"player_id":1, "room_id":1,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"},"code":4}
     void invite(int playerId);
     // {"id":0, "friend_id":1, "code":11}
-    void addToFriends(int friendId);
+    void addToFriends(string name);
     //{"s_type":3, "name":"some other username","code":9}
     void getPlayerInfo(int s_type, string playerName);
     //{"winner_id":0, "room_id":1,"v_type":0,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"} ,"code":7}
