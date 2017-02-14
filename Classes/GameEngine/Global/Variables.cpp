@@ -115,6 +115,9 @@ const std::string Variables::GREEN_PRESSED_BUTTON = "green_pressed.png";
 const std::string Variables::AGAIN_BUTTON = "again.png";
 const std::string Variables::AGAIN_PRESSED_BUTTON = "again_pressed.png";
 
+const std::string Variables::CONTINUE_BUTTON = "continue.png";
+const std::string Variables::CONTINUE_PRESSED_BUTTON = "continue_pressed.png";
+
 const std::string Variables::BG1 = "bg1.png";
 const std::string Variables::BG2 = "bg2.png";
 const std::string Variables::BG3 = "bg3.png";

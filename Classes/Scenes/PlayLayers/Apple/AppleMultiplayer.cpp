@@ -81,3 +81,7 @@ void AppleMultiplayer::initObjects() {
 bool AppleMultiplayer::isGameOver() {
     return DuelScene::isGameOver();
 }
+
+void AppleMultiplayer::_nextLevelAction() {
+
+}

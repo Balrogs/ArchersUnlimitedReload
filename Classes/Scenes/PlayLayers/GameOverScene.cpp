@@ -106,10 +106,10 @@ bool GameOverScene::init(Statistics *stats) {
                                  repeatButton->getPosition().y));
     this->addChild(backButton, 3);
 
-    if (stats->getType() < 4) {
+    if (stats->getType() < 3) {
         auto continueButton = ui::Button::create();
-        continueButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
-                                     Variables::CLOSE_BUTTON_PATH, ui::Widget::TextureResType::PLIST);
+        continueButton->loadTextures(Variables::CONTINUE_BUTTON, Variables::CONTINUE_PRESSED_BUTTON,
+                                     Variables::CONTINUE_BUTTON, ui::Widget::TextureResType::PLIST);
 
         continueButton->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
             switch (type) {
