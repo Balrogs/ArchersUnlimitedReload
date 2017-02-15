@@ -25,9 +25,9 @@ void DuelScene::initWorld() {
     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                   _client->getDBPlayer()->getName());
 
-    _player = new DuelHero(0, DuelScene::GROUND, player1);
+    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
 
-    _hero2 = new DuelHero(2000, DuelScene::GROUND,
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
                           LocalizedStrings::getInstance()->getString("BOT"));
 
     _hero2->changeFacedir(-1);
@@ -131,6 +131,10 @@ bool DuelScene::isGameOver() {
 
 void DuelScene::_startGame() {
     _isStarted = true;
+
+    if(auto waitLayer = this->_ui->getChildByName("PopUp")){
+        waitLayer->removeFromParent();
+    }
     // TODO add starting action
 }
 

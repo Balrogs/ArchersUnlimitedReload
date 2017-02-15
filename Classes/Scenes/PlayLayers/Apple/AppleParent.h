@@ -13,7 +13,7 @@ public:
 
     virtual void _nextLevelAction() = 0;
 
-    virtual void addApple() = 0;
+    virtual void addApple(Body *target);
 
     void removeTarget(Node *target);
 
@@ -28,6 +28,8 @@ protected:
     int _completedShots;
 
     std::vector<cocos2d::Node *> _targets;
+
+    cocos2d::Node* _env;
 };
 
 #endif //ARCHERSUNLIMITED_APPLEPARENT_H

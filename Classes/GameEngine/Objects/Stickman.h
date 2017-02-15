@@ -54,6 +54,8 @@ public:
     bool getHP();
 
     void dealDamage(float d);
+
+    Player *getPlayer() const;
 };
 
 class Stickman : public Body {

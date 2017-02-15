@@ -6,6 +6,8 @@
 void MultiplayerBattle::createPlayers(Player *player1, Player *player2) {
     _player1 = player1;
     _player2 = player2;
+
+    waitForPlayer();
 }
 
 
@@ -32,24 +34,14 @@ void MultiplayerBattle::setPlayer(int id) {
     _playerId = _player1->getId();
     switch (id) {
         case 1: {
-            _hero1 = new DuelHero(visibleSize.width / 2, BattleParent::GROUND, _player1);
-            _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, BattleParent::GROUND, _player2);
-            auto action = Sequence::create(
-                    MoveTo::create(0.f, Vec2(-_hero1->getPosition().x + visibleSize.width / 2, 0.f)),
-                    NULL
-            );
-            this->runAction(action);
+            _hero1->setPlayer(_player1);
+            _hero2->setPlayer(_player2);
         }
 
             break;
         case 2: {
-            _hero1 = new DuelHero(visibleSize.width / 2, BattleParent::GROUND, _player2);
-            _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, BattleParent::GROUND, _player1);
-            auto action = Sequence::create(
-                    MoveTo::create(0.f, Vec2(-_hero2->getPosition().x + visibleSize.width / 2, 0.f)),
-                    NULL
-            );
-            this->runAction(action);
+            _hero1->setPlayer(_player2);
+            _hero2->setPlayer(_player1);
         }
             break;
         default:
@@ -69,8 +61,14 @@ void MultiplayerBattle::setPlayer(int id) {
 }
 
 void MultiplayerBattle::startGame() {
-    _isStarted = true;
     _startGame();
+
+    auto action = Sequence::create(
+            MoveTo::create(0.f, Vec2(-_player->getPosition().x + visibleSize.width / 2, 0.f)),
+            NULL
+    );
+    this->runAction(action);
+
 }
 
 void MultiplayerBattle::pauseGame() {
@@ -144,7 +142,7 @@ bool MultiplayerBattle::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::
 }
 
 void MultiplayerBattle::onPopScene() {
-    _client->gameOver(-1, 1);
+    _client->gameOver(-1, -1);
     BattleParent::onPopScene();
 }
 
@@ -154,4 +152,14 @@ int MultiplayerBattle::getPlayerId() {
 
 void MultiplayerBattle::movePlayer(int dir) {
     _client->move(dir);
+}
+
+void MultiplayerBattle::waitForPlayer() {
+
+    if(auto child = this->getChildByName("PopUp")) {
+        child->removeFromParent();
+    }
+    auto popUp = WaitingPopUp::create();
+    popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+    this->_ui->addChild(popUp, 10, "PopUp");
 }

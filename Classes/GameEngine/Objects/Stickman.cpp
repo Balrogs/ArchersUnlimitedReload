@@ -225,3 +225,7 @@ bool Body::getHP() {
 void Body::dealDamage(float d) {
     _player->setHp((int)d);
 }
+
+Player *Body::getPlayer() const {
+    return _player;
+}

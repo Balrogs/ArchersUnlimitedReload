@@ -1,7 +1,9 @@
 #include <Scenes/PlayLayers/Apple/AppleBattle.h>
 #include "Apple.h"
 
-Apple::Apple(float x_pos, float y_pos) {
+Apple::Apple(float x_pos, float y_pos, int id) {
+
+    _id = id;
 
     auto texture = cocos2d::Sprite::createWithSpriteFrameName("apple.png");
 
@@ -72,4 +74,8 @@ void Apple::hit() {
             )
     );
 
+}
+
+int Apple::getId() {
+    return _id;
 }

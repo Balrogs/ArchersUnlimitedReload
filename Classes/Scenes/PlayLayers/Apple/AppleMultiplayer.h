@@ -12,21 +12,25 @@ public:
 
     void _nextLevelAction() override;
 
-    void addApple() override;
-
     void setPlayer(int id) override;
 
-    void makeTurn(int id);
+    void completeShot() override;
+
+    void startGame() override;
+
+    void receiveAction(float angle, float power, int id) override;
 
 protected:
+
+    bool _isWaiting = false;
+
+    float _penalty = 3.f;
 
     void initWorld() override;
 
     void initObjects();
 
     bool isGameOver() override;
-
-    void setTurnId(int id);
 
     bool _touchHandlerBegin(const Touch *touch, Event *event) override;
 };

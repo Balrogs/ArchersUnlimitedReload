@@ -107,16 +107,17 @@ bool Arrow::processContact(Node *bone) {
     if (bone == nullptr) {
         return false;
     }
-    if (AppleBattle *appleb = dynamic_cast<AppleBattle *>(BattleParent::getInstance())) {
+    if (AppleParent *appleb = dynamic_cast<AppleParent *>(BattleParent::getInstance())) {
         if (Apple *apple = dynamic_cast<Apple *>(bone)) {
+            if(apple->getId() != _player_id) {
+                this->addDOChild(apple);
 
-            this->addDOChild(apple);
+                appleb->setAppleHit();
 
-            appleb->setAppleHit();
-
-            BattleParent::getInstance()->addCoins(1);
-
-            return true;
+                return true;
+            } else {
+                return false;
+            }
         }
 
         if (Body *target = dynamic_cast<Body *>(bone->getParent()->getParent())) {

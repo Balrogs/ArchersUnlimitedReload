@@ -358,10 +358,6 @@ void Hero::_updateString() {
     }
 }
 
-Player *Hero::getPlayer() const {
-    return _player;
-}
-
 std::vector<std::string> Hero::getWeaponList() {
     return WEAPON_LIST;
 }
@@ -384,6 +380,11 @@ void Hero::setFaceDir() {
         }
     }
     changeFacedir(facedir);
+}
+
+void Hero::setPlayer(Player *player) {
+    this->_player->removeFromParent();
+    this->_player = player;
 }
 
 

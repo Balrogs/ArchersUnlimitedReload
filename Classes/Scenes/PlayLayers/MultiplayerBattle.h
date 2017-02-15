@@ -31,6 +31,8 @@ public:
 
     int getPlayerId() override;
 
+    virtual void waitForPlayer();
+
 protected:
 
     int _playerId;

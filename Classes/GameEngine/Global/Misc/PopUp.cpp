@@ -4,6 +4,7 @@
 #include <Scenes/MenuLayers/MainMenu.h>
 #include <Scenes/MenuLayers/Lobby.h>
 #include <Localization/LocalizedStrings.h>
+#include <Scenes/PlayLayers/MultiplayerBattle.h>
 #include "PopUp.h"
 
 USING_NS_CC;
@@ -108,17 +109,17 @@ bool PopUp::init(std::string title, cocos2d::Node *message, bool isTwoButtons) {
 
 void PopUp::noAction() {
     this->removeFromParent();
-    BattleScene::getInstance()->unPause();
+    BattleParent::getInstance()->unPause();
 }
 
 void PopUp::yesAction() {
     this->removeFromParent();
-    BattleScene::getInstance()->onPopScene();
+    BattleParent::getInstance()->onPopScene();
 }
 
 void PopUp::okAction() {
     this->removeFromParent();
-    BattleScene::getInstance()->onPopScene();
+    BattleParent::getInstance()->onPopScene();
 }
 
 void MainMenuPopUp::noAction() {
@@ -453,5 +454,64 @@ void InputNamePopUp::okAction() {
         this->removeFromParent();
     } else {
         _errorMessage ->setString(LocalizedStrings::getInstance()->getString("NAME IS EMPTY"));
+    }
+}
+
+
+WaitingPopUp *WaitingPopUp::create() {
+    WaitingPopUp *ret = new(std::nothrow) WaitingPopUp();
+    if (ret && ret->init(15)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+WaitingPopUp *WaitingPopUp::create(int time) {
+    WaitingPopUp *ret = new(std::nothrow) WaitingPopUp();
+    if (ret && ret->init(time)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool WaitingPopUp::init(int time) {
+    _waitingTime = time;
+    _message = Label::createWithTTF(StringUtils::toString(_waitingTime) + " s", Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    _message->setColor(Color3B::BLACK);
+
+    if (!PopUp::init(LocalizedStrings::getInstance()->getString("WAITING"), _message)) {
+        return false;
+    }
+
+    _ok = ui::Button::create();
+    _ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
+                     cocos2d::ui::Widget::TextureResType::PLIST);
+    _ok->addTouchEventListener(CC_CALLBACK_0(WaitingPopUp::okAction, this));
+
+    _ok->setEnabled(false);
+
+    _buttons = Node::create();
+    _buttons->addChild(_ok);
+    _buttons->setPosition(0, -POPUP_SIZE.height / 2 + _ok->getBoundingBox().size.height / 2 + 25.f);
+
+    this->addChild(_buttons, 2);
+    this->schedule(SEL_SCHEDULE(&WaitingPopUp::update), 1.f);
+
+    return true;
+}
+
+void WaitingPopUp::update(float dt) {
+    Node::update(dt);
+    if(_waitingTime - _counter == 0){
+        _ok->setEnabled(true);
+        _message->setString(LocalizedStrings::getInstance()->getString("LEAVE THE ROOM?"));
+        this->unscheduleAllCallbacks();
+    } else {
+        _counter ++;
+        _message->setString(StringUtils::toString(_waitingTime - _counter) + " s");
     }
 }

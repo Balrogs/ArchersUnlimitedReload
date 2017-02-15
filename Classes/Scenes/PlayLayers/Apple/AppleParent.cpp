@@ -7,8 +7,8 @@ void AppleParent::setHit() {
 }
 
 void AppleParent::setAppleHit() {
-    completeShot();
     _isAppleHitted = true;
+    completeShot();
 }
 
 void AppleParent::removeTarget(cocos2d::Node *target) {
@@ -18,4 +18,9 @@ void AppleParent::removeTarget(cocos2d::Node *target) {
 
 void AppleParent::completeShot() {
     _completedShots++;
+}
+
+void AppleParent::addApple(Body *target) {
+    auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"), target->getPlayer()->getId());
+    _targets.push_back(apple);
 }

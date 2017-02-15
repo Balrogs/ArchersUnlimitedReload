@@ -36,8 +36,7 @@ public:
 
     void aim() override;
 
-
-    Player *getPlayer() const;
+    void setPlayer(Player *player);
 
     std::vector<std::string> getWeaponList();
 

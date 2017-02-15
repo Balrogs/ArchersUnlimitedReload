@@ -49,7 +49,7 @@ void AppleBattle::initObjects() {
     _targets.push_back(target);
     new PassiveBrain(target);
 
-    addApple();
+    addApple(target);
 }
 
 
@@ -312,7 +312,9 @@ void AppleBattle::_nextLevelAction() {
                                 auto apple = _targets[1];
                                 this->removeTarget(apple);
                                 this->removeChild(apple);
-                                this->addApple();
+                                if (Body *target = dynamic_cast<Body *>(_targets[0])) {
+                                    this->addApple(target);
+                                }
                             }
                     ),
                     NULL)
@@ -321,13 +323,6 @@ void AppleBattle::_nextLevelAction() {
 
 }
 
-
-void AppleBattle::addApple() {
-    if (DragonObject *target = dynamic_cast<DragonObject *>(_targets[0])) {
-        auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"));
-        _targets.push_back(apple);
-    }
-}
 
 void AppleBattle::completeShot() {
     AppleParent::completeShot();

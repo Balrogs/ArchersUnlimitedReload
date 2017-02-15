@@ -308,7 +308,7 @@ void Lobby::acceptInvite() {
     auto scene = BattleParent::createScene(_gameType);
     Director::getInstance()->pushScene(scene);
 
-    if (auto gameScene = dynamic_cast<DuelSceneMultiplayer *>(BattleParent::getInstance())) {
+    if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance())) {
         auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                       _client->getDBPlayer()->getName());
         gameScene->createPlayers(player1, this->_player2);

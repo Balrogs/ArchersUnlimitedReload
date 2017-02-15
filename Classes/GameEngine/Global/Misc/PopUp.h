@@ -99,5 +99,21 @@ protected:
     virtual void okAction() override;
 };
 
+class WaitingPopUp : public PopUp {
+public:
+    static WaitingPopUp *create();
+    static WaitingPopUp *create(int time);
+
+    bool init(int time);
+
+    void update(float dt);
+
+protected:
+    int _waitingTime;
+    int _counter = 0;
+    cocos2d::Label *_message;
+    cocos2d::ui::Button *_ok;
+};
+
 
 #endif //ARCHERSUNLIMITED_POPUP_H

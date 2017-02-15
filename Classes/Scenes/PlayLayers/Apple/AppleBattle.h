@@ -13,15 +13,11 @@ public:
 
     void _nextLevelAction() override;
 
-    void addApple() override;
-
     void completeShot() override;
 
 protected:
 
     virtual int _getGainedCoinsByActionType(int type) override ;
-
-    cocos2d::Node* _env;
 
     void initWorld() override;
 
