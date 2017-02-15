@@ -25,9 +25,10 @@ Arrow::Arrow(const std::string &armatureName, float radian, float power, const c
 
     _head = Vec2(_armature->getBone("head")->global.x, _armature->getBone("head")->global.y);
     _tail = Vec2(_armature->getBone("tail")->global.x, _armature->getBone("tail")->global.y);
+    auto dot = Vec2(_armature->getBone("dot")->global.x, _armature->getBone("dot")->global.y);
 
     auto physicsBody = cocos2d::PhysicsBody::create();
-    physicsBody->addShape(PhysicsShapeEdgeSegment::create(_head, _head));
+    physicsBody->addShape(PhysicsShapeEdgeSegment::create(dot, _head));
     physicsBody->setTag(1);
     physicsBody->setMoment(10.f);
     physicsBody->setContactTestBitmask(true);

@@ -72,18 +72,21 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setContentScaleFactor(MIN(largeResolutionSize.height / designResolutionSize.height,
                                             largeResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("ipad");
+        searchPaths.push_back("ipad/ArcUnlimArmature");
     }
         // if the frame's height is larger than the height of small size.
     else if (frameSize.height > smallResolutionSize.height) {
         director->setContentScaleFactor(MIN(mediumResolutionSize.height / designResolutionSize.height,
                                             mediumResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("hd");
+        searchPaths.push_back("hd/ArcUnlimArmature");
     }
         // if the frame's height is smaller than the height of medium size.
     else {
         director->setContentScaleFactor(MIN(smallResolutionSize.height / designResolutionSize.height,
                                             smallResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("sd");
+        searchPaths.push_back("sd/ArcUnlimArmature");
     }
     searchPaths.push_back("fonts");
     searchPaths.push_back("localization");

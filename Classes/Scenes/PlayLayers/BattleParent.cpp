@@ -96,7 +96,7 @@ bool BattleParent::init(Statistics *stats) {
     _isPaused = false;
     this->addChild(_bullet_pull);
 
-    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
+    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlimArmature.json");
     factory.loadTextureAtlasData("texture.json");
 
 

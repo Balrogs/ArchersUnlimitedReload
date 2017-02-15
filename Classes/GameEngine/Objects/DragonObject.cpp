@@ -87,7 +87,7 @@ void DragonObject::addDOChild(cocos2d::Node *target) {
 
 HeroPreview::HeroPreview() {
     dragonBones::CCFactory factory;
-    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlim_2.json");
+    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlimArmature.json");
     factory.loadTextureAtlasData("texture.json");
 
     _armature = factory.buildArmature("Stickman");
@@ -96,7 +96,9 @@ HeroPreview::HeroPreview() {
     //TODO add some animations
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
 
-    auto _shoulders = _armature->getSlot("Shoulders")->getChildArmature();
+    _armature->removeSlot(_armature->getSlot("Apple"));
+
+    auto _shoulders = _armature->getSlot("Hands")->getChildArmature();
     auto _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
 
 

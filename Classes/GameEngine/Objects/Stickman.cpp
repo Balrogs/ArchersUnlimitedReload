@@ -9,7 +9,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
     _player =  Player::create(100, "BOT");
     _armature = BattleScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
-    _armature->removeSlot(_armature->getSlot("Shoulders"));
+    _armature->removeSlot(_armature->getSlot("Hands"));
     _armature->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);
     for (auto child : _armatureDisplay->getChildren()) {
         auto bone = _armature->getBoneByDisplay(child);
@@ -31,6 +31,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
         physicsBody->setName(bone->name);
         physicsBody->setContactTestBitmask(true);
     }
+    _armature->removeSlot(_armature->getSlot("Apple"));
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     this->setPosition(_x_pos, _y_pos);

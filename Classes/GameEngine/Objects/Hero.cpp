@@ -39,6 +39,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);
 
+
     for (auto child : _armatureDisplay->getChildren()) {
         auto bone = _armature->getBoneByDisplay(child);
         if (bone == nullptr) {
@@ -63,7 +64,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
 
 
-    _shoulders = _armature->getSlot("Shoulders")->getChildArmature();
+    _shoulders = _armature->getSlot("Hands")->getChildArmature();
     _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
 
 
@@ -73,12 +74,11 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     _shouldersDisplay->setPosition(globalPoint);
     _shouldersDisplay->setAnchorPoint(globalPoint);
 
+    _armature->removeSlot(_armature->getSlot("Apple"));
+
     _armature->removeBone(_armature->getBone("shoulders"));
 
-    _aimPowerState = _shoulders->getAnimation().fadeIn(
-            "setup", 0.f, 1,
-            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
-    );
+    _aimPowerState =  _shoulders->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);
     for (auto child : _shouldersDisplay->getChildren()) {
         auto bone = _shoulders->getBoneByDisplay(child);
         if (bone == nullptr) {
@@ -97,10 +97,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
         child->setPhysicsBody(physicsBody);
     }
 
-    _aimPowerState = _shoulders->getAnimation().fadeIn(
-            Variables::AIM_IDLE_ANIMATION, 0.f, 1,
-            0, "aim", dragonBones::AnimationFadeOutMode::SameGroup
-    );
+    _aimPowerState =  _shoulders->getAnimation().fadeIn(Variables::AIM_IDLE_ANIMATION);
 
     _bowArmature = _shoulders->getSlot("Bow")->getChildArmature();
     _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bowArmature->getDisplay();

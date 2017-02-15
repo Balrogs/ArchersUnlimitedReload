@@ -10,7 +10,7 @@ const std::string  Variables::SHOT_ANIMATION = "shot";
 const std::string  Variables::AIM_ANIMATION = "aim";
 const std::string  Variables::AIM_IDLE_ANIMATION = "idle";
 
-const std::string Variables::STICKMAN_SETUP_ANIMATION = "idle";
+const std::string Variables::STICKMAN_SETUP_ANIMATION = "setup";
 const std::string Variables::STICKMAN_IDLE_ANIMATION = "idle_1";
 const std::string Variables::STICKMAN_RUN_ANIMATION = "run_1";
 const std::string Variables::STICKMAN_WALK_ANIMATION = "walk";
