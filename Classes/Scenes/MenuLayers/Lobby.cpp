@@ -66,7 +66,7 @@ bool Lobby::init() {
     this->addChild(_playerCountryStatistics, 2);
 
     _playerInfoButton = cocos2d::ui::Button::create();
-    _playerInfoButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
+    _playerInfoButton->loadTextures(Variables::BUTTON_1, Variables::BUTTON_1, Variables::BUTTON_1,
                                     cocos2d::ui::Widget::TextureResType::PLIST);
 
     _playerInfoButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
@@ -98,36 +98,19 @@ bool Lobby::init() {
 
     _playerInfo->addChild(_playerInfoButton, 2);
 
-    _playerInfoBox = Sprite::createWithSpriteFrameName(Variables::BG1);
+    _playerInfoBox = Sprite::createWithSpriteFrameName(Variables::BACK_1);
 
     _playerInfoBox->setScale(infoBoxSize.width / _playerInfoBox->getContentSize().width,
                              infoBoxSize.height / _playerInfoBox->getContentSize().height);
 
     _playerInfoBox->setPosition(infoBoxSize.width / 2 + 15.f,
-                                _playerInfoButton->getBoundingBox().getMinY() - _playerInfoBox->getBoundingBox().size.height / 2 + 15.f);
+                                _playerInfoButton->getPosition().y- _playerInfoBox->getBoundingBox().size.height / 2);
 
     _playerInfo->addChild(_playerInfoBox, 1);
 
-    _inviteBox = Node::create();
-    _inviteBox->setPosition(4 * _visibleSize.width / 5, _visibleSize.height / 10);
-    this->addChild(_inviteBox);
-
-    _findPlayerButton = cocos2d::ui::Button::create();
-    _findPlayerButton->loadTextures(Variables::FIND_BUTTON, Variables::FIND_PRESSED_BUTTON,
-                                    Variables::FIND_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
-
-    _findPlayerButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                _showPopUp(GameTypePopUp::create());
-            }
-                break;
-            default:
-                break;
-        }
-    });
-    _inviteBox->addChild(_findPlayerButton);
-
+    _findPlayerButton = RichSearchButton::create();
+    _findPlayerButton->setPosition(4 * _visibleSize.width / 5, _visibleSize.height / 10);
+    this->addChild(_findPlayerButton);
 
     _friendsBox = Sprite::createWithSpriteFrameName(Variables::BG1);
 
@@ -167,18 +150,17 @@ bool Lobby::init() {
     _showScrollView();
 
 
-    _playerGlobalStatisticsBox = Sprite::createWithSpriteFrameName(Variables::BG1);
+    _playerGlobalStatisticsBox = Sprite::createWithSpriteFrameName(Variables::BACK_2);
 
     _playerGlobalStatisticsBox->setScale(infoBoxSize.width / _playerInfoBox->getContentSize().width,
-                             infoBoxSize.height / _playerInfoBox->getContentSize().height);
+                                         infoBoxSize.height / _playerInfoBox->getContentSize().height);
 
-    _playerGlobalStatisticsBox->setPosition(infoBoxSize.width / 2 + 15.f,
-                                _playerInfoButton->getBoundingBox().getMinY() - _playerGlobalStatisticsBox->getBoundingBox().size.height / 2 + 15.f);
+    _playerGlobalStatisticsBox->setPosition(_playerInfoBox->getPosition());
 
     _playerGlobalStatistics->addChild(_playerGlobalStatisticsBox, 1);
-    
+
     _playerGlobalStatisticsButton = cocos2d::ui::Button::create();
-    _playerGlobalStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
+    _playerGlobalStatisticsButton->loadTextures(Variables::BUTTON_2, Variables::BUTTON_2, Variables::BUTTON_2,
                                                 cocos2d::ui::Widget::TextureResType::PLIST);
 
     _playerGlobalStatisticsButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
@@ -205,18 +187,17 @@ bool Lobby::init() {
 
     _playerGlobalStatistics->addChild(_playerGlobalStatisticsButton, 1);
 
-    _playerCountryStatisticsBox = Sprite::createWithSpriteFrameName(Variables::BG1);
+    _playerCountryStatisticsBox = Sprite::createWithSpriteFrameName(Variables::BACK_3);
 
     _playerCountryStatisticsBox->setScale(infoBoxSize.width / _playerInfoBox->getContentSize().width,
-                                         infoBoxSize.height / _playerInfoBox->getContentSize().height);
+                                          infoBoxSize.height / _playerInfoBox->getContentSize().height);
 
-    _playerCountryStatisticsBox->setPosition(infoBoxSize.width / 2 + 15.f,
-                                            _playerInfoButton->getBoundingBox().getMinY() - _playerCountryStatisticsBox->getBoundingBox().size.height / 2 + 15.f);
+    _playerCountryStatisticsBox->setPosition(_playerGlobalStatisticsBox->getPosition());
 
     _playerCountryStatistics->addChild(_playerCountryStatisticsBox, 1);
 
     _playerCountryStatisticsButton = cocos2d::ui::Button::create();
-    _playerCountryStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
+    _playerCountryStatisticsButton->loadTextures(Variables::BUTTON_3, Variables::BUTTON_3, Variables::BUTTON_3,
                                                  cocos2d::ui::Widget::TextureResType::PLIST);
 
     _playerCountryStatisticsButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
@@ -247,7 +228,7 @@ bool Lobby::init() {
     _reloadInfoBox(1);
 
     _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 20.f);
-    _errorMessage->setPosition(cocos2d::Vec2(_inviteBox->getPosition().x, _inviteBox->getPosition().y + _visibleSize.height / 20));
+    _errorMessage->setPosition(cocos2d::Vec2(_findPlayerButton->getPosition().x, _findPlayerButton->getPosition().y + _visibleSize.height / 20));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
@@ -269,7 +250,7 @@ void Lobby::receiveInvite(string message) {
 }
 
 void Lobby::deleteInvite() {
-    _reloadInviteBox(true);
+    _setSearchButtonState();
 
     _player2 = nullptr;
 }
@@ -283,7 +264,7 @@ void Lobby::receivePlayerInfo(string message) {
         _playerInfo->addChild(view, 2);
     } else {
         _showPopUp(InvitePopUp::create(LocalizedStrings::getInstance()->getString("INVITE"), Views::getPlayerInfoView(message), true));
-        _reloadInviteBox(false);
+        _setSearchButtonState();
     }
 }
 
@@ -298,7 +279,7 @@ void Lobby::receiveCountryStats(string message) {
 }
 
 void Lobby::joinLobby() {
-    _reloadInviteBox(false);
+    _setSearchButtonState();
 
     _player2 = nullptr;
 }
@@ -320,10 +301,8 @@ void Lobby::denyInvite() {
     deleteInvite();
 }
 
-void Lobby::_reloadInviteBox(bool isEmpty) {
-    _findPlayerButton->setVisible(isEmpty);
-    //TODO init _loading
-//    _loading->setVisible(!isEmpty);
+void Lobby::_setSearchButtonState() {
+    _findPlayerButton->reset();
 }
 
 void Lobby::_showPopUp(PopUp *popUp) {
@@ -337,13 +316,11 @@ void Lobby::_showPopUp(PopUp *popUp) {
 void Lobby::startSearch(int gameType) {
     _gameType = gameType;
     _client->enterLobby(_gameType);
-    _reloadInviteBox(false);
 }
 
 void Lobby::addFriend(string name) {
     _client->addToFriends(name);
 }
-
 
 //TODO
 void Lobby::_showScrollView() {
@@ -401,14 +378,6 @@ void Lobby::_reloadInfoBox(int type) {
             _playerCountryStatistics->setLocalZOrder(2);
 
 
-            _playerInfoButton->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                            cocos2d::ui::Widget::TextureResType::PLIST);
-            _playerGlobalStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                            cocos2d::ui::Widget::TextureResType::PLIST);
-
-            _playerCountryStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                            cocos2d::ui::Widget::TextureResType::PLIST);
-
             break;
         }
         case 2: {
@@ -417,12 +386,6 @@ void Lobby::_reloadInfoBox(int type) {
             _playerCountryStatistics->setLocalZOrder(2);
 
 
-            _playerInfoButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                            cocos2d::ui::Widget::TextureResType::PLIST);
-            _playerGlobalStatisticsButton->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                                        cocos2d::ui::Widget::TextureResType::PLIST);
-            _playerCountryStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                                         cocos2d::ui::Widget::TextureResType::PLIST);
 
             break;
         }
@@ -431,17 +394,24 @@ void Lobby::_reloadInfoBox(int type) {
             _playerGlobalStatistics->setLocalZOrder(2);
             _playerCountryStatistics->setLocalZOrder(3);
 
-            _playerInfoButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                            cocos2d::ui::Widget::TextureResType::PLIST);
-            _playerGlobalStatisticsButton->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
-                                                        cocos2d::ui::Widget::TextureResType::PLIST);
-            _playerCountryStatisticsButton->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                                         cocos2d::ui::Widget::TextureResType::PLIST);
-
             break;
         }
         default: {
             break;
         }
     }
+}
+
+void Lobby::onEnter() {
+    Node::onEnter();
+
+    _reloadInfoBox(1);
+
+    _setSearchButtonState();
+
+    _player2 = nullptr;
+
+    _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
+    _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
+    _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
 }

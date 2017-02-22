@@ -73,6 +73,10 @@ public:
 
     static InvitePopUp *create(std::string title, cocos2d::Node *message);
 
+    bool init(std::string title, cocos2d::Node *message) ;
+
+    bool init(std::string title, cocos2d::Node *message, bool isTwoButtons);
+
 protected:
     void noAction() override ;
 

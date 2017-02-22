@@ -7,6 +7,7 @@
 
 #include <GameEngine/Objects/Arrows/Arrow.h>
 #include <GameEngine/Objects/Aim/Aim.h>
+#include <GameEngine/Global/Misc/SocketClient.h>
 #include "cocos2d.h"
 #include "Stickman.h"
 
@@ -22,11 +23,15 @@ public:
 
     void attack(float angle, float power);
 
+    virtual void attack(float angle, float power, int x, int y);
+
     void setAim(float angle, float power);
 
     bool checkAimDiff(float angle, float power);
 
     virtual void switchWeapon(int dest);
+
+    void setWeapon(int index);
 
     void update() override;
 
@@ -71,24 +76,32 @@ protected:
     bool _aimRandomly(cocos2d::Vec2 start, cocos2d::Vec2 destination);
 };
 
+class AppleHero : public Hero {
+public:
+    AppleHero(float x_pos, float y_pos, const char *name, int coins);
+    void _saveAim() override;
+};
 
-class DuelHero : public Hero {
+class MPHero : public Hero {
+public:
+    MPHero(float x_pos, float y_pos, SocketClient* client);
+    void attack(float angle, float power, int x, int y) override;
+
+protected:
+    SocketClient* _client;
+};
+
+class DuelHero : public MPHero {
 public:
 
-    DuelHero(float x_pos, float y_pos, Player* player);
-
-    DuelHero(float x_pos, float y_pos, const char *name);
+    DuelHero(float x_pos, float y_pos, SocketClient* client);
 
     void switchWeapon(int i) override;
 
     void move(int dir) override;
 };
 
-class AppleHero : public Hero {
-public:
-    AppleHero(float x_pos, float y_pos, const char *name, int coins);
-    void _saveAim() override;
-};
+
 
 
 #endif //DRAGONBONES_HERO_H

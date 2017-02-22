@@ -53,6 +53,22 @@ bool PopUp::init(std::string title) {
     _title->setColor(cocos2d::Color3B::BLACK);
     this->addChild(_title, 2);
 
+    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
+        switch (keyCode) {
+            case EventKeyboard::KeyCode::KEY_BREAK:
+            case EventKeyboard::KeyCode::KEY_ESCAPE:
+            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
+                noAction();
+            }
+                break;
+            default:
+                break;
+        }
+    };
+
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
     return true;
 }
 
@@ -328,6 +344,26 @@ InvitePopUp *InvitePopUp::create(std::string title, cocos2d::Node *message) {
     return ret;
 }
 
+bool InvitePopUp::init(std::string title, cocos2d::Node *message) {
+    if(!PopUp::init(title, message)){
+        return false;
+    }
+
+    message->setPosition(0, _title->getPosition().y - _title->getBoundingBox().size.height);
+
+    return true;
+}
+
+bool InvitePopUp::init(std::string title, cocos2d::Node *message, bool isTwoButtons) {
+    if(!PopUp::init(title, message, isTwoButtons)){
+        return false;
+    }
+
+    message->setPosition(0, _title->getPosition().y - _title->getBoundingBox().size.height);
+
+    return true;
+}
+
 GameTypePopUp *GameTypePopUp::create() {
     GameTypePopUp *ret = new(std::nothrow) GameTypePopUp();
     if (ret && ret->init()) {
@@ -488,7 +524,7 @@ bool WaitingPopUp::init(int time) {
     }
 
     _ok = ui::Button::create();
-    _ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_BUTTON_PATH,
+    _ok->loadTextures(Variables::YES_BUTTON_PATH, Variables::YES_PRESSED_BUTTON_PATH, Variables::YES_DISABLED_PATH,
                      cocos2d::ui::Widget::TextureResType::PLIST);
     _ok->addTouchEventListener(CC_CALLBACK_0(WaitingPopUp::okAction, this));
 

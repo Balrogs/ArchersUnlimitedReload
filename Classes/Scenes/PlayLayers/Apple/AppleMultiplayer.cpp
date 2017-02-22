@@ -41,20 +41,6 @@ bool AppleMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::
 void AppleMultiplayer::setPlayer(int id) {
     MultiplayerBattle::setPlayer(id);
 
-    switch (id) {
-        case 1: {
-            _player = _hero1;
-            break;
-        }
-        case 2: {
-            _player = _hero2;
-            break;
-        }
-
-        default:
-            break;
-    }
-
     //TODO
    // _ui->initApple(visibleSize, _hero1, _hero2);
 }
@@ -63,9 +49,8 @@ void AppleMultiplayer::initObjects() {
     _env = Node::create();
     this->addChild(_env);
 
-    _hero1 = new Hero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND );
+    _hero1 = new MPHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, _client);
     _hero2 = new Hero(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND);
-
 }
 
 bool AppleMultiplayer::isGameOver() {
@@ -333,8 +318,16 @@ void AppleMultiplayer::completeShot() {
     }
 }
 
-void AppleMultiplayer::receiveAction(float angle, float power, int id) {
+void AppleMultiplayer::receiveAction(float angle, float power, int id, int x, int y) {
     if (id != _playerId) {
-        getHero(_playerId)->attack(angle, power);
+        getHero(_playerId)->setAim(angle, power);
+        getHero(_playerId)->attack(angle, power, x, y);
     }
 }
+
+void AppleMultiplayer::receiveAim(float angle, float power, int id) {
+    if (id != _playerId) {
+        getHero(_playerId)->setAim(angle, power);
+    }
+}
+

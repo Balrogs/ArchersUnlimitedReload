@@ -25,11 +25,11 @@ void DuelScene::initWorld() {
     auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
                                   _client->getDBPlayer()->getName());
 
-    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
-
-    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
-                          LocalizedStrings::getInstance()->getString("BOT"));
-
+    _player = new Hero(visibleSize.width / 2, DuelScene::GROUND, player1);
+    _player->setWeapon(8);
+    _hero2 = new Hero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
+                          Player::create(100,LocalizedStrings::getInstance()->getString("BOT")));
+    _hero2->setWeapon(8);
     _hero2->changeFacedir(-1);
 
     _player1 = _player->getPlayer();

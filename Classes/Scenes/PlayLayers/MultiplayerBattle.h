@@ -9,7 +9,7 @@ class MultiplayerBattle : public DuelScene2P {
 public:
     virtual void createPlayers(Player* player1, Player* player2);
 
-    virtual void receiveAction(float angle, float power, int id);
+    virtual void receiveAction(float angle, float power, int id, int x, int y);
 
     virtual void receiveMove(int dir, int id);
 

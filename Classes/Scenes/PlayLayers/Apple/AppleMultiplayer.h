@@ -18,7 +18,8 @@ public:
 
     void startGame() override;
 
-    void receiveAction(float angle, float power, int id) override;
+    void receiveAction(float angle, float power, int id, int x, int y) override;
+    void receiveAim(float angle, float power, int id) override;
 
 protected:
 

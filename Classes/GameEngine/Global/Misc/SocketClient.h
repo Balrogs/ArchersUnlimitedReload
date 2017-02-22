@@ -51,7 +51,7 @@ public:
 
     void enterLobby(int lobbyId);
     // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
-    void action(float angle, float power);
+    void action(float angle, float power, int x, int y);
     // {"player_id":0,"room_id":1,"dir":1, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
     void move(int dir);
     // {"player_id":0,"room_id":1,"angle":180.0, "power":100.0, "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}

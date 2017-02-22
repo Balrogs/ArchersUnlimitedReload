@@ -19,11 +19,13 @@ DuelScene2P *DuelScene2P::create(Statistics *stats) {
 
 void DuelScene2P::initWorld() {
 
-    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND,
-                          StringUtils::format("%s 1", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
+    _hero1 = new Hero(visibleSize.width / 2, DuelScene::GROUND,
+                          Player::create(100, StringUtils::format("%s 1", LocalizedStrings::getInstance()->getString("PLAYER")).c_str()));
+    _hero1->setWeapon(8);
 
-    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
-                          StringUtils::format("%s 2", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
+    _hero2 = new Hero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
+                      Player::create(100, StringUtils::format("%s 2", LocalizedStrings::getInstance()->getString("PLAYER")).c_str()));
+    _hero2->setWeapon(8);
 
     _hero2->changeFacedir(-1);
     _player1 = _hero1->getPlayer();

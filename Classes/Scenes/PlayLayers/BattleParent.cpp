@@ -82,7 +82,7 @@ bool BattleParent::init(Statistics *stats) {
     visibleSize = Director::getInstance()->getVisibleSize();
     origin = Director::getInstance()->getVisibleOrigin();
     _GLOBAL_SCALE = 1.f;
-    GROUND = Director::getInstance()->getVisibleSize().height / 6;
+    GROUND = 100.f;
 
     //disable multitouch
     _touch = -1;

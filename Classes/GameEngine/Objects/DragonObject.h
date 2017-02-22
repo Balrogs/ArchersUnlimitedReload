@@ -37,10 +37,12 @@ protected:
 
 class HeroPreview : public DragonObject {
 public:
+
     HeroPreview();
-    void changeHat();
-    void changeBow();
-    void changeArrow();
+
+    void changeHat(int id);
+    void changeBow(int id);
+    void changeArrow(int id);
 
 protected:
 

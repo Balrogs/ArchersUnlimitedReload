@@ -81,6 +81,8 @@ Node *Views::getPlayerInfoView(std::string message) {
     view->addChild(battles_loose);
     view->addChild(battles_count);
 
+    view->setAnchorPoint(Vec2(x, -y));
+
     return view;
 }
 

@@ -5,6 +5,7 @@
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
+#include <GameEngine/Objects/Environment/MainClip.h>
 #include "BackgroundLayer.h"
 
 USING_NS_CC;
@@ -356,10 +357,18 @@ bool BackgroundLayer::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
     auto bg = Sprite::createWithSpriteFrameName(Variables::BG3);
-    bg->setScale(visibleSize.width / bg->getContentSize().width);
+    auto scale = visibleSize.width / bg->getContentSize().width;
+    bg->setScale(scale);
     bg->setPosition(visibleSize.width / 2, visibleSize.height - bg->getBoundingBox().size.height / 2);
 
     this->addChild(bg, 1);
+
+    auto mainClip = MainClip::create();
+    mainClip->setScale(scale);
+    mainClip->setPosition(
+            0.23f * bg->getBoundingBox().size.width,
+            bg->getBoundingBox().getMinY() + mainClip->getBoundingBox().size.height / 2);
+    this->addChild(mainClip, 0);
 
     _id = 0;
     _parallax = nullptr;

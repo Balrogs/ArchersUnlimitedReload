@@ -8,6 +8,7 @@
 #include "Settings.h"
 #include "MultiplayerMenu.h"
 #include "Loading.h"
+#include "Randomizer.h"
 
 USING_NS_CC;
 
@@ -124,10 +125,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
             case EventKeyboard::KeyCode::KEY_ESCAPE:
             case EventKeyboard::KeyCode::KEY_BACKSPACE: {
                 if (_menuId == 0) {
-                    auto popUp = this->getChildByName("PopUp");
-                    if (popUp == nullptr) {
-
-                        this->getEventDispatcher()->pauseEventListenersForTarget(this);
+                        this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
 
                         auto size = Director::getInstance()->getVisibleSize();
 
@@ -135,15 +133,12 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                                 LocalizedStrings::getInstance()->getString("EXIT THE GAME?"), Variables::FONT_NAME,
                                 Variables::FONT_SIZE);
                         label->setColor(cocos2d::Color3B::BLACK);
-                        popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
+                        auto popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
                                                       label,
                                                       true);
 
                         popUp->setPosition(size.width / 2, size.height / 2);
                         this->addChild(popUp, 0, "PopUp");
-                    } else {
-                        popUp->removeFromParent();
-                    }
                 } else {
                     onMenuClick(0);
                 }
@@ -195,7 +190,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     chest->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                //TODO add action
+                MainScene::getInstance()->replaceMain(Randomizer::create());
             }
                 break;
             default:
@@ -214,7 +209,8 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     customize->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                //TODO add action
+                MainScene::getInstance()->popMain();
+
             }
                 break;
             default:

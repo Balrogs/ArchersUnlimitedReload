@@ -117,23 +117,23 @@ HeroPreview::HeroPreview() {
 
     _string = cocos2d::Node::create();
 
-    _updateString();
-
     _bowArmatureDisplay->addChild(_string);
+
+    _updateString();
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
 }
 
-void HeroPreview::changeHat() {
+void HeroPreview::changeHat(int id) {
 
 }
 
-void HeroPreview::changeBow() {
+void HeroPreview::changeBow(int id) {
 
 }
 
-void HeroPreview::changeArrow() {
+void HeroPreview::changeArrow(int id) {
 
 }
 
@@ -148,5 +148,6 @@ void HeroPreview::_updateString() {
     auto line = cocos2d::DrawNode::create();
     line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
                    cocos2d::Color4F::BLACK);
+    _string->addChild(line);
 
 }

@@ -22,6 +22,7 @@ public:
     static const std::string STICKMAN_WALK_ANIMATION;
     static const std::string STICKMAN_UP_ANIMATION;
     static const std::string STICKMAN_SIT_ANIMATION;
+    static const std::string STICKMAN_EQUIP_IDLE_ANIMATION;
 
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node1,  cocos2d::Node *node2);
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node);
@@ -117,6 +118,22 @@ public:
     static const std::string MULTIPLAYER_ICON;
     static const std::string APPLE_ICON;
     static const std::string BLOCK_ICON;
+
+    static const std::string YES_DISABLED_PATH;
+    static const std::string DISABLED_BUTTON;
+
+    static const std::string BACK_1;
+    static const std::string BACK_2;
+    static const std::string BACK_3;
+    static const std::string BUTTON_1;
+    static const std::string BUTTON_2;
+    static const std::string BUTTON_3;
+
+
+    static const std::string MAIN_BACKGROUND;
+    static const std::string CLOUD_1;
+    static const std::string CLOUD_2;
+    static const std::string CLOUD_3;
 
 };
 

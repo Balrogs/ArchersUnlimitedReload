@@ -31,6 +31,7 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("BombArrow");
     WEAPON_LIST.push_back("Arrow");
+    WEAPON_LIST.push_back("Arrow");
 
     _weaponName = WEAPON_LIST[_weaponIndex];
 
@@ -179,6 +180,12 @@ void Hero::attack(float radian, float power) {
     auto globalPoint = Variables::translatePoint(cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
                                                  _shouldersDisplay);
     globalPoint.x = getPosition().x;
+
+    attack(radian, power, (int)globalPoint.x, (int)globalPoint.y);
+}
+
+void Hero::attack(float radian, float power, int x, int y) {
+    auto globalPoint = Vec2(x, y);
     int id = _player->getId();
     switch (_weaponIndex) {
         case 0:
@@ -229,6 +236,13 @@ void Hero::attack(float radian, float power) {
 void Hero::switchWeapon(int dest) {
 
     _weaponIndex += dest;
+    setWeapon(_weaponIndex + dest);
+}
+
+
+void Hero::setWeapon(int index) {
+
+    _weaponIndex = index;
 
     if (_weaponIndex >= WEAPON_LIST.size()) {
         _weaponIndex = 0;
@@ -240,7 +254,6 @@ void Hero::switchWeapon(int dest) {
     _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
     _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
 }
-
 
 void Hero::_fire(Arrow *arrow) {
     UI::enableArrows(this, false);
@@ -297,7 +310,7 @@ void Hero::setAim(float angle, float power) {
 
 
 bool Hero::checkAimDiff(float angle, float power) {
-    return  _aim->get_aimRadian() - angle > 0.1f || _aim->get_aimPower() - power > 1.f;
+    return  _aim->get_aimRadian() - angle > 0.1f || _aim->get_aimPower() - power > 0.5f;
 }
 
 void Hero::startAim() {
@@ -385,13 +398,7 @@ void Hero::setPlayer(Player *player) {
 }
 
 
-DuelHero::DuelHero(float x_pos, float y_pos, Player *player) : Hero(x_pos, y_pos, player) {
-    _weaponIndex = 8;
-    WEAPON_LIST.push_back("Arrow");
-}
-
-
-DuelHero::DuelHero(float x_pos, float y_pos, const char *name) : Hero(x_pos, y_pos, Player::create(100, name)) {
+DuelHero::DuelHero(float x_pos, float y_pos, SocketClient* client) : MPHero(x_pos, y_pos, client) {
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
 }
@@ -434,3 +441,12 @@ void AppleHero::_saveAim() {
     _aim->set_aiming(false);
 }
 
+MPHero::MPHero(float x_pos, float y_pos, SocketClient* client) : Hero(x_pos, y_pos) {
+    _client = client;
+}
+
+
+void MPHero::attack(float angle, float power, int x, int y) {
+    Hero::attack(angle, power, x, y);
+    _client->action(angle, power, x, y);
+}

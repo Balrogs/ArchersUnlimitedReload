@@ -201,17 +201,19 @@ void SocketClient::gameOver(int winner_id, int v_type) {
     t.detach();
 }
 
-void SocketClient::action(float angle, float power) {
-    char x[256];
-    sprintf(x,
-            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f, \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":60}",
+void SocketClient::action(float angle, float power, int x, int y) {
+    char mes[256];
+    sprintf(mes,
+            "{\"player_id\":%d,\"room_id\":%d,\"angle\":%f, \"power\":%f,\"x\":%d, \"y\":%d, \"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":60}",
             _player->getId(),
             _player->getRoomId(),
             angle,
             power,
+            x,
+            y,
             _player->getId(),
             _player->getToken().c_str());
-    string message = x;
+    string message = mes;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
 
@@ -429,7 +431,7 @@ void SocketClient::_parseReply(string reply) {
     if(!JSONParser::isValid(reply)){
         return;
     }
-
+//    CCLOG(reply.c_str());
     if (JSONParser::isError(reply)) {
         _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {
@@ -451,9 +453,11 @@ void SocketClient::_parseReply(string reply) {
                 auto power = JSONParser::parseFloat(reply, "power");
                 auto angle = JSONParser::parseFloat(reply, "angle");
                 auto id = JSONParser::parseIntAnswer(reply, "id");
+                auto x = JSONParser::parseIntAnswer(reply, "x");
+                auto y = JSONParser::parseIntAnswer(reply, "y");
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                     if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
-                        gameScene->receiveAction(angle, power, id);
+                        gameScene->receiveAction(angle, power, x, y, id);
                 });
             }
                 return;
@@ -487,6 +491,7 @@ void SocketClient::_parseReply(string reply) {
             default:
                 break;
         }
+
         if (!JSONParser::parseAnswer(reply, "player_name").empty()) {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
@@ -494,6 +499,15 @@ void SocketClient::_parseReply(string reply) {
                     _player->setRoomId(JSONParser::parseIntAnswer(reply, "room_id"));
                 }
 
+            });
+        }
+
+        if (JSONParser::parseIntAnswer(reply, "winner_id")) {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance()))
+                        gameScene->abort();
+                });
             });
         }
     }

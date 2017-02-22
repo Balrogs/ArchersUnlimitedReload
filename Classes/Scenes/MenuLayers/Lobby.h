@@ -8,6 +8,7 @@
 
 #include <GameEngine/Player.h>
 #include <ui/UIScrollView.h>
+#include <GameEngine/Global/Misc/RichSearchButton.h>
 #include "MultiplayerMenu.h"
 #include "GameEngine/Global/Misc/PopUp.h"
 #include "cocos2d.h"
@@ -43,15 +44,14 @@ protected:
 
     Player *_player2;
 
+    void onEnter() override;
+
 
 private:
 
     int _gameType;
 
-    cocos2d::ui::Button *_findPlayerButton;
-    cocos2d::Node *_loading;
-    cocos2d::Node *_inviteBox;
-
+    RichSearchButton* _findPlayerButton;
     cocos2d::Node *_friendsBox;
     cocos2d::ui::ScrollView *_scrollView;
     cocos2d::ui::Button *_findFriendButton;
@@ -68,7 +68,7 @@ private:
     cocos2d::Node *_playerGlobalStatisticsBox;
     cocos2d::Node *_playerCountryStatisticsBox;
 
-    void _reloadInviteBox(bool isEmpty);
+    void _setSearchButtonState();
 
     void _showScrollView();
 
