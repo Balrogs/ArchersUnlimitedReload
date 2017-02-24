@@ -17,6 +17,8 @@ public:
 
     void initDuel(cocos2d::Size visibleSize, Hero *player1, Hero *player2);
 
+    void initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *player2);
+
     void initApple(cocos2d::Size visibleSize, Hero *player);
 
     void initBattle(cocos2d::Size visibleSize, Hero *player);
@@ -29,7 +31,7 @@ public:
 
     void setWarning(const char * message, cocos2d::Color3B color);
 
-    void initTest(cocos2d::Size visibleSize);
+   // void initTest(cocos2d::Size visibleSize);
 
 protected:
 

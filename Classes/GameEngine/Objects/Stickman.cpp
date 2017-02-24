@@ -1,4 +1,3 @@
-
 #include "Stickman.h"
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
@@ -6,7 +5,7 @@
 USING_NS_CC;
 
 Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, 1) {
-    _player =  Player::create(100, "BOT");
+    _bot =  Bot::create("BOT", 100);
     _armature = BattleScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
     _armature->removeSlot(_armature->getSlot("Hands"));
@@ -131,6 +130,17 @@ void Stickman::hit(cocos2d::Vec2 velocity) {
     );
 }
 
+bool Stickman::getHP() {
+    return _bot->getHp() > 0;
+}
+
+void Stickman::dealDamage(float d) {
+    _bot->setHp((int)d);
+}
+
+Player *Stickman::getPlayer() {
+    return _bot;
+}
 
 Body::Body(float x_pos, float y_pos, float scale, float facedir) :
         _faceDir(facedir),
@@ -217,16 +227,4 @@ void Body::setState(State state) {
         _state = state;
         _updateAnimation();
     }
-}
-
-bool Body::getHP() {
-    return _player->getHp() > 0;
-}
-
-void Body::dealDamage(float d) {
-    _player->setHp((int)d);
-}
-
-Player *Body::getPlayer() const {
-    return _player;
 }

@@ -14,6 +14,8 @@ public:
 
     void setPlayer(int id) override;
 
+    virtual void createPlayers(int id, std::string name);
+
 protected:
 
     void setTurnId(int id);

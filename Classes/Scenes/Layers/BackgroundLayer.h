@@ -67,8 +67,11 @@ public:
 
     void addArrow(Node* arrow);
 
+    void wait(bool p);
+
 protected:
     InfiniteParallaxNode *_parallax;
+    cocos2d::Sprite *_waiting;
     int _id;
 };
 

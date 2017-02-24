@@ -194,8 +194,7 @@ void Settings::onEnter() {
 }
 
 void Settings::onQuit() {
-    auto scene = (MainScene *) this->getParent();
-    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
+    MainScene::getInstance()->popAndReplace();
 }
 
 void Settings::_reloadButtons() {

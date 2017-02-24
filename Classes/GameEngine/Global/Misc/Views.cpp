@@ -110,16 +110,19 @@ Node *Views::getPlayerStatisticsView(std::string message) {
 
 
 Node *Views::getGlobalStatisticsView(std::string message) {
+  //  CCLOG(message.c_str());
     auto view = Node::create();
     return view;
 }
 
 Node *Views::getCountryStatisticsView(std::string message) {
+ //   CCLOG(message.c_str());
     auto view = Node::create();
     return view;
 }
 
 Node *Views::getEventStatisticsView(std::string message) {
+  //  CCLOG(message.c_str());
     auto view = Node::create();
     return view;
 }

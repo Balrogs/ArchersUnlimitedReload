@@ -5,10 +5,8 @@
 #include "Hero.h"
 #include "Stickman.h"
 
-Hero::Hero(float x_pos, float y_pos) : Hero(x_pos, y_pos, Player::create(100, "HERO")) {
-}
 
-Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 1),
+Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1),
                                                        _isAttacking(false),
                                                        _weaponIndex(0),
                                                        _weaponName(""),
@@ -20,8 +18,6 @@ Hero::Hero(float x_pos, float y_pos, Player *player) : Body(x_pos, y_pos, 0.3f, 
     _prevAim = nullptr;
 
     this->addChild(_aim);
-
-    _player = player;
 
     WEAPON_LIST.push_back("Arrow");
     WEAPON_LIST.push_back("Arrow");
@@ -186,7 +182,7 @@ void Hero::attack(float radian, float power) {
 
 void Hero::attack(float radian, float power, int x, int y) {
     auto globalPoint = Vec2(x, y);
-    int id = _player->getId();
+    int id = getPlayer()->getId();
     switch (_weaponIndex) {
         case 0:
             _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
@@ -257,9 +253,15 @@ void Hero::setWeapon(int index) {
 
 void Hero::_fire(Arrow *arrow) {
     UI::enableArrows(this, false);
-    this->getPlayer()->addShotsCount();
+
+    if(auto player = dynamic_cast<PlayerDuel *>(getPlayer())){
+        player->addShotsCount();
+    }
+
     _saveAim();
+
     BattleParent::getInstance()->getBulletPull()->addChild(arrow);
+
     _arrowDisplay->setVisible(false);
     _state = IDLE;
     _aimPowerState = _shoulders->getAnimation().fadeIn(
@@ -385,22 +387,74 @@ void Hero::_saveAim() {
 void Hero::setFaceDir() {
     int facedir = 1;
     if (DuelScene2P *scene = dynamic_cast<DuelScene2P *>(BattleParent::getInstance())) {
-        if (scene->getHeroPos(scene->getHero(_player->getId())).x < getPosition().x) {
+        if (scene->getHeroPos(scene->getHero(getPlayer()->getId())).x < getPosition().x) {
             facedir = -1;
         }
     }
     changeFacedir(facedir);
 }
 
-void Hero::setPlayer(Player *player) {
-    this->_player->removeFromParent();
-    this->_player = player;
+
+
+DuelMPHero::DuelMPHero(float x_pos, float y_pos, SocketClient* client) : MPHero(x_pos, y_pos, client) {
+    _weaponIndex = 8;
+    WEAPON_LIST.push_back("Arrow");
+    _player = PlayerDuel::create(client->getDBPlayer()->getId(),
+                                        client->getDBPlayer()->getName(),
+                                        0
+    );
+}
+
+void DuelMPHero::switchWeapon(int i) {
+    Hero::switchWeapon(i);
+}
+
+void DuelMPHero::move(int dir) {
+    setState(MOVING);
+    auto movedir = dir * _faceDir;
+    changeFacedir(movedir);
+    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + movedir * 150.f, this->getPosition().y, 0.f);
+
+    this->runAction(cocos2d::Sequence::create(
+            cocos2d::CallFunc::create([&]() {
+                if (_prevAim != nullptr)
+                    _prevAim->setVisible(false);
+            }),
+            cocos2d::MoveTo::create(1.5f, pos),
+            cocos2d::CallFunc::create([&]() {
+                setState(IDLE);
+                setFaceDir();
+                if (_prevAim != nullptr)
+                    _prevAim->setVisible(true);
+            }),
+            NULL)
+    );
+}
+
+void DuelMPHero::setPlayer(Player *player) {
+    if(auto pl = dynamic_cast<PlayerDuel *>(player)){
+        this->_player = pl;
+    }
+}
+
+bool DuelMPHero::getHP() {
+    return _player->getHp() > 0;
+}
+
+void DuelMPHero::dealDamage(float d) {
+    _player->setHp((int)d);
+}
+
+Player *DuelMPHero::getPlayer() {
+    return _player;
 }
 
 
-DuelHero::DuelHero(float x_pos, float y_pos, SocketClient* client) : MPHero(x_pos, y_pos, client) {
+DuelHero::DuelHero(float x_pos, float y_pos, PlayerDuel* player) : Hero(x_pos, y_pos) {
+    _player = player;
     _weaponIndex = 8;
     WEAPON_LIST.push_back("Arrow");
+    setWeapon(_weaponIndex);
 }
 
 void DuelHero::switchWeapon(int i) {
@@ -429,10 +483,29 @@ void DuelHero::move(int dir) {
     );
 }
 
+void DuelHero::setPlayer(Player *player) {
+    if(auto pl = dynamic_cast<PlayerDuel *>(player)){
+        if(this->_player != nullptr){
+            this->removeFromParent();
+        }
+        this->_player = pl;
+    }
+}
 
-AppleHero::AppleHero(float x_pos, float y_pos, const char *name, int coins) : Hero(x_pos, y_pos,
-                                                                                   PlayerWithCoins::create(0, 100, name,
-                                                                                                           coins)) {
+bool DuelHero::getHP() {
+    return _player->getHp() > 0;
+}
+
+void DuelHero::dealDamage(float d) {
+    _player->setHp((int)d);
+}
+
+Player *DuelHero::getPlayer() {
+    return _player;
+}
+
+AppleHero::AppleHero(float x_pos, float y_pos, PlayerApple* player) : Hero(x_pos, y_pos) {
+    _player = player;
     _weaponIndex = 0;
     WEAPON_LIST.push_back("Arrow");
 }
@@ -441,12 +514,56 @@ void AppleHero::_saveAim() {
     _aim->set_aiming(false);
 }
 
+void AppleHero::setPlayer(Player *player) {
+    if(auto pl = dynamic_cast<PlayerApple *>(player)){
+        if(this->_player != nullptr){
+            this->removeFromParent();
+        }
+        this->_player = pl;
+
+    }
+}
+
+bool AppleHero::getHP() {
+    return true;
+}
+
+void AppleHero::dealDamage(float d) {
+}
+
+Player *AppleHero::getPlayer() {
+    return _player;
+}
+
 MPHero::MPHero(float x_pos, float y_pos, SocketClient* client) : Hero(x_pos, y_pos) {
     _client = client;
+    _player = PlayerOnlineApple::create(client->getDBPlayer()->getId(),
+                                        client->getDBPlayer()->getName(),
+                                        0
+    );
 }
 
 
 void MPHero::attack(float angle, float power, int x, int y) {
     Hero::attack(angle, power, x, y);
     _client->action(angle, power, x, y);
+}
+
+void MPHero::setPlayer(Player *player) {
+    if(auto pl = dynamic_cast<PlayerOnlineApple *>(player)){
+        this->_player->removeFromParent();
+        this->_player = pl;
+    }
+}
+
+bool MPHero::getHP() {
+    return true;
+}
+
+void MPHero::dealDamage(float d) {
+
+}
+
+Player *MPHero::getPlayer() {
+    return _player;
 }

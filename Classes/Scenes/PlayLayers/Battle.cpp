@@ -49,7 +49,8 @@ void BattleScene::removeTarget(cocos2d::Node *target) {
 
 void BattleScene::initWorld() {
 
-    _player = new Hero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f);
+    _player = new DuelHero(50.f + origin.x, BattleScene::GROUND + origin.y + 200.f,
+                           PlayerDuel::create(_client->getDBPlayer()->getId(),_client->getDBPlayer()->getName()));
 
     _createEnvForStickman(_player, 1);
 

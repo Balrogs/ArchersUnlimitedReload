@@ -25,6 +25,8 @@ public:
 
     void denyInvite();
 
+    void leaveLobby();
+
     void deleteInvite();
 
     void startSearch(int gameType);
@@ -39,12 +41,17 @@ public:
 
     void addFriend(string name);
 
+    void showSearchPopUp();
+
 protected:
     void _showPopUp(PopUp* popUp);
 
-    Player *_player2;
+    int _player2Id;
+    std::string _player2Name;
 
     void onEnter() override;
+
+    void _resetPlayer();
 
 
 private:

@@ -4,14 +4,6 @@
 #include <math.h>
 #include <Localization/LocalizedStrings.h>
 
-void MultiplayerBattle::createPlayers(Player *player1, Player *player2) {
-    _player1 = player1;
-    _player2 = player2;
-
-    waitForPlayer();
-}
-
-
 void MultiplayerBattle::receiveAction(float angle, float power, int id, int x, int y) {
     if (id != _client->getDBPlayer()->getId()) {
          CCLOG("RECEIVED : angle : %f , power : %f",angle, power);
@@ -93,6 +85,7 @@ void MultiplayerBattle::abort() {
 void MultiplayerBattle::onEnter() {
     Node::onEnter();
     _client = SocketClient::getInstance();
+    waitForPlayer();
 }
 
 bool MultiplayerBattle::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {

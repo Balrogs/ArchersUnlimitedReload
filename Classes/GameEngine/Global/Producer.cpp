@@ -71,8 +71,8 @@ void Producer::startLevel(int id) {
                         brain = new StrengthBrain(target);
                         break;
                     case 4:
-                        target = new Hero(BattleScene::getInstance()->visibleSize.width + 150.f, BattleScene::getInstance()->GROUND, Player::create(100, "BOT"));
-                        brain = new HeroBrain(target, 0.f);
+//                        target = new Hero(BattleScene::getInstance()->visibleSize.width + 150.f, BattleScene::getInstance()->GROUND, Bot::create());
+//                        brain = new HeroBrain(target, 0.f);
                         break;
                     default:
                         break;

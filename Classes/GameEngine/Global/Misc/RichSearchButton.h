@@ -18,6 +18,7 @@ public:
 protected:
 
     enum State{
+        Busy,
         Idle,
         Searching
     };

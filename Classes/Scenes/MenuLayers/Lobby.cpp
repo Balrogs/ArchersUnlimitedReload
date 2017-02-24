@@ -92,9 +92,8 @@ bool Lobby::init() {
     auto _playerInfoButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("INFO"), Variables::FONT_NAME,
             Variables::FONT_SIZE);
-    _playerInfoButton_label->setPosition(_playerInfoButton->getContentSize().width / 2,
-                                         _playerInfoButton->getContentSize().height / 2);
-    _playerInfoButton->addChild(_playerInfoButton_label, 4);
+    _playerInfoButton_label->setPosition(_playerInfoButton->getPosition());
+    this->addChild(_playerInfoButton_label, 4);
 
     _playerInfo->addChild(_playerInfoButton, 2);
 
@@ -104,7 +103,7 @@ bool Lobby::init() {
                              infoBoxSize.height / _playerInfoBox->getContentSize().height);
 
     _playerInfoBox->setPosition(infoBoxSize.width / 2 + 15.f,
-                                _playerInfoButton->getPosition().y- _playerInfoBox->getBoundingBox().size.height / 2);
+                                _playerInfoButton->getBoundingBox().getMinY() - _playerInfoBox->getBoundingBox().size.height / 2 + 7.f);
 
     _playerInfo->addChild(_playerInfoBox, 1);
 
@@ -181,9 +180,8 @@ bool Lobby::init() {
     auto _playerGlobalStatisticsButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("GLOBAL"), Variables::FONT_NAME,
             Variables::FONT_SIZE);
-    _playerGlobalStatisticsButton_label->setPosition(_playerGlobalStatisticsButton->getContentSize().width / 2,
-                                                     _playerGlobalStatisticsButton->getContentSize().height / 2);
-    _playerGlobalStatisticsButton->addChild(_playerGlobalStatisticsButton_label, 4);
+    _playerGlobalStatisticsButton_label->setPosition(_playerGlobalStatisticsButton->getPosition());
+    this->addChild(_playerGlobalStatisticsButton_label, 4);
 
     _playerGlobalStatistics->addChild(_playerGlobalStatisticsButton, 1);
 
@@ -219,9 +217,8 @@ bool Lobby::init() {
     auto _playerCountryStatisticsButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("REGION"), Variables::FONT_NAME,
             Variables::FONT_SIZE);
-    _playerCountryStatisticsButton_label->setPosition(_playerCountryStatisticsButton->getContentSize().width / 2,
-                                                      _playerCountryStatisticsButton->getContentSize().height / 2);
-    _playerCountryStatisticsButton->addChild(_playerCountryStatisticsButton_label, 4);
+    _playerCountryStatisticsButton_label->setPosition(_playerCountryStatisticsButton->getPosition());
+    this->addChild(_playerCountryStatisticsButton_label, 4);
 
     _playerCountryStatistics->addChild(_playerCountryStatisticsButton, 2);
 
@@ -232,27 +229,22 @@ bool Lobby::init() {
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage);
 
-    _player2 = nullptr;
-
-    _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
-    _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
-    _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
-
     return true;
 }
 
 void Lobby::receiveInvite(string message) {
-    auto name = JSONParser::parseAnswer(message, "player_name");
-    auto id = JSONParser::parseIntAnswer(message, "player_id");
+    _player2Name = JSONParser::parseAnswer(message, "player_name");
+    _player2Id = JSONParser::parseIntAnswer(message, "player_id");
     //   _gameType = JSONParser::parseIntAnswer(message, "game_type");
-    _player2 = Player::create(id, 100, name);
-    _client->getPlayerInfo(3, name);
+
+    _client->getPlayerInfo(3, _player2Name);
 }
 
 void Lobby::deleteInvite() {
     _setSearchButtonState();
 
-    _player2 = nullptr;
+    _resetPlayer();
+
 }
 
 void Lobby::receivePlayerInfo(string message) {
@@ -263,25 +255,24 @@ void Lobby::receivePlayerInfo(string message) {
                                0.9f * _playerInfoBox->getBoundingBox().getMaxY()));
         _playerInfo->addChild(view, 2);
     } else {
-        _showPopUp(InvitePopUp::create(LocalizedStrings::getInstance()->getString("INVITE"), Views::getPlayerInfoView(message), true));
+        _showPopUp(InvitePopUp::create(LocalizedStrings::getInstance()->getString("INVITE"),
+                                      Views::getPlayerInfoView(message), true));
         _setSearchButtonState();
     }
 }
 
 void Lobby::receiveGlobalStats(string message) {
-    auto view = Views::getPlayerInfoView(message);
+    auto view = Views::getGlobalStatisticsView(message);
     _playerGlobalStatistics->addChild(view, 2);
 }
 
 void Lobby::receiveCountryStats(string message) {
-    auto view = Views::getPlayerInfoView(message);
+    auto view = Views::getCountryStatisticsView(message);
     _playerCountryStatistics->addChild(view, 2);
 }
 
 void Lobby::joinLobby() {
-    _setSearchButtonState();
-
-    _player2 = nullptr;
+    _resetPlayer();
 }
 
 void Lobby::acceptInvite() {
@@ -290,9 +281,7 @@ void Lobby::acceptInvite() {
     Director::getInstance()->pushScene(scene);
 
     if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance())) {
-        auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
-                                      _client->getDBPlayer()->getName());
-        gameScene->createPlayers(player1, this->_player2);
+        gameScene->createPlayers(_player2Id, _player2Name);
     }
 }
 
@@ -303,6 +292,10 @@ void Lobby::denyInvite() {
 
 void Lobby::_setSearchButtonState() {
     _findPlayerButton->reset();
+}
+
+void Lobby::showSearchPopUp(){
+    _showPopUp(GameTypePopUp::create());
 }
 
 void Lobby::_showPopUp(PopUp *popUp) {
@@ -409,9 +402,19 @@ void Lobby::onEnter() {
 
     _setSearchButtonState();
 
-    _player2 = nullptr;
+    _resetPlayer();
 
     _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
     _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+}
+
+void Lobby::leaveLobby() {
+    //TODO
+}
+
+void Lobby::_resetPlayer() {
+    _player2Id = 0;
+    _player2Name = "";
+
 }

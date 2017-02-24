@@ -53,22 +53,6 @@ bool PopUp::init(std::string title) {
     _title->setColor(cocos2d::Color3B::BLACK);
     this->addChild(_title, 2);
 
-    const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
-    keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
-        switch (keyCode) {
-            case EventKeyboard::KeyCode::KEY_BREAK:
-            case EventKeyboard::KeyCode::KEY_ESCAPE:
-            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
-                noAction();
-            }
-                break;
-            default:
-                break;
-        }
-    };
-
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-
     return true;
 }
 
@@ -154,8 +138,7 @@ void MainMenuPopUp::yesAction() {
 
 void MainMenuPopUp::okAction() {
     this->removeFromParent();
-    auto scene = MainScene::getInstance();
-    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
+    MainScene::getInstance()->popAndReplace();
 }
 
 MainMenuPopUp *MainMenuPopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {

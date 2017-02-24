@@ -377,8 +377,10 @@ void SocketClient::_parseError(int error) {
         }
             break;
         case -400: {
-            //TODO show error message
             cocos2d::Director::getInstance()->popToRootScene();
+            if (auto main = dynamic_cast<MainMenu *>(MainScene::getInstance()->getMain())) {
+                main->showErrorPopUp();
+            }
         }
             break;
         case -501: {
@@ -484,6 +486,24 @@ void SocketClient::_parseReply(string reply) {
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                     if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
                         lobby->receivePlayerInfo(reply);
+                    }
+                });
+            }
+                return;
+
+            case 10: {
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                        lobby->receiveGlobalStats(reply);
+                    }
+                });
+            }
+                return;
+
+            case 11: {
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                        lobby->receiveCountryStats(reply);
                     }
                 });
             }

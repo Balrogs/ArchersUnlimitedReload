@@ -27,8 +27,6 @@ public:
 
     static cocos2d::Node *getInviteView(std::string message);
 
-private:
-
     static cocos2d::Node *getGlobalStatisticsView(std::string message);
 
     static cocos2d::Node *getCountryStatisticsView(std::string message);

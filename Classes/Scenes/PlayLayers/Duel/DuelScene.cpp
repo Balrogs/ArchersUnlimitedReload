@@ -22,19 +22,19 @@ DuelScene *DuelScene::create(Statistics *stats) {
 
 void DuelScene::initWorld() {
 
-    auto player1 = Player::create(_client->getDBPlayer()->getId(), 100,
-                                  _client->getDBPlayer()->getName());
+    auto player1 = PlayerDuel::create(_client->getDBPlayer()->getId(),
+                                    _client->getDBPlayer()->getName());
 
-    _player = new Hero(visibleSize.width / 2, DuelScene::GROUND, player1);
-    _player->setWeapon(8);
-    _hero2 = new Hero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
-                          Player::create(100,LocalizedStrings::getInstance()->getString("BOT")));
-    _hero2->setWeapon(8);
+    auto player2 =  PlayerDuel::create(0, LocalizedStrings::getInstance()->getString("BOT"));
+    player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
+
+    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, player2);
     _hero2->changeFacedir(-1);
 
     _player1 = _player->getPlayer();
     _player2 = _hero2->getPlayer();
-    _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
+
     _brain = new HeroBrainDuel(_hero2, 0.f);
 
     _createEnvForStickman(_player, _stats->getPlayerEnvType());
@@ -125,8 +125,7 @@ void DuelScene::makeTurn(int id) {
 }
 
 bool DuelScene::isGameOver() {
-    return (_player1->getShotsCount() == _player2->getShotsCount() && _player1->getShotsCount() >= 15) ||
-           _player1->getHp() <= 0 || _player2->getHp() <= 0;
+    return _player1->getHp() <= 0 || _player2->getHp() <= 0;
 }
 
 void DuelScene::_startGame() {

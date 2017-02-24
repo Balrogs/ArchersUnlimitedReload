@@ -25,7 +25,6 @@ protected:
     float _speedY;
     float _move_speed;
     float _jump_speed;
-    Player *_player;
 
 public:
 
@@ -51,17 +50,15 @@ public:
 
     virtual void changeFacedir(int facedir);
 
-    bool getHP();
+    virtual bool getHP() = 0;
 
-    void dealDamage(float d);
+    virtual void dealDamage(float d) = 0;
 
-    Player *getPlayer() const;
+    virtual Player *getPlayer() = 0;
 };
 
 class Stickman : public Body {
 
-protected:
-    void _updateAnimation() override;
 
 public:
     Stickman(float x_pos, float y_pos, float scale, float hp);
@@ -79,6 +76,17 @@ public:
     void aim() override;
 
     void update() override;
+
+    virtual bool getHP();
+
+    virtual void dealDamage(float d);
+
+    Bot *_bot;
+
+    virtual Player *getPlayer();
+
+protected:
+    void _updateAnimation() override;
 };
 
 #endif //DRAGONBONES_STICKMAN_H

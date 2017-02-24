@@ -361,7 +361,7 @@ void BattleParent::_createEnvForStickman(Body *stickman, int type) {
 void BattleParent::addCoins(int value) {
     int diff = _getGainedCoinsByActionType(value);
     _stats->increaseCoins(diff);
-    if (PlayerWithCoins *pl = dynamic_cast<PlayerWithCoins *>(_player->getPlayer())) {
-        pl->addGainedCoins(_stats->getCoinsGained());
+    if (PlayerApple *pl = dynamic_cast<PlayerApple *>(_player->getPlayer())) {
+        pl->addScore(_stats->getCoinsGained());
     }
 }

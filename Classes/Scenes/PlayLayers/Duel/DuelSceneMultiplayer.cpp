@@ -24,10 +24,8 @@ void DuelSceneMultiplayer::initWorld() {
 
     _client = SocketClient::getInstance();
 
-    _hero1 = new DuelHero(visibleSize.width / 2, BattleParent::GROUND, _client);
-    _hero2 = new Hero(visibleSize.width * 3 - 150.f, BattleParent::GROUND);
-    _hero1->setWeapon(8);
-    _hero2->setWeapon(8);
+    _hero1 = new DuelMPHero(visibleSize.width / 2, BattleParent::GROUND, _client);
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, BattleParent::GROUND, nullptr);
 }
 
 bool DuelSceneMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
@@ -78,5 +76,12 @@ void DuelSceneMultiplayer::setTurnId(int id) {
 void DuelSceneMultiplayer::setPlayer(int id) {
     MultiplayerBattle::setPlayer(id);
     _ui->initDuel(visibleSize, _hero1, _hero2);
+}
+
+void DuelSceneMultiplayer::createPlayers(int id, std::string name) {
+    _player1 = PlayerDuel::create(_client->getDBPlayer()->getId(),
+                                  _client->getDBPlayer()->getName()
+    );
+    _player2 = PlayerDuel::create(id, name);
 }
 

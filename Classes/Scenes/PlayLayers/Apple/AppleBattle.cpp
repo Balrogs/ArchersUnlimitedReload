@@ -40,8 +40,8 @@ void AppleBattle::initObjects() {
     _env = Node::create();
     this->addChild(_env);
 
-    _player = new AppleHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND,  _client->getDBPlayer()->getName().c_str(),
-                            _stats->getCoinsGained());
+    _player = new AppleHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND,
+                            PlayerApple::create(_client->getDBPlayer()->getId(),  _client->getDBPlayer()->getName(), _stats->getCoinsGained()));
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     target->changeFacedir(-1);
@@ -73,7 +73,7 @@ int AppleBattle::_getGainedCoinsByActionType(int type) {
     int value = 0;
     switch (type) {
         case 1: {
-            auto shotsLeft = _shotsLimit - _player->getPlayer()->getShotsCount();
+            auto shotsLeft = _shotsLimit - _completedShots;
             value = 100 + 10 * _stats->getLevel() - 5 * shotsLeft;
             break;
         }

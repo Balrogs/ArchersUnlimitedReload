@@ -3,6 +3,7 @@
 #include <Scenes/PlayLayers/Apple/AppleBattle.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Objects/Environment/Box.h>
+#include <Scenes/PlayLayers/Duel/DuelScene2P.h>
 
 USING_NS_CC;
 
@@ -114,6 +115,8 @@ bool Arrow::processContact(Node *bone) {
                 this->addDOChild(apple);
 
                 appleb->setAppleHit();
+
+                BattleParent::getInstance()->addCoins(1);
 
                 return true;
             } else {
@@ -430,9 +433,11 @@ void DuelArrow::update(float dt) {
     this->setPosition(position.x + _speedX, position.y + _speedY);
     this->setRotation(std::atan2(-_speedY, _speedX) * dragonBones::RADIAN_TO_ANGLE);
 
-    if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
-        if(duelScene->getPlayerId() == _player_id)
-            duelScene->moveScene(_speedX);
+    if(auto duelScene2P = dynamic_cast<DuelScene2P *>(BattleParent::getInstance())) {
+        if(duelScene2P->getPlayerId() == _player_id)
+            duelScene2P->moveScene(_speedX);
+    } else     if(auto duelScene = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
+        duelScene->moveScene(_speedX);
     }
     auto random = RandomHelper::random_real(0.f, 20.f);
 

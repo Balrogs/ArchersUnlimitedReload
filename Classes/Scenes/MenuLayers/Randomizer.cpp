@@ -38,6 +38,5 @@ void Randomizer::onEnter() {
 
 void Randomizer::onQuit() {
     this->pause();
-    auto scene = MainScene::getInstance();
-    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
+    MainScene::getInstance()->popAndReplace();
 }

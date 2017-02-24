@@ -17,8 +17,6 @@ public:
 
     Hero(float x_pos, float y_pos);
 
-    Hero(float x_pos, float y_pos, Player *player);
-
     ~Hero();
 
     void attack(float angle, float power);
@@ -41,11 +39,13 @@ public:
 
     void aim() override;
 
-    void setPlayer(Player *player);
+    virtual void setPlayer(Player *player) = 0;
 
     std::vector<std::string> getWeaponList();
 
 protected:
+
+
     bool _isAttacking;
     unsigned _weaponIndex;
     std::string _weaponName;
@@ -78,8 +78,19 @@ protected:
 
 class AppleHero : public Hero {
 public:
-    AppleHero(float x_pos, float y_pos, const char *name, int coins);
+    AppleHero(float x_pos, float y_pos, PlayerApple* player);
     void _saveAim() override;
+
+    virtual void setPlayer(Player *player);
+
+    virtual bool getHP();
+
+    virtual void dealDamage(float d);
+
+    virtual Player *getPlayer();
+
+protected:
+    PlayerApple* _player;
 };
 
 class MPHero : public Hero {
@@ -87,18 +98,58 @@ public:
     MPHero(float x_pos, float y_pos, SocketClient* client);
     void attack(float angle, float power, int x, int y) override;
 
+    virtual void setPlayer(Player *player) ;
+
+    virtual bool getHP();
+
+    virtual void dealDamage(float d);
+
+    virtual Player *getPlayer();
 protected:
     SocketClient* _client;
+    PlayerOnlineApple* _player;
 };
 
-class DuelHero : public MPHero {
+class DuelMPHero : public MPHero {
 public:
 
-    DuelHero(float x_pos, float y_pos, SocketClient* client);
+    DuelMPHero(float x_pos, float y_pos, SocketClient* client);
 
     void switchWeapon(int i) override;
 
     void move(int dir) override;
+
+    virtual void setPlayer(Player *player);
+
+    virtual bool getHP();
+
+    virtual void dealDamage(float d);
+
+    virtual Player *getPlayer();
+
+protected:
+    PlayerDuel* _player;
+};
+
+class DuelHero : public Hero {
+public:
+
+    DuelHero(float x_pos, float y_pos, PlayerDuel* player);
+
+    void switchWeapon(int i) override;
+
+    void move(int dir) override;
+
+    virtual void setPlayer(Player *player);
+
+    virtual bool getHP();
+
+    virtual void dealDamage(float d);
+
+    virtual Player *getPlayer();
+
+protected:
+    PlayerDuel* _player;
 };
 
 

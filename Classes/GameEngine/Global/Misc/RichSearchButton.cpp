@@ -14,6 +14,9 @@ bool RichSearchButton::init() {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 switch (_state) {
+                    case State::Busy : {
+                        break;
+                    }
                     case State::Searching : {
                         this->reset();
                         break;
@@ -24,7 +27,6 @@ bool RichSearchButton::init() {
                         break;
                     }
                 }
-                break;
                 default:
                     break;
             }
@@ -62,9 +64,14 @@ void RichSearchButton::_switchState(State state) {
         return;
     }
 
-    _state = state;
+
 
     switch(state){
+        case State::Busy : {
+            _state = state;
+            break;
+        }
+
         case State::Searching : {
             _stopButton->runAction(RepeatForever::create(
                     Sequence::createWithTwoActions(
@@ -79,10 +86,26 @@ void RichSearchButton::_switchState(State state) {
             );
 
             _stopButton->runAction(
+                    Sequence::createWithTwoActions(
+                            Spawn::createWithTwoActions(
+                                    CallFunc::create(
+                                            [&]() {
+                                                _switchState(State::Busy);
+                                            }
+                                    ),
                                     Spawn::createWithTwoActions(
                                             ScaleTo::create(.5f, _scale),
                                             RotateBy::create(.5f, 360.f)
-                                    )
+                                    )),
+                            CallFunc::create(
+                                    [&]() {
+                                        _state = State::Searching;
+                                        if(auto lobby = dynamic_cast<Lobby*>(MainScene::getInstance()->getMain())){
+                                            lobby->showSearchPopUp();
+                                        }
+                                    }
+                            ))
+
             );
 
             break;
@@ -90,12 +113,23 @@ void RichSearchButton::_switchState(State state) {
 
         case State::Idle : {
             _stopButton->runAction(
-                    Sequence::createWithTwoActions(
-                            ScaleTo::create(.5f, 0.f),
+                    Spawn::createWithTwoActions(
                             CallFunc::create(
                                     [&]() {
-                                        _stopButton->getActionManager()->removeAllActions();
+                                        _switchState(State::Busy);
                                     }
+                            ),
+                            Sequence::createWithTwoActions(
+                                    ScaleTo::create(.5f, 0.f),
+                                    CallFunc::create(
+                                            [&]() {
+                                                _stopButton->getActionManager()->removeAllActions();
+                                                _state = State::Idle;
+                                                if(auto lobby = dynamic_cast<Lobby*>(MainScene::getInstance()->getMain())){
+                                                    lobby->leaveLobby();
+                                                }
+                                            }
+                                    )
                             )
                     )
             );

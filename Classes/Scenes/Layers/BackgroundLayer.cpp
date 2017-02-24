@@ -1,7 +1,3 @@
-//
-// Created by igor on 13.10.16.
-//
-
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
@@ -72,6 +68,7 @@ bool InfiniteParallaxNode::init(int id) {
     return true;
 }
 
+// TODO
 void InfiniteParallaxNode::createGraveyard() {
 
     _ground = DrawNode::create();
@@ -101,7 +98,7 @@ void InfiniteParallaxNode::createGraveyard() {
     auto y = visibleSize.height - 100.f;
     this->addChild(moon, 2, Point(0, 0), Point(visibleSize.width / 2 + 2 * moon->getBoundingBox().size.width, y));
 
-    // TODO
+
 
     //grass
 
@@ -368,7 +365,12 @@ bool BackgroundLayer::init() {
     mainClip->setPosition(
             0.23f * bg->getBoundingBox().size.width,
             bg->getBoundingBox().getMinY() + mainClip->getBoundingBox().size.height / 2);
-    this->addChild(mainClip, 0);
+    this->addChild(mainClip, 0, "clip");
+
+    _waiting = Sprite::createWithSpriteFrameName(Variables::WAITING_LAYER);
+    _waiting->setScale(scale);
+    _waiting->setPosition(visibleSize.width / 2, visibleSize.height - _waiting->getBoundingBox().size.height / 2);
+    this->addChild(_waiting, 2);
 
     _id = 0;
     _parallax = nullptr;
@@ -406,4 +408,8 @@ Vec3 BackgroundLayer::getPosition3D() const {
 
 void BackgroundLayer::addArrow(Node *arrow) {
     _parallax->addChild(arrow, 10, Point(1, 1), Point::ZERO);
+}
+
+void BackgroundLayer::wait(bool p) {
+    _waiting->setVisible(p);
 }

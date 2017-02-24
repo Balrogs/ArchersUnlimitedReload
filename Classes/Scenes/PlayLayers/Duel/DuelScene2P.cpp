@@ -19,24 +19,26 @@ DuelScene2P *DuelScene2P::create(Statistics *stats) {
 
 void DuelScene2P::initWorld() {
 
-    _hero1 = new Hero(visibleSize.width / 2, DuelScene::GROUND,
-                          Player::create(100, StringUtils::format("%s 1", LocalizedStrings::getInstance()->getString("PLAYER")).c_str()));
-    _hero1->setWeapon(8);
+    auto player1 = PlayerDuel::create(1, StringUtils::format("%s 1", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
 
-    _hero2 = new Hero(visibleSize.width * 3 - 150.f, DuelScene::GROUND,
-                      Player::create(100, StringUtils::format("%s 2", LocalizedStrings::getInstance()->getString("PLAYER")).c_str()));
-    _hero2->setWeapon(8);
+    auto player2 = PlayerDuel::create(2, StringUtils::format("%s 2", LocalizedStrings::getInstance()->getString("PLAYER")).c_str());
+    player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
+
+    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
+    _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, player2);
 
     _hero2->changeFacedir(-1);
+
     _player1 = _hero1->getPlayer();
     _player2 = _hero2->getPlayer();
-    _player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
     _createEnvForStickman(_hero1, _stats->getPlayerEnvType());
     _createEnvForStickman(_hero2, _stats->getTargetEnvType());
 
     _ui->initDuel(visibleSize, _hero1, _hero2);
     _player = _hero1;
+
+    this->_turnId = _player->getPlayer()->getId();
 
     _startGame();
 }

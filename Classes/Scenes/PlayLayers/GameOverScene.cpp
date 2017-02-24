@@ -1,6 +1,8 @@
 #include <GameEngine/Global/Variables.h>
 #include <ui/UIButton.h>
 #include <Localization/LocalizedStrings.h>
+#include <Scenes/MenuLayers/MainMenu.h>
+#include <Scenes/MenuLayers/Randomizer.h>
 #include "GameOverScene.h"
 #include "Battle.h"
 
@@ -142,8 +144,8 @@ bool GameOverScene::init(Statistics *stats) {
                     def->setIntegerForKey("COINS", coins - 1000);
                     def->destroyInstance();
                     _saveStats(stats);
-                    //TODO replacescene by RANDOMIZER
                     onQuit();
+                    MainScene::getInstance()->replaceMain(Randomizer::create());
                 } else {
                     //TODO show media
                 }

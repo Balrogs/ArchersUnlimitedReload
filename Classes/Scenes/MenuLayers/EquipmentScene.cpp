@@ -30,6 +30,8 @@ bool EquipmentScene::init() {
         }
     };
 
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
+
     auto stand = Sprite::createWithSpriteFrameName(Variables::STAND);
     stand->setPosition(Vec2(stand->getContentSize().width / 2, stand->getContentSize().height / 2));
     this->addChild(stand, 1);
@@ -47,6 +49,7 @@ bool EquipmentScene::init() {
     );
     this->addChild(_controls, 2);
 
+    this->pause();
 
     return true;
 }
@@ -54,7 +57,6 @@ bool EquipmentScene::init() {
 void EquipmentScene::onEnter() {
     Layer::onEnter();
 
-  //  this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
     //TODO zoom in
 
     _controls->setVisible(true);
@@ -66,7 +68,7 @@ void EquipmentScene::onQuit() {
 
     this->pause();
     _controls->setVisible(false);
-    MainScene::getInstance()->pushMain(MainMenu::create(this));
+    MainScene::getInstance()->popAndReplace();
 }
 
 cocos2d::Vec2 EquipmentScene::getButtonPosition() {

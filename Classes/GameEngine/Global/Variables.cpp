@@ -122,6 +122,8 @@ const std::string Variables::BG1 = "bg1.png";
 const std::string Variables::BG2 = "bg2.png";
 const std::string Variables::BG3 = "bg3.png";
 
+const std::string Variables::WAITING_LAYER = "main-waiting.png";
+
 const std::string Variables::CHEST_BUTTON = "chest.png";
 const std::string Variables::CHEST_PRESSED_BUTTON = "chest_pressed.png";
 

@@ -14,7 +14,6 @@ bool MultiplayerMenu::init() {
     }
 
     this->removeAllChildren();
-    this->getEventDispatcher()->removeEventListenersForTarget(this);
 
     auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
     _visibleSize = Director::getInstance()->getVisibleSize();
@@ -197,12 +196,7 @@ void MultiplayerMenu::onMenuClick(int id) {
 }
 
 void MultiplayerMenu::onQuit() {
-    if(auto popUp = this->getChildByName("PopUp")){
-        popUp->removeFromParent();
-        return;
-    }
-    auto scene = (MainScene *) this->getParent();
-    scene->replaceMain(MainMenu::create(scene->getEquipmentLayer()));
+    MainScene::getInstance()->popAndReplace();
 }
 
 void MultiplayerMenu::onError(string message) {

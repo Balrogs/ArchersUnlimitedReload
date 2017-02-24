@@ -45,6 +45,7 @@ bool MainScene::init() {
     _main = MainMenu::create(_equipmentScene);
 
     pushMain(_main);
+    _backgroundLayer->wait(false);
 
     return true;
 }
@@ -60,21 +61,27 @@ void MainScene::pushMain(Layer *layer) {
     _main = layer;
     _mainStack.push(_main);
     this->addChild(_main, 4);
+
+    _backgroundLayer->wait(true);
 }
 
 void MainScene::popMain() {
-    if(!_mainStack.empty()){
+    if (!_mainStack.empty()) {
         this->removeChild(_mainStack.top());
         _mainStack.pop();
     }
 }
 
-EquipmentScene *MainScene::getEquipmentLayer() {
-    return _equipmentScene;
-}
-
 cocos2d::Layer *MainScene::getMain() {
     return _main;
+}
+
+void MainScene::popAndReplace() {
+    while(_mainStack.size()){
+        popMain();
+    }
+    pushMain(MainMenu::create(_equipmentScene));
+    _backgroundLayer->wait(false);
 }
 
 MainMenu *MainMenu::create(EquipmentScene *equipmentLayer) {
@@ -92,6 +99,8 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     if (!Layer::init()) {
         return false;
     }
+
+    equipmentLayer->pause();
 
     _visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -125,7 +134,8 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
             case EventKeyboard::KeyCode::KEY_ESCAPE:
             case EventKeyboard::KeyCode::KEY_BACKSPACE: {
                 if (_menuId == 0) {
-                        this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
+                    auto popUp = this->getChildByName("PopUp");
+                    if (popUp == nullptr) {
 
                         auto size = Director::getInstance()->getVisibleSize();
 
@@ -133,12 +143,15 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                                 LocalizedStrings::getInstance()->getString("EXIT THE GAME?"), Variables::FONT_NAME,
                                 Variables::FONT_SIZE);
                         label->setColor(cocos2d::Color3B::BLACK);
-                        auto popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
-                                                      label,
-                                                      true);
+                        popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
+                                                           label,
+                                                           true);
 
                         popUp->setPosition(size.width / 2, size.height / 2);
                         this->addChild(popUp, 0, "PopUp");
+                    } else {
+                        popUp->removeFromParent();
+                    }
                 } else {
                     onMenuClick(0);
                 }
@@ -206,11 +219,11 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     auto customize = cocos2d::ui::Button::create();
     customize->loadTextureNormal(Variables::CUSTOMIZE_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
 
-    customize->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    customize->addTouchEventListener([&, equipmentLayer](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                equipmentLayer->resume();
                 MainScene::getInstance()->popMain();
-
             }
                 break;
             default:
@@ -458,5 +471,19 @@ void MainMenu::onMenuClick(int id) {
 
         default:
             break;
+    }
+}
+
+void MainMenu::showErrorPopUp() {
+    if (this->getChildByName("PopUp") == nullptr) {
+        auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("SERVER ERROR"),
+                                                   Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE);
+        label->setColor(cocos2d::Color3B::BLACK);
+        auto popUp = MainMenuPopUp::create("",
+                                           label);
+        auto _visibleSize = Director::getInstance()->getVisibleSize();
+        popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
+        this->addChild(popUp, 0, "PopUp");
     }
 }

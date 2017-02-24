@@ -3,68 +3,19 @@
 
 USING_NS_CC;
 
-Player *Player::create(int id, int hp, std::string name) {
-    Player *ret = new(std::nothrow) Player();
-    if (ret && ret->init(id, hp, name)) {
-        ret->retain();
-    } else {
-        CC_SAFE_DELETE(ret);
-    }
-    return ret;
 
-}
 
-Player *Player::create(int hp, std::string name) {
-    auto id = BattleScene::getInstance()->getStickmanCount();
-    return Player::create(id, hp, name);
-}
-
-bool Player::init(int id, int hp, std::string name) {
+bool Player::init(int id, std::string name) {
     if (!Node::init()) {
         return false;
     }
 
     _id = id;
     _name = name;
-    _shotsCount = 0;
-    _hp = hp;
 
-    auto size = cocos2d::Director::getInstance()->getVisibleSize();
-
-    _name_view = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f,
-                                               cocos2d::Size(size.width / 2 - 70.f, 0.f));
-    _hp_view = HPBar::create(cocos2d::Size(size.width / 2 - 70.f, 50.f));
-    _hp_view->setContentSize(cocos2d::Size(size.width / 2 - 70.f, 50.f));
-
-    _shots_view = cocos2d::Label::createWithTTF(cocos2d::StringUtils::format("%d", _shotsCount), Variables::FONT_NAME,
-                                                32.f, cocos2d::Size(size.width / 2 - 70.f, 0.f));
-
-    _name_view->setAnchorPoint(Vec2::ZERO);
-    _hp_view->setAnchorPoint(Vec2::ZERO);
-    _shots_view->setAnchorPoint(Vec2::ZERO);
-
-    _name_view->setPosition(0, size.height - 40.f);
-    _hp_view->setPosition(0, size.height - 100.f);
-    _shots_view->setPosition(0, size.height - 150.f);
-
-
-    setHAlignment(TextHAlignment::LEFT);
-
-    _name_view->setColor(cocos2d::Color3B::BLACK);
-    _shots_view->setColor(cocos2d::Color3B::BLACK);
-
-    this->addChild(_name_view, 1, "name");
-    this->addChild(_hp_view, 1, "hp");
-    this->addChild(_shots_view, 1, "shotsCount");
-
-    updateView();
+    _visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
     return true;
-}
-
-void Player::updateView() {
-    if (this->getParent() != nullptr)
-        _shots_view->setString(cocos2d::StringUtils::format("%d", _shotsCount));
 }
 
 
@@ -76,38 +27,6 @@ std::string Player::getName() {
     return _name;
 }
 
-
-int Player::getShotsCount() {
-    return _shotsCount;
-}
-
-void Player::addShotsCount() {
-    _shotsCount += 1;
-    updateView();
-}
-
-
-int Player::getHp() {
-    return _hp;
-}
-
-void Player::setHp(int diff) {
-    _hp -= diff;
-    if (_hp > 0) {
-        _hp_view->setHp(_hp);
-    }
-}
-
-void Player::setHAlignment(cocos2d::TextHAlignment alignment) {
-    _name_view->setHorizontalAlignment(alignment);
-    _shots_view->setHorizontalAlignment(alignment);
-    _hp_view->setAlignment(alignment != cocos2d::TextHAlignment::RIGHT);
-}
-
-void Player::nullShotsCount() {
-    _shotsCount = 0;
-    updateView();
-}
 
 
 HPBar *HPBar::create(cocos2d::Size size) {
@@ -211,65 +130,255 @@ void HPBar::changeState(HPState state) {
     this->addChild(_bar);
 }
 
-PlayerWithCoins *PlayerWithCoins::create(int id, int hp, std::string name, int coins) {
-    PlayerWithCoins *ret = new(std::nothrow) PlayerWithCoins();
-    if (ret && ret->init(id, hp, name, coins)) {
+PlayerDuel *PlayerDuel::create(int id, std::string name, int hp, int shotsCount) {
+    PlayerDuel *ret = new(std::nothrow) PlayerDuel();
+    if (ret && ret->init(id, name, hp, shotsCount)) {
         ret->retain();
     } else {
         CC_SAFE_DELETE(ret);
     }
     return ret;
-
 }
 
-PlayerWithCoins *PlayerWithCoins::create(int hp, std::string name) {
-    auto id = BattleScene::getInstance()->getStickmanCount();
-    auto coins = 0;
-    return PlayerWithCoins::create(id, hp, name, coins);
-}
-
-bool PlayerWithCoins::init(int id, int hp, std::string name, int coins) {
-    if (!Player::init(id, hp, name)) {
+bool PlayerDuel::init(int id, std::string name, int hp, int shotsCount) {
+    if (!Player::init(id, name)) {
         return false;
     }
 
-    _hp_view->setVisible(false);
+    _hp = hp;
+    _shotsCount = shotsCount;
 
-    auto size = cocos2d::Director::getInstance()->getVisibleSize();
+    _nameView = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f,
+                                               cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
+    _hpView = HPBar::create(cocos2d::Size(_visibleSize.width / 2 - 70.f, 50.f));
+    _hpView->setContentSize(cocos2d::Size(_visibleSize.width / 2 - 70.f, 50.f));
 
-    _coinsView = Node::create();
-    _coinsView->setScale(0.5f);
-    _coinsView->setPosition(Vec2(_coinsView->getBoundingBox().size.width / 2,
-                                 size.height - _coinsView->getBoundingBox().size.height / 2 - 95.f));
+    _shotsView = cocos2d::Label::createWithTTF(cocos2d::StringUtils::format("%d", _shotsCount), Variables::FONT_NAME,
+                                                32.f, cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
+
+    _nameView->setAnchorPoint(Vec2::ZERO);
+    _hpView->setAnchorPoint(Vec2::ZERO);
+    _shotsView->setAnchorPoint(Vec2::ZERO);
+
+    _nameView->setPosition(0, _visibleSize.height - 40.f);
+    _hpView->setPosition(0, _visibleSize.height - 100.f);
+    _shotsView->setPosition(0, _visibleSize.height - 150.f);
+
+
+    setHAlignment(TextHAlignment::LEFT);
+
+    _nameView->setColor(cocos2d::Color3B::BLACK);
+    _shotsView->setColor(cocos2d::Color3B::BLACK);
+
+    this->addChild(_nameView, 1, "name");
+    this->addChild(_hpView, 1, "hp");
+    this->addChild(_shotsView, 1, "shotsCount");
+
+    return true;
+}
+
+void PlayerDuel::setHAlignment(cocos2d::TextHAlignment alignment) {
+    _nameView->setHorizontalAlignment(alignment);
+    _shotsView->setHorizontalAlignment(alignment);
+    _hpView->setAlignment(alignment != cocos2d::TextHAlignment::RIGHT);
+}
+
+int PlayerDuel::getShotsCount() {
+    return _shotsCount;
+}
+
+void PlayerDuel::addShotsCount() {
+    _shotsCount += 1;
+    _updateView();
+}
+
+void PlayerDuel::nullShotsCount() {
+    _shotsCount = 0;
+    _updateView();
+}
+
+int PlayerDuel::getHp() {
+    return _hp;
+}
+
+void PlayerDuel::setHp(int diff) {
+    _hp -= diff;
+    if (_hp > 0) {
+        _hpView->setHp(_hp);
+    }
+}
+
+void PlayerDuel::_updateView() {
+    //TODO
+}
+
+std::string PlayerDuel::getPlayerView() {
+    //TODO
+    return std::string();
+}
+
+PlayerApple *PlayerApple::create(int id, std::string name, int score) {
+    PlayerApple *ret = new(std::nothrow) PlayerApple();
+    if (ret && ret->init(id, name, score)) {
+        ret->retain();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool PlayerApple::init(int id, std::string name, int score) {
+    if (!Player::init(id, name)) {
+        return false;
+    }
+
+    _nameView = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f,
+                                              cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
+
+    _nameView->setAnchorPoint(Vec2::ZERO);
+
+    _nameView->setPosition(0, _visibleSize.height - 40.f);
+
+    _nameView->setColor(cocos2d::Color3B::BLACK);
+
+    _scoreView = Node::create();
+    _scoreView->setScale(0.5f);
+    _scoreView->setPosition(Vec2(_scoreView->getBoundingBox().size.width / 2,
+                                 _visibleSize.height - _scoreView->getBoundingBox().size.height / 2 - 95.f));
 
     auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
 
     coin->setPosition(coin->getBoundingBox().size.width / 2, coin->getBoundingBox().size.height / 2);
 
-    _coinsView->addChild(coin, 2, "coin");
+    _scoreView->addChild(coin, 2, "coin");
 
-    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
+    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
                                                     Variables::H_FONT_SIZE);
     coinsCount->setColor(Color3B::BLACK);
 
     coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
                             coin->getBoundingBox().size.height / 2);
 
-    _coinsView->addChild(coinsCount, 2, "count");
+    _scoreView->addChild(coinsCount, 2, "count");
 
-    this->addChild(_coinsView, 1, "coins_view");
+    this->addChild(_nameView, 1, "name");
+    this->addChild(_scoreView, 1, "coins_view");
 
     return true;
 }
 
-void PlayerWithCoins::setHAlignment(cocos2d::TextHAlignment alignment) {
-    Player::setHAlignment(alignment);
-}
-
-void PlayerWithCoins::addGainedCoins(int newCount) {
-    Node *coin = _coinsView->getChildByName("count");
-    Label *count = (Label *) _coinsView->getChildByName("count");
+void PlayerApple::addScore(int newCount) {
+    Node *coin = _scoreView->getChildByName("count");
+    Label *count = (Label *) _scoreView->getChildByName("count");
     count->setString(StringUtils::toString(newCount));
     count->setPosition(coin->getBoundingBox().size.width + 10.f,
                        count->getPosition().y);
+}
+
+void PlayerApple::_updateView() {
+
+}
+
+std::string PlayerApple::getPlayerView() {
+    return std::string();
+}
+
+int PlayerApple::getHp() {
+    return 100;
+}
+
+void PlayerApple::setHAlignment(cocos2d::TextHAlignment alignment) {
+
+}
+
+PlayerOnlineApple *PlayerOnlineApple::create(int id, std::string name, int score) {
+    PlayerOnlineApple *ret = new(std::nothrow) PlayerOnlineApple();
+    if (ret && ret->init(id, name, score)) {
+        ret->retain();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool PlayerOnlineApple::init(int id, std::string name, int score) {
+    if (!PlayerApple::init(id, name, score)) {
+        return false;
+    }
+    _scoreView->removeFromParent();
+    _scoreView = Node::create();
+    _scoreView->setScale(0.5f);
+    _scoreView->setPosition(Vec2(_scoreView->getBoundingBox().size.width / 2,
+                                 _visibleSize.height - _scoreView->getBoundingBox().size.height / 2 - 95.f));
+
+    auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
+
+    coin->setPosition(coin->getBoundingBox().size.width / 2, coin->getBoundingBox().size.height / 2);
+
+    _scoreView->addChild(coin, 2, "coin");
+
+    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
+                                                    Variables::H_FONT_SIZE);
+    coinsCount->setColor(Color3B::BLACK);
+
+    coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
+                            coin->getBoundingBox().size.height / 2);
+
+    _scoreView->addChild(coinsCount, 2, "count");
+
+    this->addChild(_scoreView, 1, "coins_view");
+
+    return true;
+}
+
+void PlayerOnlineApple::_updateView() {
+
+}
+
+std::string PlayerOnlineApple::getPlayerView() {
+    return PlayerApple::getPlayerView();
+}
+
+Bot *Bot::create(std::string name, int hp) {
+    auto id = BattleScene::getInstance()->getStickmanCount();
+    Bot *ret = new(std::nothrow) Bot();
+    if (ret && ret->init(id, name, hp)) {
+        ret->retain();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool Bot::init(int id, std::string name, int hp) {
+    if (!Player::init(id, name)) {
+        return false;
+    }
+
+    _hp = hp;
+
+    return true;
+}
+
+int Bot::getHp() {
+    return _hp;
+}
+
+void Bot::setHp(int diff) {
+    _hp -= diff;
+    if (_hp > 0) {
+        _hpView->setHp(_hp);
+    }
+}
+
+void Bot::_updateView() {
+
+}
+
+void Bot::setHAlignment(cocos2d::TextHAlignment alignment) {
+
+}
+
+std::string Bot::getPlayerView() {
+    return std::string();
 }

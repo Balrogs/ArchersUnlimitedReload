@@ -38,25 +38,52 @@ protected:
 };
 
 class Player : public cocos2d::Node {
+public:
+    virtual bool init(int id, std::string name);
+
+    int getId();
+    std::string getName();
+
+    virtual std::string getPlayerView() = 0;
+    virtual int getHp() = 0;
+    virtual void setHAlignment(cocos2d::TextHAlignment alignment) = 0;
+
 protected:
     int _id;
     std::string _name;
-    int _shotsCount;
-    int _hp;
+    cocos2d::Size _visibleSize;
 
-    cocos2d::Label *_name_view;
-    HPBar *_hp_view;
-    cocos2d::Label *_shots_view;
+    virtual void _updateView() = 0;
 
-    void updateView();
+};
+
+class Bot : public Player {
 
 public:
+    static Bot *create(std::string name, int hp);
 
-    static Player *create(int id, int hp, std::string name);
+    virtual bool init(int id, std::string name, int hp);
 
-    static Player *create(int hp, std::string name);
+    int getHp();
 
-    virtual bool init(int id, int hp, std::string name);
+    void setHp(int diff);
+
+    virtual void setHAlignment(cocos2d::TextHAlignment alignment);
+
+    virtual std::string getPlayerView();
+
+protected:
+    int _hp;
+    HPBar *_hpView;
+    virtual void _updateView();
+};
+
+
+class PlayerDuel : public Player {
+public:
+    static PlayerDuel *create(int id, std::string name, int hp = 100, int shotsCount = 0);
+
+    virtual bool init(int id, std::string name, int hp, int shotsCount);
 
     virtual void setHAlignment(cocos2d::TextHAlignment alignment);
 
@@ -66,31 +93,58 @@ public:
 
     void nullShotsCount();
 
-    int getId();
-
-    std::string getName();
-
     int getHp();
 
     void setHp(int diff);
-};
 
-class PlayerWithCoins : public Player {
-public:
-
-    static PlayerWithCoins *create(int id, int hp, std::string name, int coins);
-
-    static PlayerWithCoins *create(int hp, std::string name);
-
-    virtual bool init(int id, int hp, std::string name, int coins);
-
-    virtual void setHAlignment(cocos2d::TextHAlignment alignment) override;
-
-    void addGainedCoins(int newCount);
+    virtual std::string getPlayerView();
 
 protected:
-    cocos2d::Node* _coinsView;
+
+    int _shotsCount;
+    int _hp;
+    cocos2d::Label *_nameView;
+    cocos2d::Label *_shotsView;
+    HPBar *_hpView;
+
+    virtual void _updateView();
 };
 
+
+class PlayerApple : public Player {
+public:
+
+    static PlayerApple *create(int id, std::string name,  int score = 0);
+
+    virtual bool init(int id, std::string name, int score);
+
+    void addScore(int newCount);
+
+    virtual std::string getPlayerView();
+
+    virtual  int getHp();
+
+    virtual void setHAlignment(cocos2d::TextHAlignment alignment);
+
+protected:
+    cocos2d::Label *_nameView;
+
+    cocos2d::Node* _scoreView;
+
+    virtual void _updateView();
+};
+
+class PlayerOnlineApple : public PlayerApple {
+public:
+    static PlayerOnlineApple *create(int id, std::string name, int score = 0);
+
+    bool init(int id, std::string name, int score);
+
+    virtual std::string getPlayerView();
+
+protected:
+
+    virtual void _updateView();
+};
 
 #endif //ARCUNLIM_PLAYER_H

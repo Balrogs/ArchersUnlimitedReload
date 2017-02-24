@@ -27,7 +27,7 @@ public:
 
     void popMain();
 
-    EquipmentScene* getEquipmentLayer();
+    void popAndReplace();
 
     cocos2d::Layer *getMain();
 
@@ -50,6 +50,8 @@ public:
     void onEnter() override;
 
     void onPushScene(int id);
+
+    void showErrorPopUp();
 
 private:
     cocos2d::Size _visibleSize;

@@ -41,8 +41,8 @@ bool AppleMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::
 void AppleMultiplayer::setPlayer(int id) {
     MultiplayerBattle::setPlayer(id);
 
-    //TODO
-   // _ui->initApple(visibleSize, _hero1, _hero2);
+
+    _ui->initAppleMultiPlayer(visibleSize, _hero1, _hero2);
 }
 
 void AppleMultiplayer::initObjects() {
@@ -50,7 +50,7 @@ void AppleMultiplayer::initObjects() {
     this->addChild(_env);
 
     _hero1 = new MPHero(150.f * this->_GLOBAL_SCALE + origin.x, AppleBattle::GROUND, _client);
-    _hero2 = new Hero(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND);
+    _hero2 = new AppleHero(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, nullptr);
 }
 
 bool AppleMultiplayer::isGameOver() {
@@ -329,5 +329,18 @@ void AppleMultiplayer::receiveAim(float angle, float power, int id) {
     if (id != _playerId) {
         getHero(_playerId)->setAim(angle, power);
     }
+}
+
+void AppleMultiplayer::createPlayers(int id, std::string name) {
+    _player1 = PlayerOnlineApple::create(_client->getDBPlayer()->getId(),
+                                  _client->getDBPlayer()->getName()
+    );
+    _player2 = PlayerOnlineApple::create(id, name);
+}
+
+int AppleMultiplayer::_getGainedCoinsByActionType(int type) {
+
+    //TODO
+    return DuelScene::_getGainedCoinsByActionType(type);
 }
 

@@ -19,7 +19,12 @@ public:
     void startGame() override;
 
     void receiveAction(float angle, float power, int id, int x, int y) override;
+
     void receiveAim(float angle, float power, int id) override;
+
+    virtual void createPlayers(int id, std::string name);
+
+    virtual int _getGainedCoinsByActionType(int type);
 
 protected:
 

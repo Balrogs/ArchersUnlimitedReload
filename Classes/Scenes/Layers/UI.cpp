@@ -148,6 +148,20 @@ void UI::setWarning(const char *message, Color3B color) {
     _warningLabel->setColor(color);
     _warningLabel->setString(message);
 }
+
+void UI::initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *player2) {
+
+    auto player1_view = player1->getPlayer();
+    player1_view->setPosition(10.f, 0.f);
+    this->addChild(player1_view);
+    this->bounds.push_back(player1_view->getBoundingBox());
+
+    auto player2_view = player2->getPlayer();
+    player2_view->setPosition(visibleSize.width / 2 + 60.f, 0.f);
+    this->addChild(player2_view);
+    this->bounds.push_back(player2_view->getBoundingBox());
+
+}
 //
 //void UI::initTest(cocos2d::Size visibleSize) {
 //
