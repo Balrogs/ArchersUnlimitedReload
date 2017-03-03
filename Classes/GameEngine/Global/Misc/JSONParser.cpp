@@ -1,3 +1,4 @@
+#include <platform/CCFileUtils.h>
 #include "JSONParser.h"
 
 string JSONParser::parse(string message, string key) {
@@ -79,4 +80,22 @@ bool JSONParser::isValid(string message) {
     Document document;
     document.Parse(message.c_str());
     return !document.HasParseError();
+}
+
+std::vector<AssetInfo *> JSONParser::parseAsset(string key) {
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets/assets.json");
+    Document document;
+    document.Parse(content.c_str());
+    std::vector<AssetInfo*> assets;
+
+    const Value& b = document[key.c_str()];
+
+    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+    {
+        const Value& c = b[i];
+
+        assets.push_back(new AssetInfo(c["name"].GetString(), c["path"].GetString(), c["available"].GetBool()));
+    }
+
+    return assets;
 }

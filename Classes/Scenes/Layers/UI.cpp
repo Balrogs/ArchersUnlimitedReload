@@ -31,7 +31,7 @@ bool UI::init() {
 
     this->addChild(pause);
 
-    _warningLabel = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, 32.f);
+    _warningLabel = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
     _warningLabel->setColor(Color3B::BLACK);
     _warningLabel->setPosition(
             Vec2(pause->getPosition().x, pause->getPosition().y - pause->getBoundingBox().size.height));
@@ -162,6 +162,48 @@ void UI::initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *pl
     this->bounds.push_back(player2_view->getBoundingBox());
 
 }
+
+void UI::startGame() {
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+
+    auto label = cocos2d::Label::createWithTTF("!GO!", Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    label->setColor(Color3B::BLUE);
+    label->setPosition(
+            Vec2(visibleSize.width / 2,
+            1.5f *visibleSize.height));
+    this->addChild(label);
+    label->runAction(RepeatForever::create(
+            Sequence::createWithTwoActions(
+                    DelayTime::create(0.5f),
+                    Sequence::createWithTwoActions(
+                            CallFunc::create(
+                                    [&,label]() {
+                                        label->setColor(Color3B::WHITE);
+                                    }
+                            ),
+                            Sequence::createWithTwoActions(
+                                    DelayTime::create(0.5f),
+                                    CallFunc::create(
+                                            [&, label]() {
+                                                label->setColor(Color3B::BLUE);
+                                            }
+                                    )))
+            )
+                     )
+    );
+
+    label->runAction(
+            Sequence::createWithTwoActions(
+                    MoveTo::create(1.f,Vec2(visibleSize.width / 2,
+                                            0.75f *visibleSize.height)),
+                    Spawn::createWithTwoActions(
+                            DelayTime::create(0.5f),
+                            ScaleTo::create(0.5f, 0.f)
+                    )
+            )
+    );
+}
+
 //
 //void UI::initTest(cocos2d::Size visibleSize) {
 //

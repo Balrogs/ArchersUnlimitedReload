@@ -41,8 +41,11 @@ protected:
 
     void _startGame();
 
+    void _setTurnId(int id);
 private:
     Brain* _brain;
+
+
 };
 
 

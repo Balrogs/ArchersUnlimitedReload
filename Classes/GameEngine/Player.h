@@ -1,7 +1,3 @@
-//
-// Created by igor on 05.10.16.
-//
-
 #ifndef ARCUNLIM_PLAYER_H
 #define ARCUNLIM_PLAYER_H
 
@@ -99,19 +95,23 @@ public:
 
     virtual std::string getPlayerView();
 
+    void markTurn(bool p);
+
 protected:
+    cocos2d::Label *_nameView;
+    virtual void _updateView();
+private:
 
     int _shotsCount;
     int _hp;
-    cocos2d::Label *_nameView;
+
     cocos2d::Label *_shotsView;
     HPBar *_hpView;
 
-    virtual void _updateView();
 };
 
 
-class PlayerApple : public Player {
+class PlayerApple : public PlayerDuel {
 public:
 
     static PlayerApple *create(int id, std::string name,  int score = 0);

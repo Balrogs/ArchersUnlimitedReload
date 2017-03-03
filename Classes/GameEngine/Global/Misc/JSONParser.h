@@ -5,10 +5,13 @@
 #ifndef ARCHERSUNLIMITED_JSONPARSER_H
 #define ARCHERSUNLIMITED_JSONPARSER_H
 
+#include <vector>
 #include "rapidjson/document.h"
+#include "Asset.h"
 
 using namespace rapidjson;
 using namespace std;
+
 
 
 class JSONParser {
@@ -21,6 +24,8 @@ public:
     static bool isValid(string message);
     static string parseError(string message, string key);
     static float parseFloat(string message, string key);
+
+    static std::vector<AssetInfo*> parseAsset(string key);
 };
 
 

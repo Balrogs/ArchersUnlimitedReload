@@ -37,7 +37,7 @@ bool DuelSceneMultiplayer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos
 
 void DuelSceneMultiplayer::makeTurn(int id) {
     if (id == -1 || this->_turnId == 0) {
-        this->_turnId = id;
+        _setTurnId(id);
         return;
     }
     if (this->_turnId != id) {

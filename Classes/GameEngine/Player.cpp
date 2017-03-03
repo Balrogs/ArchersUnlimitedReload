@@ -217,6 +217,35 @@ std::string PlayerDuel::getPlayerView() {
     return std::string();
 }
 
+void PlayerDuel::markTurn(bool p) {
+    if(p){
+        _nameView->runAction(RepeatForever::create(
+                Sequence::createWithTwoActions(
+                        DelayTime::create(1.f),
+                        Sequence::createWithTwoActions(
+                                CallFunc::create(
+                                        [&]() {
+                                            _nameView->setColor(Color3B::BLUE);
+                                        }
+                                ),
+                                Sequence::createWithTwoActions(
+                                        DelayTime::create(1.f),
+                                        CallFunc::create(
+                                                [&]() {
+                                                    _nameView->setColor(Color3B::WHITE);
+                                                }
+                                        )
+                                )))
+                             )
+        );
+    } else {
+        _nameView->stopAllActions();
+        _nameView->setColor(Color3B::BLACK);
+    }
+
+}
+
+
 PlayerApple *PlayerApple::create(int id, std::string name, int score) {
     PlayerApple *ret = new(std::nothrow) PlayerApple();
     if (ret && ret->init(id, name, score)) {
@@ -264,6 +293,8 @@ bool PlayerApple::init(int id, std::string name, int score) {
     this->addChild(_nameView, 1, "name");
     this->addChild(_scoreView, 1, "coins_view");
 
+    setHAlignment(TextHAlignment::LEFT);
+
     return true;
 }
 
@@ -289,6 +320,15 @@ int PlayerApple::getHp() {
 
 void PlayerApple::setHAlignment(cocos2d::TextHAlignment alignment) {
 
+    _nameView->setHorizontalAlignment(alignment);
+
+    if(auto count = dynamic_cast<Label *>(_scoreView->getChildByName("count"))){
+        if(alignment == TextHAlignment::LEFT){
+        count->setHorizontalAlignment(TextHAlignment::RIGHT);
+        } else {
+            count->setHorizontalAlignment(TextHAlignment::LEFT);
+        }
+    }
 }
 
 PlayerOnlineApple *PlayerOnlineApple::create(int id, std::string name, int score) {
@@ -306,27 +346,24 @@ bool PlayerOnlineApple::init(int id, std::string name, int score) {
         return false;
     }
     _scoreView->removeFromParent();
+
     _scoreView = Node::create();
-    _scoreView->setScale(0.5f);
-    _scoreView->setPosition(Vec2(_scoreView->getBoundingBox().size.width / 2,
-                                 _visibleSize.height - _scoreView->getBoundingBox().size.height / 2 - 95.f));
-
-    auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
-
-    coin->setPosition(coin->getBoundingBox().size.width / 2, coin->getBoundingBox().size.height / 2);
-
-    _scoreView->addChild(coin, 2, "coin");
+    _scoreView->setPosition(_nameView->getPosition());
 
     auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
-                                                    Variables::H_FONT_SIZE);
+                                                    1.5f * Variables::H_FONT_SIZE,
+                                                    cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
     coinsCount->setColor(Color3B::BLACK);
-
-    coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
-                            coin->getBoundingBox().size.height / 2);
+    coinsCount->setPosition(Vec2(
+            coinsCount->getContentSize().width / 2,
+            0
+    ));
 
     _scoreView->addChild(coinsCount, 2, "count");
 
     this->addChild(_scoreView, 1, "coins_view");
+
+    setHAlignment(TextHAlignment::LEFT);
 
     return true;
 }

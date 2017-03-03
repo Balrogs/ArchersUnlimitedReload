@@ -71,6 +71,8 @@ protected:
 
     void onEnter() override;
 
+    void _readAssets();
+
     void onQuit();
 };
 #endif //ARCUNLIM_EQUIPMENTSCENE_H

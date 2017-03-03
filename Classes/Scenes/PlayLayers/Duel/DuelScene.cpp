@@ -44,11 +44,11 @@ void DuelScene::initWorld() {
 
     _startGame();
 
-    makeTurn(_player2->getId());
+    _setTurnId(_player->getPlayer()->getId());
 }
 
 bool DuelScene::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    if (this->_turnId == _player2->getId()) {
+    if (this->_turnId == _player->getPlayer()->getId()) {
         makeTurn(-1);
         return BattleParent::_touchHandlerBegin(touch, event);
     } else
@@ -61,7 +61,7 @@ bool DuelScene::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *ev
 
 void DuelScene::makeTurn(int id) {
     if (id == -1 || this->_turnId == 0) {
-        this->_turnId = id;
+        _setTurnId(id);
         return;
     }
 
@@ -74,7 +74,7 @@ void DuelScene::makeTurn(int id) {
             auto action = Sequence::create(
                     CallFunc::create(
                             [&]() {
-                                this->_turnId = _player1->getId();
+                                _setTurnId(_player2->getId());
                             }
                     ),
                     Spawn::createWithTwoActions(
@@ -96,7 +96,6 @@ void DuelScene::makeTurn(int id) {
             );
             this->runAction(action);
         } else if (id == _player2->getId()) {
-
             if (this->getPosition().x >= visibleSize.width / 2) {
                 delay = 0.5f;
             }
@@ -114,7 +113,7 @@ void DuelScene::makeTurn(int id) {
                     CallFunc::create(
                             [&]() {
                                 UI::enableArrows(_player, true);
-                                this->_turnId = _player2->getId();
+                                _setTurnId(_player1->getId());
                             }
                     ),
                     NULL
@@ -134,7 +133,8 @@ void DuelScene::_startGame() {
     if(auto waitLayer = this->_ui->getChildByName("PopUp")){
         waitLayer->removeFromParent();
     }
-    // TODO add starting action
+
+    _ui->startGame();
 }
 
 int DuelScene::_getGainedCoinsByActionType(int type) {
@@ -151,5 +151,16 @@ int DuelScene::getPlayerId() {
     return _player->getPlayer()->getId();
 }
 
+
+void DuelScene::_setTurnId(int id) {
+    this->_turnId = id;
+    if (_player1->getId() == id) {
+        ((PlayerDuel *)_player1)->markTurn(true);
+        ((PlayerDuel *)_player2)->markTurn(false);
+    } else if (_player2->getId() == id) {
+        ((PlayerDuel *)_player2)->markTurn(true);
+        ((PlayerDuel *)_player1)->markTurn(false);
+    }
+}
 
 

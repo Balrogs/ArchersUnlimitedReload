@@ -38,9 +38,9 @@ void DuelScene2P::initWorld() {
     _ui->initDuel(visibleSize, _hero1, _hero2);
     _player = _hero1;
 
-    this->_turnId = _player->getPlayer()->getId();
-
     _startGame();
+
+    _setTurnId(_player->getPlayer()->getId());
 }
 
 bool DuelScene2P::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
@@ -52,7 +52,7 @@ bool DuelScene2P::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event
 
 void DuelScene2P::makeTurn(int id) {
     if (id == -1 || this->_turnId == 0) {
-        this->_turnId = id;
+        _setTurnId(id);
         return;
     }
 
@@ -76,7 +76,7 @@ void DuelScene2P::makeTurn(int id) {
                 CallFunc::create(
                         [&]() {
                             UI::enableArrows(_player, true);
-                            this->_turnId = _player->getPlayer()->getId();
+                            _setTurnId(_player->getPlayer()->getId());
                         }
                 ),
                 NULL

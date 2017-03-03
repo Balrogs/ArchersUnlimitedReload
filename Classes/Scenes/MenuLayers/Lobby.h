@@ -13,7 +13,7 @@
 #include "GameEngine/Global/Misc/PopUp.h"
 #include "cocos2d.h"
 
-class Lobby : public MultiplayerMenu {
+class Lobby : public cocos2d::Layer {
 public:
     CREATE_FUNC(Lobby);
 
@@ -43,6 +43,10 @@ public:
 
     void showSearchPopUp();
 
+    virtual void onError(string message);
+
+    virtual void onQuit();
+
 protected:
     void _showPopUp(PopUp* popUp);
 
@@ -52,6 +56,11 @@ protected:
     void onEnter() override;
 
     void _resetPlayer();
+
+    cocos2d::Label *_errorMessage;
+    SocketClient *_client;
+
+    cocos2d::Size _visibleSize;
 
 
 private:

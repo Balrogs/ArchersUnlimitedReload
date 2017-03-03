@@ -31,6 +31,8 @@ public:
 
     void setWarning(const char * message, cocos2d::Color3B color);
 
+    void startGame();
+
    // void initTest(cocos2d::Size visibleSize);
 
 protected:

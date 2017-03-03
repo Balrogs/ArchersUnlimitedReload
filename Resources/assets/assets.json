@@ -1,0 +1,23 @@
+{
+    "arrows" : [
+        {
+            "name": "standart",
+            "path": "Arrow",
+            "available": true
+        },
+        {
+            "name": "bomb",
+            "path": "BombArrow",
+            "available": true
+        }
+    ],
+    "bows": [
+        {
+            "name": "standart",
+            "path": "Bow",
+            "available": true
+        }
+    ],
+    "hats": [
+    ]
+}

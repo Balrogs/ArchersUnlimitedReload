@@ -8,6 +8,7 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include "Lobby.h"
+#include "MainMenu.h"
 
 USING_NS_CC;
 
@@ -15,9 +16,6 @@ bool Lobby::init() {
     if(!Layer::init()){
         return false;
     }
-
-    this->removeAllChildren();
-    this->getEventDispatcher()->removeEventListenersForTarget(this);
 
     _client = SocketClient::getInstance();
     _visibleSize = Director::getInstance()->getVisibleSize();
@@ -370,15 +368,12 @@ void Lobby::_reloadInfoBox(int type) {
             _playerGlobalStatistics->setLocalZOrder(2);
             _playerCountryStatistics->setLocalZOrder(2);
 
-
             break;
         }
         case 2: {
             _playerInfo->setLocalZOrder(2);
             _playerGlobalStatistics->setLocalZOrder(3);
             _playerCountryStatistics->setLocalZOrder(2);
-
-
 
             break;
         }
@@ -417,4 +412,12 @@ void Lobby::_resetPlayer() {
     _player2Id = 0;
     _player2Name = "";
 
+}
+
+void Lobby::onError(string message) {
+    _errorMessage->setString(message);
+}
+
+void Lobby::onQuit() {
+    MainScene::getInstance()->popAndReplace();
 }

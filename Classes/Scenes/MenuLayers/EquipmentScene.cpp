@@ -1,8 +1,5 @@
-//s54
-// Created by igor on 05.10.16.
-//
-
 #include <GameEngine/Global/Variables.h>
+#include <GameEngine/Global/Misc/JSONParser.h>
 #include "EquipmentScene.h"
 #include "MainMenu.h"
 
@@ -36,6 +33,8 @@ bool EquipmentScene::init() {
     stand->setPosition(Vec2(stand->getContentSize().width / 2, stand->getContentSize().height / 2));
     this->addChild(stand, 1);
 
+    _readAssets();
+
     auto hero = new HeroPreview();
     hero->setScale(1.5f);
     hero->setPosition(stand->getContentSize().width / 2, stand->getContentSize().height / 2);
@@ -57,6 +56,8 @@ bool EquipmentScene::init() {
 void EquipmentScene::onEnter() {
     Layer::onEnter();
 
+    _readAssets();
+
     //TODO zoom in
 
     _controls->setVisible(true);
@@ -73,6 +74,12 @@ void EquipmentScene::onQuit() {
 
 cocos2d::Vec2 EquipmentScene::getButtonPosition() {
     return Vec2(_controls->getHero()->getPosition().x, _controls->getHero()->getGlobalHeight("Head"));
+}
+
+void EquipmentScene::_readAssets() {
+    auto arrows = JSONParser::parseAsset("arrows");
+    auto bows = JSONParser::parseAsset("bows");
+    auto hats = JSONParser::parseAsset("hats");
 }
 
 EquipmentScene::UIControls *EquipmentScene::UIControls::create(HeroPreview *hero) {

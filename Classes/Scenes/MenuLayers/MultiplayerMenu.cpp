@@ -13,8 +13,6 @@ bool MultiplayerMenu::init() {
         return false;
     }
 
-    this->removeAllChildren();
-
     auto visibleOrigin = Director::getInstance()->getVisibleOrigin();
     _visibleSize = Director::getInstance()->getVisibleSize();
 
