@@ -26,6 +26,7 @@ public:
     static float parseFloat(string message, string key);
 
     static std::vector<AssetInfo*> parseAsset(string key);
+    static AssetInfo* parseAsset(string key, int id);
 };
 
 

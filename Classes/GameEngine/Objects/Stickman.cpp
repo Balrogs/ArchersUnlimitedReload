@@ -4,7 +4,7 @@
 
 USING_NS_CC;
 
-Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos, y_pos, scale, 1) {
+Stickman::Stickman(float x_pos, float y_pos, float scale, float hp): Body(x_pos, y_pos, scale, 1, PlayerView::readPlayerView()) {
     _bot =  Bot::create("BOT", 100);
     _armature = BattleScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
@@ -15,7 +15,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
         if (bone == nullptr) {
             continue;
         }
-        if (bone->name == "Head") {
+        if (bone->name == "head") {
             child->setPhysicsBody(cocos2d::PhysicsBody::createCircle(child->getBoundingBox().size.height / 2,
                                                                      cocos2d::PHYSICSBODY_MATERIAL_DEFAULT));
         } else {
@@ -37,6 +37,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp) : Body(x_pos
     this->setScale(BattleScene::getInstance()->getGlobalScale());
     _updateAnimation();
 
+    _setPlayerView();
 
     dragonBones::WorldClock::clock.add(_armature);
 
@@ -142,12 +143,26 @@ Player *Stickman::getPlayer() {
     return _bot;
 }
 
-Body::Body(float x_pos, float y_pos, float scale, float facedir) :
+void Stickman::_changeArrow() {
+
+}
+
+void Stickman::_changeHat() {
+    _hat = BattleParent::getInstance()->factory.buildArmature(_playerView->getHat()->Path());
+    _armature->getSlot("Hat")->setChildArmature(_hat);
+}
+
+void Stickman::_changeBow() {
+
+}
+
+Body::Body(float x_pos, float y_pos, float scale, int facedir, PlayerView* playerView) :
         _faceDir(facedir),
         _moveDir(0),
         _speedX(0.f),
         _speedY(0.f),
-        _state(IDLE) {
+        _state(IDLE),
+        _playerView(playerView) {
     _x_pos = x_pos;
     _y_pos = y_pos;
 }
@@ -227,4 +242,10 @@ void Body::setState(State state) {
         _state = state;
         _updateAnimation();
     }
+}
+
+void Body::_setPlayerView() {
+    _changeArrow();
+    _changeHat();
+    _changeBow();
 }

@@ -1,5 +1,6 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
+#include <GameEngine/Global/Misc/JSONParser.h>
 
 USING_NS_CC;
 
@@ -418,4 +419,52 @@ void Bot::setHAlignment(cocos2d::TextHAlignment alignment) {
 
 std::string Bot::getPlayerView() {
     return std::string();
+}
+
+
+PlayerView *PlayerView::readPlayerView() {
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+    int hat = def->getIntegerForKey("hat", 3);
+    int bow = def->getIntegerForKey("bow", 2);
+    int arrow = def->getIntegerForKey("arrow", 3);
+
+    return new PlayerView(hat, bow, arrow);
+}
+
+PlayerView::PlayerView(int hat, int bow, int arrow) {
+    _hatId = hat;
+    _bowId = bow;
+    _arrowId = arrow;
+}
+
+AssetInfo* PlayerView::getHat() {
+    return JSONParser::parseAsset("hats", _hatId);
+}
+
+AssetInfo* PlayerView::getBow() {
+    return JSONParser::parseAsset("bows", _bowId);
+}
+
+AssetInfo* PlayerView::getArrow() {
+    return JSONParser::parseAsset("arrows", _arrowId);
+}
+
+std::string PlayerView::toString() {
+    return StringUtils::format("{\"hat\":%d,\"bow\":%d,\"arrow\":%d}", _hatId, _arrowId, _bowId);
+}
+
+void PlayerView::setHat(int id) {
+    _hatId = id;
+    cocos2d::UserDefault::getInstance()->setIntegerForKey("hat", _hatId);
+}
+
+void PlayerView::setBow(int id) {
+    _bowId = id;
+    cocos2d::UserDefault::getInstance()->setIntegerForKey("bow", _bowId);
+}
+
+void PlayerView::setArrow(int id) {
+    _arrowId = id;
+    cocos2d::UserDefault::getInstance()->setIntegerForKey("arrow", _arrowId);
 }

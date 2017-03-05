@@ -94,8 +94,18 @@ std::vector<AssetInfo *> JSONParser::parseAsset(string key) {
     {
         const Value& c = b[i];
 
-        assets.push_back(new AssetInfo(c["name"].GetString(), c["path"].GetString(), c["available"].GetBool()));
+        assets.push_back(new AssetInfo(c["id"].GetInt(), c["name"].GetString(), c["path"].GetString(), c["available"].GetBool()));
     }
 
     return assets;
+}
+
+AssetInfo *JSONParser::parseAsset(string key, int id) {
+    auto assets = parseAsset(key);
+    for(auto asset : assets){
+        if(asset->Id() == id){
+            return asset;
+        }
+    }
+    return nullptr;
 }

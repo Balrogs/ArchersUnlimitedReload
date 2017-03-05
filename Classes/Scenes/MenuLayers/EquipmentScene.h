@@ -14,6 +14,9 @@ public:
     bool init();
 
     cocos2d::Vec2 getButtonPosition();
+
+    void resumeEquipment();
+
 protected:
 
     enum Alignment{
@@ -21,24 +24,15 @@ protected:
         Horizontal
     };
 
-
-    enum BuyType{
-        Achievement,
-        Money,
-        Chest
-    };
-
     class Item : public Sprite {
     public:
-        static Item *create(Node* view, int ind, float value, bool isAvailable, BuyType type);
+        static Item *create(Node* view, int ind, bool isAvailable);
 
-        bool init(Node* view, int ind, bool isAvailable, BuyType type, float value);
+        bool init(Node* view, int ind, bool isAvailable);
 
     protected:
         int _index;
         bool _available;
-        Label* _message;
-        ui::Button* _buy;
     };
 
     class Selector : public Node {
@@ -49,8 +43,6 @@ protected:
 
     protected:
         int _index;
-        Label* _message;
-        ui::Button* _buy;
     };
 
     class UIControls : public Node {
@@ -68,8 +60,11 @@ protected:
     Size _visibleSize;
 
     UIControls* _controls;
+    Node* _stand;
 
-    void onEnter() override;
+    Label* _hatsCount;
+    Label* _arrowsCount;
+    Label* _bowsCount;
 
     void _readAssets();
 

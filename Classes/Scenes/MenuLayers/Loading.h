@@ -7,7 +7,7 @@ class Loading : public cocos2d::Layer {
 public:
     CREATE_FUNC(Loading);
 
-    bool init();
+    bool init() override;
 
 };
 

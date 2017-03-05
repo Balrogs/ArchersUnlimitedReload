@@ -222,7 +222,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     customize->addTouchEventListener([&, equipmentLayer](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                equipmentLayer->resume();
+                equipmentLayer->resumeEquipment();
                 MainScene::getInstance()->popMain();
             }
                 break;
@@ -330,7 +330,7 @@ void MainMenu::onMenuClick(int id) {
                 switch (type) {
                     case cocos2d::ui::Widget::TouchEventType::ENDED: {
                         if(SocketClient::getInstance()->connected() && SocketClient::getInstance()->getDBPlayer()->canLogin()){
-                            SocketClient::getInstance()->login();
+                          //  SocketClient::getInstance()->login();
                             MainScene::getInstance()->pushMain(Loading::create());
                         } else {
                             MainScene::getInstance()->replaceMain(MultiplayerMenu::create());

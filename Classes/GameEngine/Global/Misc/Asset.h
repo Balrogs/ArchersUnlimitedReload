@@ -10,10 +10,16 @@
 
 class AssetInfo {
 public:
-    AssetInfo(std::string n, std::string p, bool a);
-    std::string name;
-    std::string path;
-    bool available;
+    AssetInfo(int id, std::string n, std::string p, bool a);
+    int Id();
+    std::string Name();
+    std::string Path();
+    bool isAvailable();
+private:
+    int _id;
+    std::string _name;
+    std::string _path;
+    bool _available;
 };
 
 

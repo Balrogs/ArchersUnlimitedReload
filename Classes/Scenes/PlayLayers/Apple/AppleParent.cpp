@@ -21,6 +21,6 @@ void AppleParent::completeShot() {
 }
 
 void AppleParent::addApple(Body *target) {
-    auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("Head"), target->getPlayer()->getId());
+    auto apple = new Apple(target->getPositionX(), target->getGlobalHeight("head"), target->getPlayer()->getId());
     _targets.push_back(apple);
 }

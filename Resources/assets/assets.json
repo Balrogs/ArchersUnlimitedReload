@@ -1,23 +1,266 @@
 {
     "arrows" : [
         {
+            "id" : 0,
             "name": "standart",
             "path": "Arrow",
             "available": true
         },
         {
+            "id" : 1,
             "name": "bomb",
             "path": "BombArrow",
+            "available": true
+        },
+        {
+            "id" : 2,
+            "name": "green",
+            "path": "GreenArrow",
+            "available": true
+        },
+        {
+            "id" : 3,
+            "name": "orchid",
+            "path": "OrcArrow",
+            "available": true
+        },
+        {
+            "id" : 4,
+            "name": "valentine",
+            "path": "ValentineArrow",
+            "available": true
+        },
+        {
+            "id" : 5,
+            "name": "classic",
+            "path": "ClassicArrow",
+            "available": true
+        },
+        {
+            "id" : 6,
+            "name": "three",
+            "path": "ThreeArrow",
             "available": true
         }
     ],
     "bows": [
         {
+            "id" : 0,
             "name": "standart",
             "path": "Bow",
+            "available": true
+        },
+        {
+            "id" : 1,
+            "name": "wooden",
+            "path": "WoodenBow",
+            "available": true
+        },
+        {
+            "id" : 2,
+            "name": "linear",
+            "path": "LinearBow",
+            "available": true
+        },
+        {
+            "id" : 3,
+            "name": "round",
+            "path": "RoundBow",
+            "available": true
+        },
+        {
+            "id" : 4,
+            "name": "laser",
+            "path": "LaserBow",
             "available": true
         }
     ],
     "hats": [
+        {
+            "id" : 0,
+            "name": "none",
+            "path": "Hat",
+            "available": true
+        },
+        {
+            "id" : 1,
+            "name": "baseball",
+            "path": "Baseball",
+            "available": true
+        },
+        {
+            "id" : 2,
+            "name": "anon",
+            "path": "Anon",
+            "available": true
+        },
+        {
+            "id" : 3,
+            "name": "batman",
+            "path": "Batman",
+            "available": true
+        },
+        {
+            "id" : 4,
+            "name": "box",
+            "path": "Box",
+            "available": true
+        },
+        {
+            "id" : 5,
+            "name": "cartman",
+            "path": "Cartman",
+            "available": true
+        },
+        {
+            "id" : 6,
+            "name": "cat",
+            "path": "Cat",
+            "available": true
+        },
+        {
+            "id" : 7,
+            "name": "cowboy",
+            "path": "Cowboy",
+            "available": true
+        },
+        {
+            "id" : 8,
+            "name": "crown",
+            "path": "Crown",
+            "available": true
+        },
+        {
+            "id" : 9,
+            "name": "cylinder",
+            "path": "Cylinder",
+            "available": true
+        },
+        {
+            "id" : 10,
+            "name": "devil",
+            "path": "Devil",
+            "available": true
+        },
+        {
+            "id" : 11,
+            "name": "glasses",
+            "path": "Glasses",
+            "available": true
+        },
+        {
+            "id" : 12,
+            "name": "helmet",
+            "path": "Helmet",
+            "available": true
+        },
+        {
+            "id" : 13,
+            "name": "nose",
+            "path": "Nose",
+            "available": true
+        },
+        {
+            "id" : 14,
+            "name": "orc",
+            "path": "Orc",
+            "available": true
+        },
+        {
+            "id" : 15,
+            "name": "pan",
+            "path": "Pan",
+            "available": true
+        },
+        {
+            "id" : 16,
+            "name": "pharaon",
+            "path": "Pharaon",
+            "available": true
+        },
+        {
+            "id" : 17,
+            "name": "princess",
+            "path": "Princess",
+            "available": true
+        },
+        {
+            "id" : 18,
+            "name": "rambo",
+            "path": "Rambo",
+            "available": true
+        },
+        {
+            "id" : 19,
+            "name": "robinhood",
+            "path": "Robinhood",
+            "available": true
+        },
+        {
+            "id" : 20,
+            "name": "santa",
+            "path": "Santa",
+            "available": true
+        },
+        {
+            "id" : 21,
+            "name": "skull1",
+            "path": "Skull1",
+            "available": true
+        },
+        {
+            "id" : 22,
+            "name": "skull2",
+            "path": "Skull2",
+            "available": true
+        },
+        {
+            "id" : 23,
+            "name": "skull3",
+            "path": "Skull3",
+            "available": true
+        },
+        {
+            "id" : 24,
+            "name": "skull4",
+            "path": "Skull4",
+            "available": true
+        },
+        {
+            "id" : 25,
+            "name": "smile",
+            "path": "Smile",
+            "available": true
+        },
+        {
+            "id" : 26,
+            "name": "sombrero",
+            "path": "Sombrero",
+            "available": true
+        },
+        {
+            "id" : 27,
+            "name": "swag",
+            "path": "Swag",
+            "available": true
+        },
+        {
+            "id" : 28,
+            "name": "terminator",
+            "path": "Terminator",
+            "available": true
+        },
+        {
+            "id" : 29,
+            "name": "thug",
+            "path": "Thug",
+            "available": true
+        },
+        {
+            "id" : 30,
+            "name": "ushanka",
+            "path": "Ushanka",
+            "available": true
+        }
     ]
 }

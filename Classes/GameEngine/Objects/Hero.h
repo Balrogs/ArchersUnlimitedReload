@@ -58,6 +58,7 @@ protected:
     dragonBones::CCArmatureDisplay *_arrowDisplay;
     dragonBones::CCArmatureDisplay *_shouldersDisplay;
     dragonBones::Armature *_bowArmature;
+    dragonBones::Armature *_hat;
     dragonBones::CCArmatureDisplay *_bowArmatureDisplay;
     cocos2d::Node *_string;
 
@@ -74,6 +75,12 @@ protected:
     void setFaceDir();
 
     bool _aimRandomly(cocos2d::Vec2 start, cocos2d::Vec2 destination);
+
+    void _changeArrow();
+
+    void _changeHat();
+
+    void _changeBow();
 };
 
 class AppleHero : public Hero {

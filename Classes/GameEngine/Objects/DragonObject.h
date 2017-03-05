@@ -1,11 +1,9 @@
-//
-// Created by igor on 17.10.16.
-//
-
 #ifndef ARCUNLIM_DRAGONOBJECT_H
 #define ARCUNLIM_DRAGONOBJECT_H
 
 #include <dragonBones/cocos2dx/CCArmatureDisplay.h>
+#include <dragonBones/cocos2dx/CCFactory.h>
+#include <GameEngine/Player.h>
 #include "cocos2d.h"
 
 class DragonObject : public cocos2d::Sprite {
@@ -44,15 +42,32 @@ public:
     void changeBow(int id);
     void changeArrow(int id);
 
+    float getHatHeight();
+
 protected:
 
+    PlayerView* _playerView;
+    void _setPlayerView();
+
+    dragonBones::CCFactory factory;
+
     dragonBones::CCArmatureDisplay *_bowArmatureDisplay;
-    dragonBones::CCArmatureDisplay *_arrowDisplay;
-    dragonBones::Armature *_arrowArmature;
-    dragonBones::Armature *_bowArmature;
+    dragonBones::CCArmatureDisplay *_shouldersDisplay;
+    dragonBones::Armature *_arrow;
+    dragonBones::Armature *_shoulders;
+    dragonBones::Armature *_bow;
+    dragonBones::Armature *_hat;
+
     cocos2d::Node *_string;
 
     void _updateString();
+
+    void _changeArrow();
+
+    void _changeHat();
+
+    void _changeBow();
+
 };
 
 

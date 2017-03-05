@@ -3,6 +3,7 @@
 
 
 #include <cocos2d.h>
+#include <GameEngine/Global/Misc/Asset.h>
 
 enum HPState {
     FULL,
@@ -33,8 +34,32 @@ protected:
     void changeState(HPState state);
 };
 
+class PlayerView {
+public:
+    static PlayerView* readPlayerView();
+
+    AssetInfo* getHat();
+    AssetInfo* getBow();
+    AssetInfo* getArrow();
+
+    void setHat(int id);
+    void setBow(int id);
+    void setArrow(int id);
+
+    std::string toString();
+
+private:
+
+    PlayerView(int hat, int bow, int arrow);
+
+    int _hatId;
+    int _bowId;
+    int _arrowId;
+};
+
 class Player : public cocos2d::Node {
 public:
+
     virtual bool init(int id, std::string name);
 
     int getId();

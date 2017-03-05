@@ -6,7 +6,7 @@
 #include "Stickman.h"
 
 
-Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1),
+Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1, PlayerView::readPlayerView()),
                                                        _isAttacking(false),
                                                        _weaponIndex(0),
                                                        _weaponName(""),
@@ -42,7 +42,7 @@ Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1),
         if (bone == nullptr) {
             continue;
         }
-        if (bone->name == "Head") {
+        if (bone->name == "head") {
             child->setPhysicsBody(cocos2d::PhysicsBody::createCircle(child->getBoundingBox().size.height / 2,
                                                                      cocos2d::PHYSICSBODY_MATERIAL_DEFAULT));
         } else {
@@ -96,17 +96,11 @@ Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1),
 
     _aimPowerState =  _shoulders->getAnimation().fadeIn(Variables::AIM_IDLE_ANIMATION);
 
-    _bowArmature = _shoulders->getSlot("Bow")->getChildArmature();
-    _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bowArmature->getDisplay();
-    _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
-    _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
-    _arrowDisplay->setVisible(false);
-
     _string = cocos2d::Node::create();
 
-    _updateString();
+    _setPlayerView();
 
-    _bowArmatureDisplay->addChild(_string);
+    _arrowDisplay->setVisible(false);
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
@@ -185,39 +179,39 @@ void Hero::attack(float radian, float power, int x, int y) {
     int id = getPlayer()->getId();
     switch (_weaponIndex) {
         case 0:
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new Arrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 1:
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+            _fire(new Arrow(_weaponName, radian + 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
                             id));
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+            _fire(new Arrow(_weaponName, radian - 3.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
                             id));
             break;
 
         case 2:
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+            _fire(new Arrow(_weaponName, radian + 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
                             id));
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
-            _fire(new Arrow(WEAPON_LIST[_weaponIndex], radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
+            _fire(new Arrow(_weaponName, radian, power, globalPoint, id));
+            _fire(new Arrow(_weaponName, radian - 6.f * dragonBones::ANGLE_TO_RADIAN, power, globalPoint,
                             id));
             break;
         case 3:
-            _fire(new PowerArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new PowerArrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 4:
-            _fire(new FrozenArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new FrozenArrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 5:
-            _fire(new FireArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new FireArrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 6:
-            _fire(new BombArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new BombArrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 7:
-            _fire(new MineArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new MineArrow(_weaponName, radian, power, globalPoint, id));
             break;
         case 8:
-            _fire(new DuelArrow(WEAPON_LIST[_weaponIndex], radian, power, globalPoint, id));
+            _fire(new DuelArrow(_weaponName, radian, power, globalPoint, id));
             break;
         default:
             break;
@@ -246,7 +240,7 @@ void Hero::setWeapon(int index) {
         _weaponIndex = (unsigned int) WEAPON_LIST.size() - 1;
 
     _shoulders->getSlot("Arrow")->setChildArmature(
-            BattleParent::getInstance()->factory.buildArmature(WEAPON_LIST[_weaponIndex]));
+            BattleParent::getInstance()->factory.buildArmature(_weaponName));
     _arrowArmature = _shoulders->getSlot("Arrow")->getChildArmature();
     _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
 }
@@ -394,6 +388,33 @@ void Hero::setFaceDir() {
     changeFacedir(facedir);
 }
 
+void Hero::_changeArrow() {
+    _weaponName = _playerView->getArrow()->Path();
+    _arrowArmature = BattleParent::getInstance()->factory.buildArmature(_weaponName);
+    _shoulders->getSlot("Arrow")->setChildArmature(_arrowArmature);
+    _arrowDisplay = (dragonBones::CCArmatureDisplay *) _arrowArmature->getDisplay();
+}
+
+void Hero::_changeHat() {
+    _hat = BattleParent::getInstance()->factory.buildArmature(_playerView->getHat()->Path());
+    _armature->getSlot("Hat")->setChildArmature(_hat);
+}
+
+void Hero::_changeBow() {
+
+    _bowArmature = BattleParent::getInstance()->factory.buildArmature(_playerView->getBow()->Path());
+
+    _shoulders->getSlot("Bow")->setChildArmature(_bowArmature);
+
+    _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bowArmature->getDisplay();
+
+    _string->retain();
+    _string->removeFromParent();
+    _bowArmatureDisplay->addChild(_string);
+    _string->release();
+
+    _updateString();
+}
 
 
 DuelMPHero::DuelMPHero(float x_pos, float y_pos, SocketClient* client) : MPHero(x_pos, y_pos, client) {

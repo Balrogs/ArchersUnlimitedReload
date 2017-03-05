@@ -275,7 +275,7 @@ bool BattleParent::isGameOver() {
 }
 
 cocos2d::Vec2 BattleParent::getHeroPos(Hero *player) {
-    return Vec2(player->getPosition().x, player->getGlobalHeight("Head"));
+    return Vec2(player->getPosition().x, player->getGlobalHeight("head"));
 }
 
 int BattleParent::getStickmanCount() {
@@ -287,7 +287,7 @@ void BattleParent::addStickman() {
 }
 
 Vec2 BattleParent::getPlayerPos() {
-    return Vec2(_player->getPosition().x, _player->getGlobalHeight("Head"));
+    return Vec2(_player->getPosition().x, _player->getGlobalHeight("head"));
 }
 
 void BattleParent::showPopUp() {

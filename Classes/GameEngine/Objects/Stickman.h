@@ -26,9 +26,20 @@ protected:
     float _move_speed;
     float _jump_speed;
 
+    PlayerView* _playerView;
+
+    void _setPlayerView();
+
+    virtual void _changeArrow() = 0;
+
+    virtual void _changeHat() = 0;
+
+    virtual void _changeBow() = 0;
+
+
 public:
 
-    Body(float x_pos, float y_pos, float scale, float facedir);
+    Body(float x_pos, float y_pos, float scale, int facedir, PlayerView* playerView);
 
     void setSpeed(float move_speed);
 
@@ -59,7 +70,6 @@ public:
 
 class Stickman : public Body {
 
-
 public:
     Stickman(float x_pos, float y_pos, float scale, float hp);
 
@@ -86,7 +96,15 @@ public:
     virtual Player *getPlayer();
 
 protected:
+    dragonBones::Armature *_hat;
+
     void _updateAnimation() override;
+
+    void _changeArrow();
+
+    void _changeHat();
+
+    void _changeBow();
 };
 
 #endif //DRAGONBONES_STICKMAN_H
