@@ -168,7 +168,7 @@ void HeroPreview::_updateString() {
 
     auto line = cocos2d::DrawNode::create();
     line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
-                   Variables::STRING_COLOR);
+                   Color4F::GRAY);
     _string->addChild(line);
 }
 
