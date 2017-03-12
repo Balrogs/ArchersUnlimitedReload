@@ -32,6 +32,8 @@ const float Variables::FONT_SIZE = 42.f;
 const float Variables::H_FONT_SIZE = 72.f;
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
 
+const cocos2d::Color4F Variables::STRING_COLOR = cocos2d::Color4F::GRAY;
+
 const std::string Variables::YES_BUTTON_PATH = "yes.png";
 const std::string Variables::YES_DISABLED_PATH = "yes_disabled.png";
 const std::string Variables::YES_PRESSED_BUTTON_PATH = "yes_pressed.png";

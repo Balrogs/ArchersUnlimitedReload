@@ -33,6 +33,9 @@ public:
     static const float H_FONT_SIZE;
     static const cocos2d::Color3B FONT_COLOR;
 
+
+    static const cocos2d::Color4F STRING_COLOR;
+
     static const std::string YES_BUTTON_PATH;
     static const std::string NO_BUTTON_PATH;
 

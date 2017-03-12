@@ -5,6 +5,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <dragonBones/cocos2dx/CCFactory.h>
 #include <dragonBones/cocos2dx/CCSlot.h>
+#include <Scenes/MenuLayers/EquipmentScene.h>
 #include "DragonObject.h"
 
 USING_NS_CC;
@@ -90,20 +91,15 @@ HeroPreview::HeroPreview() {
 
     _playerView = PlayerView::readPlayerView();
 
-    const auto dragonBonesData = factory.loadDragonBonesData("ArcUnlimArmature.json");
-    factory.loadTextureAtlasData("texture.json");
-
-    _armature = factory.buildArmature("Stickman");
+    _armature = EquipmentScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
 
-    //TODO add some animations
-    _armature->getAnimation().play()
+    _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
 
     _armature->removeSlot(_armature->getSlot("Apple"));
 
      _shoulders = _armature->getSlot("Hands")->getChildArmature();
      _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
-
 
     const auto firePointBone = _armature->getBone("shoulders");
     cocos2d::Vec2 globalPoint;
@@ -113,8 +109,11 @@ HeroPreview::HeroPreview() {
 
     _armature->removeBone(_armature->getBone("shoulders"));
 
-    _string = cocos2d::Node::create();
+    _bow = EquipmentScene::getInstance()->factory.buildArmature(_playerView->getBow()->Path());
 
+    _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bow->getDisplay();
+    _string = cocos2d::Node::create();
+    _bowArmatureDisplay->addChild(_string);
     _setPlayerView();
 
     _updateString();
@@ -124,18 +123,36 @@ HeroPreview::HeroPreview() {
 }
 
 void HeroPreview::changeHat(int id) {
-    _playerView->setHat(id);
-    _changeHat();
+
+    CCLOG("HAT ID %d",id);
+    if(id == -1){
+        _changeHat("Hat");
+    } else {
+        _playerView->setHat(id);
+        _changeHat();
+
+    }
 }
 
 void HeroPreview::changeBow(int id) {
-    _playerView->setBow(id);
-    _changeBow();
+    if(id == -1){
+        _changeBow("Hat");
+    } else {
+        _playerView->setBow(id);
+        _changeBow();
+
+    }
 }
 
 void HeroPreview::changeArrow(int id) {
-    _playerView->setArrow(id);
-    _changeArrow();
+    if(id == -1){
+        _changeArrow("Hat");
+    } else {
+
+        _playerView->setArrow(id);
+        _changeArrow();
+
+    }
 }
 
 void HeroPreview::_updateString() {
@@ -145,12 +162,14 @@ void HeroPreview::_updateString() {
     auto top = _bow->getBone("top");
     auto bottom = _bow->getBone("bottom");
 
+    if(top == nullptr || bottom == nullptr){
+        return;
+    }
 
     auto line = cocos2d::DrawNode::create();
     line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
-                   cocos2d::Color4F::BLACK);
+                   Variables::STRING_COLOR);
     _string->addChild(line);
-
 }
 
 void HeroPreview::_setPlayerView() {
@@ -159,28 +178,24 @@ void HeroPreview::_setPlayerView() {
     _changeHat();
 }
 
-void HeroPreview::_changeArrow() {
-    _arrow = factory.buildArmature(_playerView->getArrow()->Path());
+void HeroPreview::_changeArrow(std::string path) {
+    _arrow = EquipmentScene::getInstance()->factory.buildArmature(path);
     _shoulders->getSlot("Arrow")->setChildArmature(_arrow);
 }
 
-void HeroPreview::_changeHat() {
-    _hat = factory.buildArmature(_playerView->getHat()->Path());
+void HeroPreview::_changeHat(std::string path) {
+    _hat = EquipmentScene::getInstance()->factory.buildArmature(path);
     _armature->getSlot("Hat")->setChildArmature(_hat);
 }
 
-void HeroPreview::_changeBow() {
+void HeroPreview::_changeBow(std::string path) {
 
-    _bow = factory.buildArmature(_playerView->getBow()->Path());
+    _bow = EquipmentScene::getInstance()->factory.buildArmature(path);
 
     _shoulders->getSlot("Bow")->setChildArmature(_bow);
 
     _bowArmatureDisplay = (dragonBones::CCArmatureDisplay *) _bow->getDisplay();
-
-    _string->retain();
-    _string->removeFromParent();
     _bowArmatureDisplay->addChild(_string);
-    _string->release();
 
     _updateString();
 }
@@ -192,4 +207,64 @@ float HeroPreview::getHatHeight() {
         return bone_rect.getMinY();
     }
     return 0;
+}
+
+Vec2 HeroPreview::getSlotPosition(std::string name) {
+    auto node = _armature->getBone(name);
+    Vec3 point;
+    if (node == nullptr) {
+        node = _shoulders->getBone(name);
+        auto transform = node->global;
+        auto p = new Vec3(transform.x, -transform.y, 0);
+        _shouldersDisplay->getNodeToParentTransform().transformPoint(p);
+        point = Vec3(p->x, p->y, 0);;
+    } else {
+        auto transform = node->global;
+        point = Vec3(transform.x, -transform.y, 0);
+    }
+
+    this->getWorldToNodeTransform().translate(point);
+    return Vec2(point.x, point.y);
+}
+
+PlayerView *HeroPreview::getPlayerView() {
+    return _playerView;
+}
+
+void HeroPreview::_changeArrow() {
+    _changeArrow(_playerView->getArrow()->Path());
+}
+
+void HeroPreview::_changeHat() {
+    _changeHat(_playerView->getHat()->Path());
+}
+
+void HeroPreview::_changeBow() {
+    _changeBow(_playerView->getBow()->Path());
+}
+
+dragonBones::Armature *HeroPreview::getShoulders() {
+    return _shoulders;
+}
+
+float HeroPreview::getArrowRotation() {
+    auto head = _arrow->getBone("head")->global;
+    auto tail = _arrow->getBone("tail")->global;
+
+    float x = head.x - tail.x;
+    float y = head.y - tail.y;
+    auto angle = std::atan2(y, x);
+
+    return -angle * dragonBones::RADIAN_TO_ANGLE;
+}
+
+float HeroPreview::getBowRotation() {
+    auto head = _bow->getBone("bottom")->global;
+    auto tail = _bow->getBone("top")->global;
+
+    float x = head.x - tail.x;
+    float y = head.y - tail.y;
+    auto angle = std::atan2(y, x);
+
+    return -angle * dragonBones::RADIAN_TO_ANGLE;
 }

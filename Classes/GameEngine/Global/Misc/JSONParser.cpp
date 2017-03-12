@@ -1,4 +1,6 @@
 #include <platform/CCFileUtils.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 #include "JSONParser.h"
 
 string JSONParser::parse(string message, string key) {
@@ -108,4 +110,23 @@ AssetInfo *JSONParser::parseAsset(string key, int id) {
         }
     }
     return nullptr;
+}
+
+//TODO test this
+void JSONParser::setAssetAvailable(string key, int id) {
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets/assets.json");
+    Document document;
+    document.Parse(content.c_str());
+    std::vector<AssetInfo*> assets;
+
+    Value& parent = document[key.c_str()];
+    Value& asset = parent[id];
+    asset["available"].SetBool(true);
+
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    document.Accept(writer);
+    auto fullpath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets/assets.json");
+    cocos2d::FileUtils::getInstance()->writeStringToFile(buffer.GetString(), fullpath);
+
 }

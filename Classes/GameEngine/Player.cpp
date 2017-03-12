@@ -422,6 +422,14 @@ std::string Bot::getPlayerView() {
 }
 
 
+PlayerView *PlayerView::randomBotView() {
+    int hat = RandomHelper::random_int(0, (int) JSONParser::parseAsset("hats").size());
+    int bow = RandomHelper::random_int(0, (int) JSONParser::parseAsset("bows").size());
+    int arrow = RandomHelper::random_int(0, (int) JSONParser::parseAsset("arrows").size());
+    return new PlayerView(hat, bow, arrow);
+}
+
+
 PlayerView *PlayerView::readPlayerView() {
     cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 

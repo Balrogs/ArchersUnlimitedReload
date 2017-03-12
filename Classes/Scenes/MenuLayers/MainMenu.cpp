@@ -126,6 +126,10 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                                      settingsButton->getBoundingBox().size.height / 2 + 15.f));
     this->addChild(settingsButton);
 
+    cocos2d::Director::getInstance()->getScheduler()->schedule(
+            schedule_selector(MainMenu::_enterFrameHandler),
+            this, 0.f, false
+    );
 
     _keyboardListener = cocos2d::EventListenerKeyboard::create();
     _keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
@@ -246,6 +250,10 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     return true;
 }
 
+void MainMenu::_enterFrameHandler(float passedTime) {
+    dragonBones::WorldClock::clock.advanceTime(passedTime);
+}
+
 void MainMenu::onEnter() {
     Layer::onEnter();
 
@@ -330,7 +338,7 @@ void MainMenu::onMenuClick(int id) {
                 switch (type) {
                     case cocos2d::ui::Widget::TouchEventType::ENDED: {
                         if(SocketClient::getInstance()->connected() && SocketClient::getInstance()->getDBPlayer()->canLogin()){
-                          //  SocketClient::getInstance()->login();
+                            SocketClient::getInstance()->login();
                             MainScene::getInstance()->pushMain(Loading::create());
                         } else {
                             MainScene::getInstance()->replaceMain(MultiplayerMenu::create());

@@ -27,6 +27,7 @@ public:
 
     static std::vector<AssetInfo*> parseAsset(string key);
     static AssetInfo* parseAsset(string key, int id);
+    static void setAssetAvailable(string key, int id);
 };
 
 

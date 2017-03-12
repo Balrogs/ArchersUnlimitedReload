@@ -32,6 +32,7 @@ public:
     cocos2d::Layer *getMain();
 
 private:
+
     static MainScene *_instance;
 
     EquipmentScene *_equipmentScene;
@@ -54,6 +55,9 @@ public:
     void showErrorPopUp();
 
 private:
+
+    void _enterFrameHandler(float passedTime);
+
     cocos2d::Size _visibleSize;
     int _menuId;
     cocos2d::Label* _coinsCount;

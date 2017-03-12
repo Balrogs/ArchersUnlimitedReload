@@ -37,6 +37,7 @@ protected:
 class PlayerView {
 public:
     static PlayerView* readPlayerView();
+    static PlayerView* randomBotView();
 
     AssetInfo* getHat();
     AssetInfo* getBow();

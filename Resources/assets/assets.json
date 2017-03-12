@@ -72,7 +72,7 @@
             "id" : 4,
             "name": "laser",
             "path": "LaserBow",
-            "available": true
+            "available": false
         }
     ],
     "hats": [

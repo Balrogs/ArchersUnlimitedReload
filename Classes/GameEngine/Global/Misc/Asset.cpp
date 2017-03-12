@@ -9,17 +9,11 @@ AssetInfo::AssetInfo(int id, std::string n, std::string p, bool a) {
 }
 
 std::string AssetInfo::Name() {
-    if(isAvailable()){
-        return _name;
-    }
-    return std::string();
+    return _name;
 }
 
 std::string AssetInfo::Path() {
-    if(isAvailable()){
-        return _path;
-    }
-    return std::string();
+    return _path;
 }
 
 bool AssetInfo::isAvailable() {

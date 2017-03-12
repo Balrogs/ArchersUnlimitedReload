@@ -348,18 +348,18 @@ void Hero::_updateString() {
 
         line1->drawLine(cocos2d::Vec2(top->global.x, -top->global.y),
                         cocos2d::Vec2(globalPoint.x, globalPoint.y),
-                        cocos2d::Color4F::BLACK);
+                        Variables::STRING_COLOR);
 
         line2->drawLine(cocos2d::Vec2(globalPoint.x, globalPoint.y),
                         cocos2d::Vec2(bottom->global.x, -bottom->global.y),
-                        cocos2d::Color4F::BLACK);
+                        Variables::STRING_COLOR);
 
         _string->addChild(line1, 1);
         _string->addChild(line2, 1);
     } else {
         auto line = cocos2d::DrawNode::create();
         line->drawLine(cocos2d::Vec2(top->global.x, -top->global.y), cocos2d::Vec2(bottom->global.x, -bottom->global.y),
-                       cocos2d::Color4F::BLACK);
+                       Variables::STRING_COLOR);
         _string->addChild(line, 1);
     }
 }

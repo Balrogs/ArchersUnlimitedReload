@@ -42,14 +42,20 @@ public:
     void changeBow(int id);
     void changeArrow(int id);
 
+    PlayerView* getPlayerView();
+    dragonBones::Armature* getShoulders();
+
     float getHatHeight();
+
+    float getArrowRotation();
+    float getBowRotation();
+
+    cocos2d::Vec2 getSlotPosition(std::string name);
 
 protected:
 
     PlayerView* _playerView;
     void _setPlayerView();
-
-    dragonBones::CCFactory factory;
 
     dragonBones::CCArmatureDisplay *_bowArmatureDisplay;
     dragonBones::CCArmatureDisplay *_shouldersDisplay;
@@ -68,6 +74,11 @@ protected:
 
     void _changeBow();
 
+    void _changeArrow(std::string path);
+
+    void _changeHat(std::string path);
+
+    void _changeBow(std::string path);
 };
 
 
