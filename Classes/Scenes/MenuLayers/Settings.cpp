@@ -11,17 +11,15 @@ bool Settings::init() {
     if (!Layer::init()) {
         return false;
     }
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-
-    auto black = LayerColor::create(Color4B(0, 0, 0, 160));
-    this->addChild(black);
+    
+    _visibleSize = Director::getInstance()->getVisibleSize();
 
     _bg = Sprite::createWithSpriteFrameName(Variables::BG1);
 
-    _bg->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+    _bg->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
 
-    _bg->setScale((visibleSize.width - 50.f) / _bg->getContentSize().width,
-                  (visibleSize.height - 50.f) / _bg->getContentSize().height);
+    _bg->setScale((_visibleSize.width - 50.f) / _bg->getContentSize().width,
+                  (_visibleSize.height - 50.f) / _bg->getContentSize().height);
 
     this->addChild(_bg, 1);
 
@@ -71,7 +69,7 @@ bool Settings::init() {
                 break;
         }
     });
-    backButton->setPosition(Vec2(visibleSize.width / 2,
+    backButton->setPosition(Vec2(_visibleSize.width / 2,
                                  backButton->getBoundingBox().size.height / 2 + _bg->getBoundingBox().getMinY() +
                                  25.f));
     this->addChild(backButton, 3);
@@ -185,16 +183,32 @@ bool Settings::init() {
 
     this->addChild(rate, 3);
 
+    this->setPosition(_visibleSize.width, 0);
 
     return true;
 }
 
 void Settings::onEnter() {
     Layer::onEnter();
+    this->runAction(Sequence::create(
+            CallFunc::create([](){
+                MainScene::getInstance()->wait(true);
+            }),
+            MoveTo::create(0.5f, Vec2::ZERO)
+            , NULL)
+    );
 }
 
 void Settings::onQuit() {
-    MainScene::getInstance()->popAndReplace();
+    this->runAction(Sequence::create(
+            CallFunc::create([](){
+                MainScene::getInstance()->wait(false);
+            }),
+            MoveTo::create(0.5f, Vec2(_visibleSize.width, 0)),
+            CallFunc::create([](){
+                MainScene::getInstance()->popAndReplace();
+            }), NULL)
+    );
 }
 
 void Settings::_reloadButtons() {

@@ -25,6 +25,8 @@ public:
 
     void pushMain(cocos2d::Layer* layer);
 
+    void wait(bool p);
+
     void popMain();
 
     void popAndReplace();

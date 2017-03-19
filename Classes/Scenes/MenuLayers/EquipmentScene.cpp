@@ -118,10 +118,12 @@ void EquipmentScene::onQuit() {
 
     _stand->runAction(Sequence::createWithTwoActions(
             CallFunc::create([&]() {
-                _controls->removeFromParent();
-                _bowsCount->setVisible(false);
-                _hatsCount->setVisible(false);
-                _arrowsCount->setVisible(false);
+                if(_controls) {
+                    _controls->removeFromParent();
+                    _bowsCount->setVisible(false);
+                    _hatsCount->setVisible(false);
+                    _arrowsCount->setVisible(false);
+                }
             }),
             Spawn::createWithTwoActions(
                     ScaleTo::create(.7f, 1.f),

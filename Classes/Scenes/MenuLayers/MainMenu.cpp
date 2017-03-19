@@ -37,6 +37,7 @@ bool MainScene::init() {
 
     _backgroundLayer = BackgroundLayer::create();
     _equipmentScene = EquipmentScene::create();
+    _equipmentScene->pause();
 
     this->addChild(_backgroundLayer, 2);
 
@@ -84,6 +85,10 @@ void MainScene::popAndReplace() {
     _backgroundLayer->wait(false);
 }
 
+void MainScene::wait(bool p) {
+    _backgroundLayer->wait(p);
+}
+
 MainMenu *MainMenu::create(EquipmentScene *equipmentLayer) {
     MainMenu *ret = new(std::nothrow) MainMenu();
     if (ret && ret->init(equipmentLayer)) {
@@ -105,8 +110,9 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     _visibleSize = Director::getInstance()->getVisibleSize();
 
     _menu = Node::create();
-    onMenuClick(0);
     this->addChild(_menu);
+    onMenuClick(0);
+
 
     auto settingsButton = cocos2d::ui::Button::create();
     settingsButton->loadTextures(Variables::SETTINGS_BUTTON, Variables::SETTINGS_PRESSED_BUTTON,
@@ -270,101 +276,119 @@ void MainMenu::onPushScene(int id) {
 }
 
 void MainMenu::onMenuClick(int id) {
-    _menu->removeAllChildren();
-    _menuId = id;
-    switch (id) {
-        case 0 : {
-            auto singleP = cocos2d::ui::Button::create();
-            singleP->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                  cocos2d::ui::Widget::TextureResType::PLIST);
+    FiniteTimeAction* action, *postAction;
+    if(_menu->getChildrenCount()){
+        action = MoveTo::create(0.3f, Vec2(_visibleSize.width / 2, 0));
+        postAction = Sequence::create(
+                MoveTo::create(0.3f, Vec2::ZERO),
+                NULL);
+    } else {
+        _menu->setPosition(_visibleSize.width / 2, 0);
+        action = DelayTime::create(0.f);
+        postAction = Sequence::create(
+                MoveTo::create(0.75f, Vec2::ZERO),
+                NULL);
+    }
 
-            singleP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        onMenuClick(1);
-                    }
-                        break;
-                    default:
-                        break;
-                }
-            });
+    auto changeAction = CallFunc::create([&, id]() {
+        _menu->removeAllChildren();
+        _menuId = id;
+        switch (id) {
+            case 0 : {
+                auto singleP = cocos2d::ui::Button::create();
+                singleP->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
+                                      cocos2d::ui::Widget::TextureResType::PLIST);
 
-            singleP->setPosition(
-                    Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
-                         3 * _visibleSize.height / 4));
-            auto singleP_label = cocos2d::Label::createWithTTF(
-                    LocalizedStrings::getInstance()->getString("SINGLE PLAYER"), Variables::FONT_NAME,
-                    Variables::FONT_SIZE);
-            singleP_label->setPosition(singleP->getContentSize().width / 2,
-                                       singleP->getContentSize().height / 2);
-            singleP->addChild(singleP_label, 4);
-
-            _menu->addChild(singleP);
-
-            auto duel2P = cocos2d::ui::Button::create();
-            duel2P->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                                 cocos2d::ui::Widget::TextureResType::PLIST);
-
-            duel2P->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        onPushScene(3);
-                    }
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-            duel2P->setPosition(
-                    Vec2(singleP->getPosition().x,
-                         singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
-                         duel2P->getBoundingBox().size.height / 2 - 15.f));
-            auto duel2P_label = cocos2d::Label::createWithTTF(
-                    LocalizedStrings::getInstance()->getString("DUEL 2 PLAYERS"), Variables::FONT_NAME,
-                    Variables::FONT_SIZE);
-            duel2P_label->setPosition(duel2P->getContentSize().width / 2,
-                                      duel2P->getContentSize().height / 2);
-            duel2P->addChild(duel2P_label, 4);
-
-
-            _menu->addChild(duel2P);
-
-            auto multiP = cocos2d::ui::Button::create();
-            multiP->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
-                                 cocos2d::ui::Widget::TextureResType::PLIST);
-
-            multiP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        if(SocketClient::getInstance()->connected() && SocketClient::getInstance()->getDBPlayer()->canLogin()){
-                            SocketClient::getInstance()->login();
-                            MainScene::getInstance()->pushMain(Loading::create());
-                        } else {
-                            MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
+                singleP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            onMenuClick(1);
                         }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    default:
-                        break;
-                }
-            });
+                });
 
-            multiP->setPosition(
-                    Vec2(duel2P->getPosition().x, duel2P->getPosition().y - duel2P->getBoundingBox().size.height / 2 -
-                                                  multiP->getBoundingBox().size.height / 2 - 15.f));
-            auto multiP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("MULTIPLAYER"),
-                                                              Variables::FONT_NAME,
-                                                              Variables::FONT_SIZE);
-            multiP_label->setPosition(multiP->getContentSize().width / 2,
-                                      multiP->getContentSize().height / 2);
-            multiP->addChild(multiP_label, 4);
+                singleP->setPosition(
+                        Vec2(_visibleSize.width - singleP->getBoundingBox().size.width / 2 - 30.f,
+                             3 * _visibleSize.height / 4));
+                auto singleP_label = cocos2d::Label::createWithTTF(
+                        LocalizedStrings::getInstance()->getString("SINGLE PLAYER"), Variables::FONT_NAME,
+                        Variables::FONT_SIZE);
+                singleP_label->setPosition(singleP->getContentSize().width / 2,
+                                           singleP->getContentSize().height / 2);
+                singleP->addChild(singleP_label, 4);
 
-            _menu->addChild(multiP);
+                _menu->addChild(singleP);
 
-            break;
-        }
-        case 1 : {
+                auto duel2P = cocos2d::ui::Button::create();
+                duel2P->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
+                                     cocos2d::ui::Widget::TextureResType::PLIST);
+
+                duel2P->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            onPushScene(3);
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                duel2P->setPosition(
+                        Vec2(singleP->getPosition().x,
+                             singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
+                             duel2P->getBoundingBox().size.height / 2 - 15.f));
+                auto duel2P_label = cocos2d::Label::createWithTTF(
+                        LocalizedStrings::getInstance()->getString("DUEL 2 PLAYERS"), Variables::FONT_NAME,
+                        Variables::FONT_SIZE);
+                duel2P_label->setPosition(duel2P->getContentSize().width / 2,
+                                          duel2P->getContentSize().height / 2);
+                duel2P->addChild(duel2P_label, 4);
+
+
+                _menu->addChild(duel2P);
+
+                auto multiP = cocos2d::ui::Button::create();
+                multiP->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
+                                     cocos2d::ui::Widget::TextureResType::PLIST);
+
+                multiP->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            if (SocketClient::getInstance()->connected() &&
+                                SocketClient::getInstance()->getDBPlayer()->canLogin()) {
+                                SocketClient::getInstance()->login();
+                                MainScene::getInstance()->pushMain(Loading::create());
+                            } else {
+                                MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
+                            }
+                        }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                multiP->setPosition(
+                        Vec2(duel2P->getPosition().x,
+                             duel2P->getPosition().y - duel2P->getBoundingBox().size.height / 2 -
+                             multiP->getBoundingBox().size.height / 2 - 15.f));
+                auto multiP_label = cocos2d::Label::createWithTTF(
+                        LocalizedStrings::getInstance()->getString("MULTIPLAYER"),
+                        Variables::FONT_NAME,
+                        Variables::FONT_SIZE);
+                multiP_label->setPosition(multiP->getContentSize().width / 2,
+                                          multiP->getContentSize().height / 2);
+                multiP->addChild(multiP_label, 4);
+
+                _menu->addChild(multiP);
+
+                break;
+            }
+            case 1 : {
 
 //            auto singleP = cocos2d::ui::Button::create();
 //            singleP->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
@@ -396,90 +420,93 @@ void MainMenu::onMenuClick(int id) {
 //
 //            _menu->addChild(singleP);
 
-            auto duel = cocos2d::ui::Button::create();
-            duel->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
-                               cocos2d::ui::Widget::TextureResType::PLIST);
+                auto duel = cocos2d::ui::Button::create();
+                duel->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON, Variables::GREEN_BUTTON,
+                                   cocos2d::ui::Widget::TextureResType::PLIST);
 
-            duel->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        onPushScene(2);
+                duel->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            onPushScene(2);
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    default:
-                        break;
-                }
-            });
+                });
 
-            duel->setPosition(
-                    Vec2(_visibleSize.width - duel->getBoundingBox().size.width / 2 - 30.f,
-                         3 * _visibleSize.height / 4));
+                duel->setPosition(
+                        Vec2(_visibleSize.width - duel->getBoundingBox().size.width / 2 - 30.f,
+                             3 * _visibleSize.height / 4));
 //                    Vec2(singleP->getPosition().x,
 //                         singleP->getPosition().y - singleP->getBoundingBox().size.height / 2 -
 //                         duel->getBoundingBox().size.height / 2 - 15.f));
-            auto duel_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"),
-                                                            Variables::FONT_NAME,
-                                                            Variables::FONT_SIZE);
-            duel_label->setPosition(duel->getContentSize().width / 2,
-                                    duel->getContentSize().height / 2);
-            duel->addChild(duel_label, 4);
+                auto duel_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"),
+                                                                Variables::FONT_NAME,
+                                                                Variables::FONT_SIZE);
+                duel_label->setPosition(duel->getContentSize().width / 2,
+                                        duel->getContentSize().height / 2);
+                duel->addChild(duel_label, 4);
 
 
-            _menu->addChild(duel);
+                _menu->addChild(duel);
 
-            auto appleB = cocos2d::ui::Button::create();
-            appleB->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
-                                 cocos2d::ui::Widget::TextureResType::PLIST);
+                auto appleB = cocos2d::ui::Button::create();
+                appleB->loadTextures(Variables::BLUE_BUTTON, Variables::BLUE_PRESSED_BUTTON, Variables::BLUE_BUTTON,
+                                     cocos2d::ui::Widget::TextureResType::PLIST);
 
-            appleB->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        onPushScene(1);
+                appleB->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            onPushScene(1);
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    default:
-                        break;
-                }
-            });
+                });
 
-            appleB->setPosition(
-                    Vec2(duel->getPosition().x, duel->getPosition().y - duel->getBoundingBox().size.height / 2 -
-                                                appleB->getBoundingBox().size.height / 2 - 15.f));
-            auto appleB_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"),
-                                                              Variables::FONT_NAME,
-                                                              Variables::FONT_SIZE);
-            appleB_label->setPosition(appleB->getContentSize().width / 2,
-                                      appleB->getContentSize().height / 2);
-            appleB->addChild(appleB_label, 4);
+                appleB->setPosition(
+                        Vec2(duel->getPosition().x, duel->getPosition().y - duel->getBoundingBox().size.height / 2 -
+                                                    appleB->getBoundingBox().size.height / 2 - 15.f));
+                auto appleB_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"),
+                                                                  Variables::FONT_NAME,
+                                                                  Variables::FONT_SIZE);
+                appleB_label->setPosition(appleB->getContentSize().width / 2,
+                                          appleB->getContentSize().height / 2);
+                appleB->addChild(appleB_label, 4);
 
 
-            _menu->addChild(appleB);
+                _menu->addChild(appleB);
 
-            auto backButton = cocos2d::ui::Button::create();
-            backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
-                                     Variables::BACK_BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
+                auto backButton = cocos2d::ui::Button::create();
+                backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
+                                         Variables::BACK_BUTTON_PATH, cocos2d::ui::Widget::TextureResType::PLIST);
 
-            backButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-                switch (type) {
-                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                        onMenuClick(0);
+                backButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                    switch (type) {
+                        case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                            onMenuClick(0);
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    default:
-                        break;
-                }
-            });
-            backButton->setPosition(
-                    Vec2(appleB->getPosition().x, appleB->getPosition().y - appleB->getBoundingBox().size.height / 2 -
-                                                  backButton->getBoundingBox().size.height / 2 - 15.f));
-            _menu->addChild(backButton);
+                });
+                backButton->setPosition(
+                        Vec2(appleB->getPosition().x,
+                             appleB->getPosition().y - appleB->getBoundingBox().size.height / 2 -
+                             backButton->getBoundingBox().size.height / 2 - 15.f));
+                _menu->addChild(backButton);
 
-            break;
+                break;
+            }
+
+            default:
+                break;
         }
-
-        default:
-            break;
-    }
+    });
+    _menu->runAction(Sequence::create(action, changeAction, postAction, NULL));
 }
 
 void MainMenu::showErrorPopUp() {

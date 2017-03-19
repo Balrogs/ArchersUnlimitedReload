@@ -35,6 +35,7 @@ protected:
 
     void _showScrollView();
 
+    cocos2d::Size _visibleSize;
 };
 
 
