@@ -319,6 +319,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Loading.cpp
         Classes/GameEngine/Objects/Environment/MainClip.cpp
         Classes/GameEngine/Global/Misc/RichSearchButton.cpp
+        Classes/GameEngine/Global/Misc/Asset.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -341,7 +342,8 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/DBPlayer.h
         Classes/Scenes/MenuLayers/Loading.h
         Classes/GameEngine/Objects/Environment/MainClip.h
-        Classes/GameEngine/Global/Misc/RichSearchButton.h Classes/GameEngine/Global/Misc/Asset.cpp Classes/GameEngine/Global/Misc/Asset.h)
+        Classes/GameEngine/Global/Misc/RichSearchButton.h
+        Classes/GameEngine/Global/Misc/Asset.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})
