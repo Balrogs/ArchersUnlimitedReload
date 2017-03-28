@@ -95,7 +95,7 @@ Node *Statistics::getView(Size contentSize) {
         auto victory = Label::createWithTTF(
                 string,
                 Variables::FONT_NAME,
-                Variables::FONT_SIZE);
+                Variables::FONT_SIZE());
         victory->setColor(Color3B::BLACK);
 
         victory->setPosition(Vec2(
@@ -108,7 +108,7 @@ Node *Statistics::getView(Size contentSize) {
     auto coins = Label::createWithTTF(
             StringUtils::format("+ %d", _coinsGained),
             Variables::FONT_NAME,
-            Variables::FONT_SIZE);
+            Variables::FONT_SIZE());
     coins->setColor(Color3B::BLACK);
     coins->setPosition(contentSize.width / 2 - coins->getContentSize().width / 2,
                        0 + coins->getContentSize().height + 15.f);

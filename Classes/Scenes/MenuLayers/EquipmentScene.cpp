@@ -48,7 +48,7 @@ bool EquipmentScene::init() {
 
     auto color = Color3B(51, 51, 51);
 
-    _hatsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
+    _hatsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     _hatsCount->setPosition(Vec2(
             _visibleSize.width * 0.8f,
             _visibleSize.height * 0.68f)
@@ -56,18 +56,18 @@ bool EquipmentScene::init() {
     _hatsCount->setColor(color);
     _hatsCount->setVisible(false);
     this->addChild(_hatsCount);
-    _arrowsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
+    _arrowsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     _arrowsCount->setPosition(Vec2(
             _hatsCount->getPositionX(),
-            _hatsCount->getPositionY() - 1.5f * Variables::FONT_SIZE)
+            _hatsCount->getPositionY() - 1.5f * Variables::FONT_SIZE())
     );
     _arrowsCount->setColor(color);
     _arrowsCount->setVisible(false);
     this->addChild(_arrowsCount);
-    _bowsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
+    _bowsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     _bowsCount->setPosition(Vec2(
             _hatsCount->getPositionX(),
-            _arrowsCount->getPositionY() - 1.5f * Variables::FONT_SIZE)
+            _arrowsCount->getPositionY() - 1.5f * Variables::FONT_SIZE())
     );
     _bowsCount->setColor(color);
     _bowsCount->setVisible(false);
@@ -586,12 +586,12 @@ bool EquipmentScene::Item::init(Node *view, int ind, Type type, bool isAvailable
 
         //TODO set currency
         auto price = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE, Size(3 * coins_bar->getContentSize().width / 5,
-                                                                              Variables::FONT_SIZE));
+                                                   Variables::FONT_SIZE(), Size(3 * coins_bar->getContentSize().width / 5,
+                                                                              Variables::FONT_SIZE()));
         price->setHorizontalAlignment(TextHAlignment::RIGHT);
         price->setColor(Color3B::WHITE);
         price->setAnchorPoint(Vec2(0, 0));
-        price->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE / 2);
+        price->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE() / 2);
 
         coins_bar->addChild(price, 5);
 

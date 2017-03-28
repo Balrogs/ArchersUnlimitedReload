@@ -1,6 +1,8 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include "Variables.h"
 
+Resolution Variables::_resolution = Resolution::HD;
+
 const std::string  Variables::HERO_IDLE_ANIMATION = "idle_1";
 const std::string  Variables::SHOT_ANIMATION = "shot";
 const std::string  Variables::AIM_ANIMATION = "aim";
@@ -28,8 +30,6 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
 }
 
 const std::string Variables::FONT_NAME = "FSEX300.ttf";
-const float Variables::FONT_SIZE = 42.f;
-const float Variables::H_FONT_SIZE = 72.f;
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
 
 const cocos2d::Color4F Variables::STRING_COLOR = cocos2d::Color4F::GRAY;
@@ -149,6 +149,32 @@ const std::string Variables::MAIN_BACKGROUND = "background.png";
 const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
 const std::string Variables::CLOUD_3 = "cloud3.png";
+
+void Variables::setResolution(Resolution resolution) {
+    Variables::_resolution = resolution;
+}
+
+float Variables::FONT_SIZE() {
+    switch(Variables::_resolution){
+        case SD:
+            return 20.f;
+        case HD:
+            return 42.f;
+        case IPAD:
+            return 72.f;
+    }
+}
+
+float Variables::H_FONT_SIZE() {
+    switch(Variables::_resolution){
+        case SD:
+            return 42.f;
+        case HD:
+            return 72.f;
+        case IPAD:
+            return 144.f;
+    }
+}
 
 
 

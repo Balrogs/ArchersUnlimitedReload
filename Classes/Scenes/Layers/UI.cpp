@@ -31,7 +31,7 @@ bool UI::init() {
 
     this->addChild(pause);
 
-    _warningLabel = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
+    _warningLabel = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     _warningLabel->setColor(Color3B::BLACK);
     _warningLabel->setPosition(
             Vec2(pause->getPosition().x, pause->getPosition().y - pause->getBoundingBox().size.height));
@@ -166,7 +166,7 @@ void UI::initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *pl
 void UI::startGame() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    auto label = cocos2d::Label::createWithTTF("!GO!", Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    auto label = cocos2d::Label::createWithTTF("!GO!", Variables::FONT_NAME, Variables::H_FONT_SIZE());
     label->setColor(Color3B::BLUE);
     label->setPosition(
             Vec2(visibleSize.width / 2,

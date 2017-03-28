@@ -8,6 +8,12 @@
 #include <dragonBones/cocos2dx/CCArmatureDisplay.h>
 #include "cocos2d.h"
 
+enum Resolution {
+    SD,
+    HD,
+    IPAD
+};
+
 class Variables {
 
 public:
@@ -28,9 +34,11 @@ public:
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node);
 
 
+    static void setResolution(Resolution resolution);
+
     static const std::string FONT_NAME;
-    static const float FONT_SIZE;
-    static const float H_FONT_SIZE;
+    static float FONT_SIZE();
+    static float H_FONT_SIZE();
     static const cocos2d::Color3B FONT_COLOR;
 
 
@@ -139,6 +147,9 @@ public:
     static const std::string CLOUD_1;
     static const std::string CLOUD_2;
     static const std::string CLOUD_3;
+
+private:
+    static Resolution _resolution;
 
 };
 

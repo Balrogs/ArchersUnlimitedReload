@@ -36,11 +36,11 @@ bool MultiplayerMenu::init() {
                                     bg->getBoundingBox().getMaxY() - 3 * editBoxSize.height / 2));
         _editName->setFontName(Variables::FONT_NAME.c_str());
         _editName->setFontColor(Color3B::BLACK);
-        _editName->setFontSize((int)Variables::FONT_SIZE);
+        _editName->setFontSize((int)Variables::FONT_SIZE());
         _editName->setMaxLength(12);
         _editName->setPlaceHolder(LocalizedStrings::getInstance()->getString("NAME"));
         _editName->setPlaceholderFontColor(Color3B::BLACK);
-        _editName->setPlaceholderFontSize((int)Variables::FONT_SIZE);
+        _editName->setPlaceholderFontSize((int)Variables::FONT_SIZE());
         _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
         _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
         this->addChild(_editName, 3);
@@ -50,16 +50,16 @@ bool MultiplayerMenu::init() {
                                         bg->getBoundingBox().getMaxY() - 7 * editBoxSize.height / 2));
         _editPassword->setFontName(Variables::FONT_NAME.c_str());
         _editPassword->setFontColor(Color3B::BLACK);
-        _editPassword->setFontSize((int)Variables::FONT_SIZE);
+        _editPassword->setFontSize((int)Variables::FONT_SIZE());
         _editPassword->setPlaceHolder(LocalizedStrings::getInstance()->getString("PASSWORD"));
         _editPassword->setPlaceholderFontColor(Color3B::BLACK);
         _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
         _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
-        _editPassword->setPlaceholderFontSize((int)Variables::FONT_SIZE);
+        _editPassword->setPlaceholderFontSize((int)Variables::FONT_SIZE());
         this->addChild(_editPassword, 3);
 
-        _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
-        _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, bg->getBoundingBox().getMinY() + Variables::FONT_SIZE / 2));
+        _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
+        _errorMessage->setPosition(cocos2d::Vec2(_editPassword->getPosition().x, bg->getBoundingBox().getMinY() + Variables::FONT_SIZE() / 2));
         _errorMessage->setTextColor(Color4B::RED);
 
         this->addChild(_errorMessage, 4);
@@ -118,7 +118,7 @@ bool MultiplayerMenu::init() {
                      bg->getBoundingBox().getMinY() - login->getBoundingBox().size.height));
         auto login_label = cocos2d::Label::createWithTTF(
                 LocalizedStrings::getInstance()->getString("LOGIN"), Variables::FONT_NAME,
-                Variables::FONT_SIZE);
+                Variables::FONT_SIZE());
         login_label->setPosition(login->getContentSize().width / 2,
                                  login->getContentSize().height / 2);
         login->addChild(login_label, 4);
@@ -146,7 +146,7 @@ bool MultiplayerMenu::init() {
                      registration->getBoundingBox().size.height / 2 - 15.f));
         auto registration_label = cocos2d::Label::createWithTTF(
                 LocalizedStrings::getInstance()->getString("REGISTER"), Variables::FONT_NAME,
-                Variables::FONT_SIZE);
+                Variables::FONT_SIZE());
         registration_label->setPosition(registration->getContentSize().width / 2,
                                         registration->getContentSize().height / 2);
         registration->addChild(registration_label, 4);
@@ -155,7 +155,7 @@ bool MultiplayerMenu::init() {
 
     } else {
         auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CONNECTION ERROR"),
-                                                   Variables::FONT_NAME, Variables::FONT_SIZE);
+                                                   Variables::FONT_NAME, Variables::FONT_SIZE());
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("", label, false);
         popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
@@ -205,7 +205,7 @@ void MultiplayerMenu::update(float dt) {
     if (!_client->connected() && this->getChildByName("PopUp") == nullptr) {
         auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CONNECTION ERROR"),
                                                    Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                   Variables::FONT_SIZE());
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("",
                                            label);

@@ -38,7 +38,7 @@ bool RegisterMenu::init() {
     this->addChild(_bg, 1);
 
     auto title = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("REGISTRATION"), Variables::FONT_NAME,
-                                               Variables::H_FONT_SIZE);
+                                               Variables::H_FONT_SIZE());
     title->setPosition(_bg->getBoundingBox().size.width / 2 + _bg->getBoundingBox().getMinX(),
                        _bg->getBoundingBox().getMaxY() - title->getContentSize().height / 2 - 50.f);
     this->addChild(title, 2);
@@ -50,11 +50,11 @@ bool RegisterMenu::init() {
     _editName->setPosition(Vec2(visibleOrigin.x + visibleSize.width / 2, visibleOrigin.y + visibleSize.height * 3 / 4));
     _editName->setFontName(Variables::FONT_NAME.c_str());
     _editName->setFontColor(Color3B::BLACK);
-    _editName->setFontSize((int)Variables::FONT_SIZE);
+    _editName->setFontSize((int)Variables::FONT_SIZE());
     _editName->setMaxLength(12);
     _editName->setPlaceHolder(LocalizedStrings::getInstance()->getString("NAME"));
     _editName->setPlaceholderFontColor(Color3B::BLACK);
-    _editName->setPlaceholderFontSize((int)Variables::FONT_SIZE);
+    _editName->setPlaceholderFontSize((int)Variables::FONT_SIZE());
     _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
     _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
     this->addChild(_editName, 3);
@@ -63,12 +63,12 @@ bool RegisterMenu::init() {
     _editPassword->setPosition(Vec2(_editName->getPosition().x, _editName->getPosition().y -  2 *_editPassword->getBoundingBox().size.height));
     _editPassword->setFontName(Variables::FONT_NAME.c_str());
     _editPassword->setFontColor(Color3B::BLACK);
-    _editPassword->setFontSize((int)Variables::FONT_SIZE);
+    _editPassword->setFontSize((int)Variables::FONT_SIZE());
     _editPassword->setPlaceHolder(LocalizedStrings::getInstance()->getString("PASSWORD"));
     _editPassword->setPlaceholderFontColor(Color3B::BLACK);
     _editPassword->setInputFlag(ui::EditBox::InputFlag::PASSWORD);
     _editPassword->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
-    _editPassword->setPlaceholderFontSize((int)Variables::FONT_SIZE);
+    _editPassword->setPlaceholderFontSize((int)Variables::FONT_SIZE());
     this->addChild(_editPassword, 3);
 
     _region = LocalizedStrings::getInstance()->getString("EUROPE");
@@ -88,7 +88,7 @@ bool RegisterMenu::init() {
     _regionBox->setPosition(cocos2d::Vec2(_editPassword->getPosition().x,
                                           _editPassword->getPosition().y - 5 * _regionBox->getBoundingBox().size.height / 4));
     _regionBox_title = cocos2d::Label::createWithTTF(_region.c_str(), Variables::FONT_NAME,
-                                                         Variables::FONT_SIZE);
+                                                         Variables::FONT_SIZE());
     _regionBox_title->setColor(Color3B::BLACK);
     _regionBox_title->setPosition(_regionBox->getContentSize().width / 2,
                                  _regionBox->getContentSize().height / 2);
@@ -96,8 +96,8 @@ bool RegisterMenu::init() {
 
     this->addChild(_regionBox, 3);
 
-    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE);
-    _errorMessage->setPosition(cocos2d::Vec2(_regionBox->getPosition().x, _regionBox->getPosition().y - 2 * Variables::FONT_SIZE));
+    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
+    _errorMessage->setPosition(cocos2d::Vec2(_regionBox->getPosition().x, _regionBox->getPosition().y - 2 * Variables::FONT_SIZE()));
     _errorMessage->setTextColor(Color4B::RED);
     this->addChild(_errorMessage, 2);
 
@@ -197,7 +197,7 @@ void RegisterMenu::_showScrollView() {
         auto region = _region_list.at(i);
         auto regionButton = cocos2d::ui::Button::create();
         regionButton->setTitleText(region);
-        regionButton->setTitleFontSize(Variables::FONT_SIZE);
+        regionButton->setTitleFontSize(Variables::FONT_SIZE());
         regionButton->setTitleFontName(Variables::FONT_NAME);
         regionButton->setColor(Color3B::BLACK);
         regionButton->addTouchEventListener(

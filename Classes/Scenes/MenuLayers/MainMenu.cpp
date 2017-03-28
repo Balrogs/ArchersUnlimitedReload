@@ -151,7 +151,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
                         auto label = cocos2d::Label::createWithTTF(
                                 LocalizedStrings::getInstance()->getString("EXIT THE GAME?"), Variables::FONT_NAME,
-                                Variables::FONT_SIZE);
+                                Variables::FONT_SIZE());
                         label->setColor(cocos2d::Color3B::BLACK);
                         popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
                                                            label,
@@ -196,11 +196,11 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
     auto coins = def->getIntegerForKey("COINS", 0);
     _coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
-                                                    Variables::FONT_SIZE, Size(3 * coins_bar->getContentSize().width / 5, Variables::FONT_SIZE));
+                                                    Variables::FONT_SIZE(), Size(3 * coins_bar->getContentSize().width / 5, Variables::FONT_SIZE()));
     _coinsCount->setHorizontalAlignment(TextHAlignment::RIGHT);
     _coinsCount->setColor(Color3B::WHITE);
     _coinsCount->setAnchorPoint(Vec2(0, 0));
-    _coinsCount->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE / 2);
+    _coinsCount->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE() / 2);
 
     coins_bar->addChild(_coinsCount, 5);
 
@@ -246,7 +246,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
     auto customize_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CUSTOMIZE"),
                                                          Variables::FONT_NAME,
-                                                         Variables::FONT_SIZE);
+                                                         Variables::FONT_SIZE());
     customize_label->setPosition(customize_label->getBoundingBox().size.width / 2 + 10.f,
                                  customize->getContentSize().height / 2);
     customize->addChild(customize_label, 4);
@@ -315,7 +315,7 @@ void MainMenu::onMenuClick(int id) {
                              3 * _visibleSize.height / 4));
                 auto singleP_label = cocos2d::Label::createWithTTF(
                         LocalizedStrings::getInstance()->getString("SINGLE PLAYER"), Variables::FONT_NAME,
-                        Variables::FONT_SIZE);
+                        Variables::FONT_SIZE());
                 singleP_label->setPosition(singleP->getContentSize().width / 2,
                                            singleP->getContentSize().height / 2);
                 singleP->addChild(singleP_label, 4);
@@ -343,7 +343,7 @@ void MainMenu::onMenuClick(int id) {
                              duel2P->getBoundingBox().size.height / 2 - 15.f));
                 auto duel2P_label = cocos2d::Label::createWithTTF(
                         LocalizedStrings::getInstance()->getString("DUEL 2 PLAYERS"), Variables::FONT_NAME,
-                        Variables::FONT_SIZE);
+                        Variables::FONT_SIZE());
                 duel2P_label->setPosition(duel2P->getContentSize().width / 2,
                                           duel2P->getContentSize().height / 2);
                 duel2P->addChild(duel2P_label, 4);
@@ -379,7 +379,7 @@ void MainMenu::onMenuClick(int id) {
                 auto multiP_label = cocos2d::Label::createWithTTF(
                         LocalizedStrings::getInstance()->getString("MULTIPLAYER"),
                         Variables::FONT_NAME,
-                        Variables::FONT_SIZE);
+                        Variables::FONT_SIZE());
                 multiP_label->setPosition(multiP->getContentSize().width / 2,
                                           multiP->getContentSize().height / 2);
                 multiP->addChild(multiP_label, 4);
@@ -412,7 +412,7 @@ void MainMenu::onMenuClick(int id) {
 //                         3 * _visibleSize.height / 4));
 //            auto singleP_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("WAVES"),
 //                                                               Variables::FONT_NAME,
-//                                                               Variables::FONT_SIZE);
+//                                                               Variables::FONT_SIZE());
 //            singleP_label->setPosition(singleP->getContentSize().width / 2,
 //                                       singleP->getContentSize().height / 2);
 //            singleP->addChild(singleP_label, 4);
@@ -443,7 +443,7 @@ void MainMenu::onMenuClick(int id) {
 //                         duel->getBoundingBox().size.height / 2 - 15.f));
                 auto duel_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"),
                                                                 Variables::FONT_NAME,
-                                                                Variables::FONT_SIZE);
+                                                                Variables::FONT_SIZE());
                 duel_label->setPosition(duel->getContentSize().width / 2,
                                         duel->getContentSize().height / 2);
                 duel->addChild(duel_label, 4);
@@ -471,7 +471,7 @@ void MainMenu::onMenuClick(int id) {
                                                     appleB->getBoundingBox().size.height / 2 - 15.f));
                 auto appleB_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"),
                                                                   Variables::FONT_NAME,
-                                                                  Variables::FONT_SIZE);
+                                                                  Variables::FONT_SIZE());
                 appleB_label->setPosition(appleB->getContentSize().width / 2,
                                           appleB->getContentSize().height / 2);
                 appleB->addChild(appleB_label, 4);
@@ -513,7 +513,7 @@ void MainMenu::showErrorPopUp() {
     if (this->getChildByName("PopUp") == nullptr) {
         auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("SERVER ERROR"),
                                                    Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                   Variables::FONT_SIZE());
         label->setColor(cocos2d::Color3B::BLACK);
         auto popUp = MainMenuPopUp::create("",
                                            label);

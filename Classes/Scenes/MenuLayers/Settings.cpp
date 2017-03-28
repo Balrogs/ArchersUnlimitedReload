@@ -24,7 +24,7 @@ bool Settings::init() {
     this->addChild(_bg, 1);
 
     auto title = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("SETTINGS"), Variables::FONT_NAME,
-                                               Variables::H_FONT_SIZE);
+                                               Variables::H_FONT_SIZE());
     title->setPosition(_bg->getBoundingBox().getMinX() + 50.f + title->getContentSize().width / 2,
                        _bg->getBoundingBox().getMaxY() - title->getContentSize().height / 2 - 50.f);
     this->addChild(title, 2);
@@ -47,7 +47,7 @@ bool Settings::init() {
     removeAds->setPosition(Vec2(_bg->getBoundingBox().getMaxX() * 7 / 8 - removeAds->getBoundingBox().size.width / 2,
                                 title->getPosition().y));
     auto ads_title = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("REMOVE ADS"), Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                   Variables::FONT_SIZE());
     ads_title->setPosition(removeAds->getContentSize().width - ads_title->getContentSize().width / 2 - 25.f,
                            removeAds->getContentSize().height / 2);
     removeAds->addChild(ads_title, 4);
@@ -100,7 +100,7 @@ bool Settings::init() {
     _reloadButtons();
 
     auto music = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("MUSIC"), Variables::FONT_NAME,
-                                               Variables::FONT_SIZE);
+                                               Variables::FONT_SIZE());
     music->setPosition(
             Vec2(_musicButton->getBoundingBox().getMinX() - music->getBoundingBox().size.width / 2 - 50.f,
                  _musicButton->getPosition().y));
@@ -108,7 +108,7 @@ bool Settings::init() {
     this->addChild(music, 2);
 
     auto sounds = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("SOUNDS"), Variables::FONT_NAME,
-                                                Variables::FONT_SIZE);
+                                                Variables::FONT_SIZE());
     sounds->setPosition(
             Vec2(_effectsButton->getBoundingBox().getMinX() - sounds->getBoundingBox().size.width / 2 - 50.f,
                  _effectsButton->getPosition().y));
@@ -136,7 +136,7 @@ bool Settings::init() {
             Vec2(_bg->getBoundingBox().getMinX() + 150.f + _languageBox->getBoundingBox().size.width / 2,
                  _bg->getBoundingBox().size.height / 2 + _languageBox->getContentSize().height));
     auto languageBox_title = cocos2d::Label::createWithTTF(_language.c_str(), Variables::FONT_NAME,
-                                                           Variables::FONT_SIZE);
+                                                           Variables::FONT_SIZE());
     languageBox_title->setColor(Color3B::BLACK);
     languageBox_title->setPosition(_languageBox->getContentSize().width / 2,
                                    _languageBox->getContentSize().height / 2);
@@ -145,7 +145,7 @@ bool Settings::init() {
     this->addChild(_languageBox, 3);
 
     auto language = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("LANGUAGE"), Variables::FONT_NAME,
-                                                  Variables::FONT_SIZE);
+                                                  Variables::FONT_SIZE());
     language->setPosition(_languageBox->getPosition().x,
                           _languageBox->getPosition().y + _languageBox->getBoundingBox().size.height / 2 +
                           language->getBoundingBox().size.height);
@@ -176,7 +176,7 @@ bool Settings::init() {
     rate->addChild(rate_icon, 5);
 
     auto rate_title = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("RATE US"), Variables::FONT_NAME,
-                                                    Variables::FONT_SIZE);
+                                                    Variables::FONT_SIZE());
     rate_title->setPosition((rate->getContentSize().width / 2 - rate_title->getContentSize().width / 2),
                             rate->getContentSize().height / 2);
     rate->addChild(rate_title, 4);
@@ -303,7 +303,7 @@ void Settings::_showScrollView() {
         auto language = language_list.at(i);
         auto languageButton = cocos2d::ui::Button::create();
         languageButton->setTitleText(language);
-        languageButton->setTitleFontSize(Variables::FONT_SIZE);
+        languageButton->setTitleFontSize(Variables::FONT_SIZE());
         languageButton->setTitleFontName(Variables::FONT_NAME);
         languageButton->setColor(Color3B::BLACK);
         languageButton->addTouchEventListener(

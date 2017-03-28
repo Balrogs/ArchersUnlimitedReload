@@ -48,7 +48,7 @@ bool PopUp::init(std::string title) {
     base->setScale(_scale.x, _scale.y);
     this->addChild(base);
 
-    _title = Label::createWithTTF(title, Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    _title = Label::createWithTTF(title, Variables::FONT_NAME, Variables::H_FONT_SIZE());
     _title->setPosition(0.f, POPUP_SIZE.height / 2 - _title->getContentSize().height / 2 - 20.f);
     _title->setColor(cocos2d::Color3B::BLACK);
     this->addChild(_title, 2);
@@ -193,7 +193,7 @@ bool PausePopUp::init(std::string title) {
     goToMenu->addTouchEventListener(CC_CALLBACK_0(PausePopUp::yesAction, this));
 
     auto goToMenuTitle = cocos2d::Label::createWithTTF("GO TO MENU", Variables::FONT_NAME,
-                                                       Variables::FONT_SIZE);
+                                                       Variables::FONT_SIZE());
     goToMenuTitle->setPosition(goToMenu->getContentSize().width / 2,
                                goToMenu->getContentSize().height / 2);
     goToMenu->addChild(goToMenuTitle, 4);
@@ -205,7 +205,7 @@ bool PausePopUp::init(std::string title) {
     play->addTouchEventListener(CC_CALLBACK_0(PausePopUp::noAction, this));
 
     auto playTitle = cocos2d::Label::createWithTTF("CONTINUE", Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                   Variables::FONT_SIZE());
     playTitle->setPosition(play->getContentSize().width / 2,
                            play->getContentSize().height / 2);
     play->addChild(playTitle, 4);
@@ -382,7 +382,7 @@ bool GameTypePopUp::init() {
     });
 
     auto duelTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("DUEL"), Variables::FONT_NAME,
-                                                       Variables::FONT_SIZE);
+                                                       Variables::FONT_SIZE());
     duelTitle->setPosition(duel->getContentSize().width / 2,
                                duel->getContentSize().height / 2);
     duel->addChild(duelTitle, 4);
@@ -409,7 +409,7 @@ bool GameTypePopUp::init() {
     });
 
     auto appleTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("APPLE"), Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE);
+                                                   Variables::FONT_SIZE());
     appleTitle->setPosition(apple->getContentSize().width / 2,
                            apple->getContentSize().height / 2);
     apple->addChild(appleTitle, 4);
@@ -435,17 +435,17 @@ bool InputNamePopUp::init() {
         return false;
     }
 
-    auto editBoxSize = Size(3 * POPUP_SIZE.width / 4, 1.1f * Variables::H_FONT_SIZE);
+    auto editBoxSize = Size(3 * POPUP_SIZE.width / 4, 1.1f * Variables::H_FONT_SIZE());
 
     _editName = ui::EditBox::create(editBoxSize, Variables::BAR, ui::Widget::TextureResType::PLIST);
     _editName->setPosition(Vec2(0, 0));
     _editName->setFontName(Variables::FONT_NAME.c_str());
     _editName->setFontColor(Color3B::BLACK);
-    _editName->setFontSize((int)Variables::H_FONT_SIZE);
+    _editName->setFontSize((int)Variables::H_FONT_SIZE());
     _editName->setMaxLength(12);
     _editName->setPlaceHolder(LocalizedStrings::getInstance()->getString("NAME"));
     _editName->setPlaceholderFontColor(Color3B::BLACK);
-    _editName->setPlaceholderFontSize((int)Variables::H_FONT_SIZE);
+    _editName->setPlaceholderFontSize((int)Variables::H_FONT_SIZE());
     _editName->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
     _editName->setInputMode(ui::EditBox::InputMode::SINGLE_LINE);
     this->addChild(_editName, 3);
@@ -499,7 +499,7 @@ WaitingPopUp *WaitingPopUp::create(int time) {
 
 bool WaitingPopUp::init(int time) {
     _waitingTime = time;
-    _message = Label::createWithTTF(StringUtils::toString(_waitingTime) + " s", Variables::FONT_NAME, Variables::H_FONT_SIZE);
+    _message = Label::createWithTTF(StringUtils::toString(_waitingTime) + " s", Variables::FONT_NAME, Variables::H_FONT_SIZE());
     _message->setColor(Color3B::BLACK);
 
     if (!PopUp::init(LocalizedStrings::getInstance()->getString("WAITING"), _message)) {

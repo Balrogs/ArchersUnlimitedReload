@@ -1,4 +1,5 @@
 #include <Scenes/MenuLayers/SplashScene.h>
+#include <GameEngine/Global/Variables.h>
 #include "AppDelegate.h"
 #include "Scenes/MenuLayers/MainMenu.h"
 
@@ -12,7 +13,7 @@ USING_NS_CC;
 1080 x 1920
 
  */
-static cocos2d::Size designResolutionSize =  cocos2d::Size(1280, 720);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(800, 480);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1280, 720);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(1920, 1080);
@@ -74,6 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
                                             largeResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("ipad");
         searchPaths.push_back("ipad/ArcUnlimArmature");
+        Variables::setResolution(Resolution::IPAD);
     }
         // if the frame's height is larger than the height of small size.
     else if (frameSize.height > smallResolutionSize.height) {
@@ -81,6 +83,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
                                             mediumResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("hd");
         searchPaths.push_back("hd/ArcUnlimArmature");
+        Variables::setResolution(Resolution::HD);
     }
         // if the frame's height is smaller than the height of medium size.
     else {
@@ -88,6 +91,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
                                             smallResolutionSize.width / designResolutionSize.width));
         searchPaths.push_back("sd");
         searchPaths.push_back("sd/ArcUnlimArmature");
+        Variables::setResolution(Resolution::SD);
     }
     searchPaths.push_back("fonts");
     searchPaths.push_back("localization");

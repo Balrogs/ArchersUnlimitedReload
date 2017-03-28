@@ -37,7 +37,7 @@ bool GameOverScene::init(Statistics *stats) {
 
     _title1 = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GAME OVER"),
                                             Variables::FONT_NAME,
-                                            Variables::H_FONT_SIZE);
+                                            Variables::H_FONT_SIZE());
     _title1->setPosition(visibleSize.width / 2,
                          bg->getBoundingBox().getMaxY() - _title1->getContentSize().height / 2 - 50.f);
     this->addChild(_title1, 2);
@@ -45,7 +45,7 @@ bool GameOverScene::init(Statistics *stats) {
 
     _title2 = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GAME OVER"),
                                             Variables::FONT_NAME,
-                                            Variables::H_FONT_SIZE);
+                                            Variables::H_FONT_SIZE());
     _title2->setPosition(_title1->getPosition().x - 10.f, _title1->getPosition().y + 10.f);
     _title2->setColor(Color3B::RED);
     this->addChild(_title2, 2);

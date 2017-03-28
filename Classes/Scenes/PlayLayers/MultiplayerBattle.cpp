@@ -76,7 +76,7 @@ void MultiplayerBattle::resumeGame() {
 
 void MultiplayerBattle::abort() {
     auto popUp = PopUp::create(LocalizedStrings::getInstance()->getString("GAME OVER"),
-                               cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("OPPONENT HAS LEFT THE GAME"), Variables::FONT_NAME, Variables::FONT_SIZE),
+                               cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("OPPONENT HAS LEFT THE GAME"), Variables::FONT_NAME, Variables::FONT_SIZE()),
                                false);
     popUp->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->_ui->addChild(popUp, 0, "PopUp");

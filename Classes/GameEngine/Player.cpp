@@ -283,7 +283,7 @@ bool PlayerApple::init(int id, std::string name, int score) {
     _scoreView->addChild(coin, 2, "coin");
 
     auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
-                                                    Variables::H_FONT_SIZE);
+                                                    Variables::H_FONT_SIZE());
     coinsCount->setColor(Color3B::BLACK);
 
     coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
@@ -352,7 +352,7 @@ bool PlayerOnlineApple::init(int id, std::string name, int score) {
     _scoreView->setPosition(_nameView->getPosition());
 
     auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
-                                                    1.5f * Variables::H_FONT_SIZE,
+                                                    1.5f * Variables::H_FONT_SIZE(),
                                                     cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
     coinsCount->setColor(Color3B::BLACK);
     coinsCount->setPosition(Vec2(

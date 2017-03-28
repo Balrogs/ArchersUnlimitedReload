@@ -89,7 +89,7 @@ bool Lobby::init() {
 
     auto _playerInfoButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("INFO"), Variables::FONT_NAME,
-            Variables::FONT_SIZE);
+            Variables::FONT_SIZE());
     _playerInfoButton_label->setPosition(_playerInfoButton->getPosition());
     this->addChild(_playerInfoButton_label, 4);
 
@@ -119,7 +119,7 @@ bool Lobby::init() {
     );
 
     auto title = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("FRIENDS"), Variables::FONT_NAME,
-                                                Variables::FONT_SIZE);
+                                                Variables::FONT_SIZE());
     title->setPosition(_friendsBox->getPosition().x,
                        _friendsBox->getBoundingBox().getMaxY() - title->getContentSize().height / 2);
     this->addChild(title, 2);
@@ -141,7 +141,7 @@ bool Lobby::init() {
         }
     });
     _findFriendButton->setPosition(Vec2(_friendsBox->getPosition().x,
-                                        _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height / 2 + Variables::FONT_SIZE / 2));
+                                        _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height / 2 + Variables::FONT_SIZE() / 2));
     this->addChild(_findFriendButton, 2);
 
     _showScrollView();
@@ -177,7 +177,7 @@ bool Lobby::init() {
                  _playerInfoButton->getPosition().y));
     auto _playerGlobalStatisticsButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("GLOBAL"), Variables::FONT_NAME,
-            Variables::FONT_SIZE);
+            Variables::FONT_SIZE());
     _playerGlobalStatisticsButton_label->setPosition(_playerGlobalStatisticsButton->getPosition());
     this->addChild(_playerGlobalStatisticsButton_label, 4);
 
@@ -214,7 +214,7 @@ bool Lobby::init() {
                  _playerInfoButton->getPosition().y));
     auto _playerCountryStatisticsButton_label = cocos2d::Label::createWithTTF(
             LocalizedStrings::getInstance()->getString("REGION"), Variables::FONT_NAME,
-            Variables::FONT_SIZE);
+            Variables::FONT_SIZE());
     _playerCountryStatisticsButton_label->setPosition(_playerCountryStatisticsButton->getPosition());
     this->addChild(_playerCountryStatisticsButton_label, 4);
 
@@ -319,7 +319,7 @@ void Lobby::_showScrollView() {
     _scrollView = cocos2d::ui::ScrollView::create();
     _scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
     _scrollView->setContentSize(Size(0.9f * _friendsBox->getBoundingBox().size.width,
-                                     0.9f * (_friendsBox->getBoundingBox().size.height - _findFriendButton->getBoundingBox().size.height - 1.5f * Variables::FONT_SIZE)));
+                                     0.9f * (_friendsBox->getBoundingBox().size.height - _findFriendButton->getBoundingBox().size.height - 1.5f * Variables::FONT_SIZE())));
     _scrollView->setInnerContainerSize(
             Size(0.9f * _friendsBox->getContentSize().width,
                  2 * _friendsBox->getContentSize().height));
@@ -328,7 +328,7 @@ void Lobby::_showScrollView() {
     _scrollView->setBounceEnabled(true);
     _scrollView->setInertiaScrollEnabled(true);
     _scrollView->setPosition(Vec2(_friendsBox->getPosition().x - _scrollView->getContentSize().width / 2,
-                                  _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height + Variables::FONT_SIZE));
+                                  _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height + Variables::FONT_SIZE()));
 //    
 //        for (unsigned long i = 0; i < language_list.size(); i++) {
 //            auto language = language_list.at(i);
