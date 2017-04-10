@@ -6,8 +6,8 @@
 #include <Localization/LocalizedStrings.h>
 #include "MainMenu.h"
 #include "Settings.h"
-#include "MultiplayerMenu.h"
-#include "Loading.h"
+#include "Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h"
+#include "Scenes/MenuLayers/Loading.h"
 #include "Randomizer.h"
 
 USING_NS_CC;

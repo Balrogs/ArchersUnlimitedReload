@@ -1,8 +1,8 @@
 #include <GameEngine/Global/Variables.h>
 #include <ui/UIButton.h>
 #include <Localization/LocalizedStrings.h>
-#include <Scenes/MenuLayers/MainMenu.h>
-#include <Scenes/MenuLayers/Randomizer.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
+#include <Scenes/MenuLayers/Main/Randomizer.h>
 #include "GameOverScene.h"
 #include "Battle.h"
 

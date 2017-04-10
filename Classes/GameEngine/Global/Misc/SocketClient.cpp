@@ -1,10 +1,10 @@
 #include <base/ccUTF8.h>
-#include <Scenes/MenuLayers/MainMenu.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
 #include <Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h>
-#include <Scenes/MenuLayers/MultiplayerMenu.h>
-#include <Scenes/MenuLayers/Lobby.h>
+#include <Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h>
+#include <Scenes/MenuLayers/Multiplayer/Lobby.h>
 #include <Scenes/MenuLayers/Loading.h>
-#include <Scenes/MenuLayers/RegisterMenu.h>
+#include <Scenes/MenuLayers/Multiplayer/RegisterMenu.h>
 #include "JSONParser.h"
 
 static SocketClient *instance = nullptr;

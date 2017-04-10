@@ -5,7 +5,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <dragonBones/cocos2dx/CCFactory.h>
 #include <dragonBones/cocos2dx/CCSlot.h>
-#include <Scenes/MenuLayers/EquipmentScene.h>
+#include <Scenes/MenuLayers/Main/EquipmentScene.h>
 #include "DragonObject.h"
 
 USING_NS_CC;

@@ -1,7 +1,7 @@
 #include <Scenes/MenuLayers/SplashScene.h>
 #include <GameEngine/Global/Variables.h>
 #include "AppDelegate.h"
-#include "Scenes/MenuLayers/MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
 
 USING_NS_CC;
 // WP resolutions

@@ -160,17 +160,17 @@ set(GAME_SRC
         Classes/GameEngine/Objects/Environment/Apple.cpp
         Classes/Scenes/PlayLayers/Apple/AppleBattle.cpp
         Classes/Scenes/PlayLayers/Duel/DuelScene.cpp
-        Classes/Scenes/MenuLayers/MainMenu.cpp
+        Classes/Scenes/MenuLayers/Main/MainMenu.cpp
 
         Classes/GameEngine/Player.cpp
         Classes/GameEngine/Global/Producer.cpp
         Classes/Scenes/Layers/PauseScene.cpp
         Classes/Scenes/PlayLayers/GameOverScene.cpp
-        Classes/Scenes/MenuLayers/EquipmentScene.cpp
-        Classes/Scenes/MenuLayers/Randomizer.cpp
+        Classes/Scenes/MenuLayers/Main/EquipmentScene.cpp
+        Classes/Scenes/MenuLayers/Main/Randomizer.cpp
         Classes/Scenes/Layers/UI.cpp
         Classes/Scenes/Layers/BackgroundLayer.cpp
-        Classes/Scenes/MenuLayers/Settings.cpp
+        Classes/Scenes/MenuLayers/Main/Settings.cpp
         Classes/GameEngine/Objects/Stickman.cpp
         Classes/GameEngine/Objects/Aim/AimPreview.cpp
         Classes/GameEngine/Objects/Environment/Gate.cpp
@@ -285,16 +285,16 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Environment/Apple.h
         Classes/Scenes/PlayLayers/Apple/AppleBattle.h
         Classes/Scenes/PlayLayers/Duel/DuelScene.h
-        Classes/Scenes/MenuLayers/MainMenu.h
+        Classes/Scenes/MenuLayers/Main/MainMenu.h
         Classes/GameEngine/Global/Producer.h
         Classes/Scenes/Layers/PauseScene.h
         Classes/Scenes/PlayLayers/GameOverScene.h
-        Classes/Scenes/MenuLayers/EquipmentScene.h
-        Classes/Scenes/MenuLayers/Randomizer.h
+        Classes/Scenes/MenuLayers/Main/EquipmentScene.h
+        Classes/Scenes/MenuLayers/Main/Randomizer.h
         Classes/GameEngine/Player.h
         Classes/Scenes/Layers/UI.h
         Classes/Scenes/Layers/BackgroundLayer.h
-        Classes/Scenes/MenuLayers/Settings.h
+        Classes/Scenes/MenuLayers/Main/Settings.h
         Classes/GameEngine/Objects/DragonObject.h
   ${PLATFORM_SPECIFIC_HEADERS}
         Classes/GameEngine/Objects/Environment/Ground.cpp
@@ -312,14 +312,15 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/BattleParent.cpp
         Classes/Scenes/PlayLayers/MultiplayerBattle.cpp
         Classes/Scenes/PlayLayers/Apple/AppleParent.cpp
-        Classes/Scenes/MenuLayers/RegisterMenu.cpp
-        Classes/Scenes/MenuLayers/Lobby.cpp
-        Classes/Scenes/MenuLayers/MultiplayerMenu.cpp
+        Classes/Scenes/MenuLayers/Multiplayer/RegisterMenu.cpp
+        Classes/Scenes/MenuLayers/Multiplayer/Lobby.cpp
+        Classes/Scenes/MenuLayers/Multiplayer/MultiplayerMenu.cpp
         Classes/GameEngine/Global/Misc/DBPlayer.cpp
         Classes/Scenes/MenuLayers/Loading.cpp
         Classes/GameEngine/Objects/Environment/MainClip.cpp
         Classes/GameEngine/Global/Misc/RichSearchButton.cpp
         Classes/GameEngine/Global/Misc/Asset.cpp
+        Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -336,14 +337,15 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/MultiplayerBattle.h
         Classes/Scenes/PlayLayers/Apple/AppleParent.h
         Classes/Scenes/PlayLayers/BattleParent.h
-        Classes/Scenes/MenuLayers/RegisterMenu.h
-        Classes/Scenes/MenuLayers/Lobby.h
-        Classes/Scenes/MenuLayers/MultiplayerMenu.h
+        Classes/Scenes/MenuLayers/Multiplayer/RegisterMenu.h
+        Classes/Scenes/MenuLayers/Multiplayer/Lobby.h
+        Classes/Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h
         Classes/GameEngine/Global/Misc/DBPlayer.h
         Classes/Scenes/MenuLayers/Loading.h
         Classes/GameEngine/Objects/Environment/MainClip.h
         Classes/GameEngine/Global/Misc/RichSearchButton.h
-        Classes/GameEngine/Global/Misc/Asset.h)
+        Classes/GameEngine/Global/Misc/Asset.h
+        Classes/Scenes/MenuLayers/Multiplayer/EventView.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

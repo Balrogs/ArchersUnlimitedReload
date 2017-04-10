@@ -1,8 +1,8 @@
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include <ui/UIButton.h>
-#include <Scenes/MenuLayers/MainMenu.h>
-#include <Scenes/MenuLayers/Lobby.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
+#include <Scenes/MenuLayers/Multiplayer/Lobby.h>
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/PlayLayers/MultiplayerBattle.h>
 #include "PopUp.h"

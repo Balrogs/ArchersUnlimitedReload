@@ -8,7 +8,8 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include "Lobby.h"
-#include "MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
+#include "EventView.h"
 
 USING_NS_CC;
 
@@ -19,6 +20,21 @@ bool Lobby::init() {
 
     _client = SocketClient::getInstance();
     _visibleSize = Director::getInstance()->getVisibleSize();
+
+   _leftPart1 = cocos2d::Node::create();
+   _leftPart2 = cocos2d::Node::create();
+   _rightPart1 = cocos2d::Node::create();
+   _rightPart2 = cocos2d::Node::create();
+
+    _leftPart1->setPositionY(_visibleSize.height);
+    _leftPart2->setPositionX(-_visibleSize.width);
+    _rightPart1->setPositionY(-_visibleSize.height);
+    _rightPart2->setPositionX(_visibleSize.width);
+
+    this->addChild(_leftPart1);
+    this->addChild(_leftPart2);
+    this->addChild(_rightPart1);
+    this->addChild(_rightPart2);
 
     auto backButton = cocos2d::ui::Button::create();
     backButton->loadTextures(Variables::BACK_BUTTON_PATH, Variables::BACK_PRESSED_BUTTON_PATH,
@@ -36,7 +52,7 @@ bool Lobby::init() {
     });
     backButton->setPosition(Vec2(backButton->getBoundingBox().size.width / 2 + 15.f,
                                  _visibleSize.height - backButton->getBoundingBox().size.height / 2 - 15.f));
-    this->addChild(backButton);
+    _leftPart1->addChild(backButton);
 
     const auto keyboardListener = cocos2d::EventListenerKeyboard::create();
     keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
@@ -44,7 +60,13 @@ bool Lobby::init() {
             case EventKeyboard::KeyCode::KEY_BREAK:
             case EventKeyboard::KeyCode::KEY_ESCAPE:
             case EventKeyboard::KeyCode::KEY_BACKSPACE: {
-                onQuit();
+                auto popUp = this->getChildByName("PopUp");
+                if (popUp == nullptr) {
+                    onQuit();
+                } else {
+                    _setSearchButtonState();
+                    popUp->removeFromParent();
+                }
             }
                 break;
             default:
@@ -57,11 +79,11 @@ bool Lobby::init() {
     auto infoBoxSize = Size(_visibleSize.width / 2, 3 * _visibleSize.height / 5);
 
     _playerInfo = Node::create();
-    this->addChild(_playerInfo, 3);
+    _leftPart2->addChild(_playerInfo, 3);
     _playerGlobalStatistics = Node::create();
-    this->addChild(_playerGlobalStatistics, 2);
+    _leftPart2->addChild(_playerGlobalStatistics, 2);
     _playerCountryStatistics = Node::create();
-    this->addChild(_playerCountryStatistics, 2);
+    _leftPart2->addChild(_playerCountryStatistics, 2);
 
     _playerInfoButton = cocos2d::ui::Button::create();
     _playerInfoButton->loadTextures(Variables::BUTTON_1, Variables::BUTTON_1, Variables::BUTTON_1,
@@ -91,7 +113,7 @@ bool Lobby::init() {
             LocalizedStrings::getInstance()->getString("INFO"), Variables::FONT_NAME,
             Variables::FONT_SIZE());
     _playerInfoButton_label->setPosition(_playerInfoButton->getPosition());
-    this->addChild(_playerInfoButton_label, 4);
+    _leftPart2->addChild(_playerInfoButton_label, 4);
 
     _playerInfo->addChild(_playerInfoButton, 2);
 
@@ -104,10 +126,6 @@ bool Lobby::init() {
                                 _playerInfoButton->getBoundingBox().getMinY() - _playerInfoBox->getBoundingBox().size.height / 2 + 7.f);
 
     _playerInfo->addChild(_playerInfoBox, 1);
-
-    _findPlayerButton = RichSearchButton::create();
-    _findPlayerButton->setPosition(4 * _visibleSize.width / 5, _visibleSize.height / 10);
-    this->addChild(_findPlayerButton);
 
     _friendsBox = Sprite::createWithSpriteFrameName(Variables::BG1);
 
@@ -122,9 +140,9 @@ bool Lobby::init() {
                                                 Variables::FONT_SIZE());
     title->setPosition(_friendsBox->getPosition().x,
                        _friendsBox->getBoundingBox().getMaxY() - title->getContentSize().height / 2);
-    this->addChild(title, 2);
+    _rightPart2->addChild(title, 2);
 
-    this->addChild(_friendsBox, 1);
+    _rightPart2->addChild(_friendsBox, 1);
 
     _findFriendButton = cocos2d::ui::Button::create();
     _findFriendButton->loadTextures(Variables::FIND_BUTTON, Variables::FIND_PRESSED_BUTTON,
@@ -142,7 +160,46 @@ bool Lobby::init() {
     });
     _findFriendButton->setPosition(Vec2(_friendsBox->getPosition().x,
                                         _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height / 2 + Variables::FONT_SIZE() / 2));
-    this->addChild(_findFriendButton, 2);
+    _rightPart2->addChild(_findFriendButton, 2);
+
+    _findPlayerButton = RichSearchButton::create();
+    _findPlayerButton->setPosition(Vec2(
+            _friendsBox->getPosition().x - _findFriendButton->getBoundingBox().size.width,
+            _playerInfoBox->getBoundingBox().getMinY() + _findPlayerButton->getBoundingBox().size.height / 2
+    ));
+    _rightPart1->addChild(_findPlayerButton);
+
+    auto eventButton = cocos2d::ui::Button::create();
+    eventButton->loadTextures(Variables::EVENT_BUTTON, Variables::EVENT_PRESSED_BUTTON,
+                              Variables::EVENT_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    eventButton->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                this->runAction(Sequence::create(
+                        CallFunc::create([&](){
+                            MainScene::getInstance()->wait(false);
+
+                            _leftPart1->runAction(MoveTo::create(0.5f, Vec2(0, _visibleSize.height)));
+                            _leftPart2->runAction(MoveTo::create(0.5f, Vec2(-_visibleSize.width, 0)));
+                            _rightPart1->runAction(MoveTo::create(0.5f, Vec2(0, -_visibleSize.height)));
+                            _rightPart2->runAction(MoveTo::create(0.5f, Vec2(_visibleSize.width, 0)));
+                        }),
+                        CallFunc::create([](){
+                            MainScene::getInstance()->pushMain(EventView::create());
+                        }), NULL)
+                );
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    eventButton->setPosition(Vec2(
+            _findPlayerButton->getPosition().x + 2.f * eventButton->getBoundingBox().size.width,
+            _findPlayerButton->getPosition().y
+    ));
+    _rightPart1->addChild(eventButton);
 
     _showScrollView();
 
@@ -179,7 +236,7 @@ bool Lobby::init() {
             LocalizedStrings::getInstance()->getString("GLOBAL"), Variables::FONT_NAME,
             Variables::FONT_SIZE());
     _playerGlobalStatisticsButton_label->setPosition(_playerGlobalStatisticsButton->getPosition());
-    this->addChild(_playerGlobalStatisticsButton_label, 4);
+    _leftPart2->addChild(_playerGlobalStatisticsButton_label, 4);
 
     _playerGlobalStatistics->addChild(_playerGlobalStatisticsButton, 1);
 
@@ -216,7 +273,7 @@ bool Lobby::init() {
             LocalizedStrings::getInstance()->getString("REGION"), Variables::FONT_NAME,
             Variables::FONT_SIZE());
     _playerCountryStatisticsButton_label->setPosition(_playerCountryStatisticsButton->getPosition());
-    this->addChild(_playerCountryStatisticsButton_label, 4);
+    _leftPart2->addChild(_playerCountryStatisticsButton_label, 4);
 
     _playerCountryStatistics->addChild(_playerCountryStatisticsButton, 2);
 
@@ -356,7 +413,7 @@ void Lobby::_showScrollView() {
 //            _scrollView->addChild(languageButton, 3);
 //
 //        }
-    this->addChild(_scrollView, 4);
+    _rightPart2->addChild(_scrollView, 4);
 
 }
 
@@ -399,9 +456,22 @@ void Lobby::onEnter() {
 
     _resetPlayer();
 
-    _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
-    _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
-    _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+    MainScene::getInstance()->wait(false);
+
+    _leftPart1->runAction(MoveTo::create(0.4f, Vec2::ZERO));
+    _leftPart2->runAction(MoveTo::create(0.4f, Vec2::ZERO));
+    _rightPart1->runAction(MoveTo::create(0.4f, Vec2::ZERO));
+    _rightPart2->runAction(MoveTo::create(0.4f, Vec2::ZERO));
+
+    this->runAction(Sequence::create(
+            DelayTime::create(0.5f),
+            CallFunc::create([&](){
+                _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
+                _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
+                _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+            }),
+            NULL)
+    );
 }
 
 void Lobby::leaveLobby() {
@@ -419,5 +489,19 @@ void Lobby::onError(string message) {
 }
 
 void Lobby::onQuit() {
-    MainScene::getInstance()->popAndReplace();
+    this->getEventDispatcher()->pauseEventListenersForTarget(this, true);
+    this->runAction(Sequence::create(
+            CallFunc::create([&](){
+                MainScene::getInstance()->wait(false);
+
+                _leftPart1->runAction(MoveTo::create(0.5f, Vec2(0, _visibleSize.height)));
+                _leftPart2->runAction(MoveTo::create(0.5f, Vec2(-_visibleSize.width, 0)));
+                _rightPart1->runAction(MoveTo::create(0.5f, Vec2(0, -_visibleSize.height)));
+                _rightPart2->runAction(MoveTo::create(0.5f, Vec2(_visibleSize.width, 0)));
+            }),
+            DelayTime::create(0.5f),
+            CallFunc::create([](){
+                MainScene::getInstance()->popAndReplace();
+            }), NULL)
+    );
 }

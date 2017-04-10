@@ -65,6 +65,11 @@ protected:
 
 private:
 
+    cocos2d::Node *_leftPart1;
+    cocos2d::Node *_leftPart2;
+    cocos2d::Node *_rightPart1;
+    cocos2d::Node *_rightPart2;
+
     int _gameType;
 
     RichSearchButton* _findPlayerButton;

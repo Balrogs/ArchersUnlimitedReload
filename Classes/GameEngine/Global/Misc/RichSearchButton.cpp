@@ -1,6 +1,6 @@
 #include <GameEngine/Global/Variables.h>
-#include <Scenes/MenuLayers/MainMenu.h>
-#include <Scenes/MenuLayers/Lobby.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
+#include <Scenes/MenuLayers/Multiplayer/Lobby.h>
 #include "RichSearchButton.h"
 
 bool RichSearchButton::init() {
@@ -63,8 +63,6 @@ void RichSearchButton::_switchState(State state) {
     if(state == _state){
         return;
     }
-
-
 
     switch(state){
         case State::Busy : {

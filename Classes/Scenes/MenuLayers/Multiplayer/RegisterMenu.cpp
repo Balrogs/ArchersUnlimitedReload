@@ -5,7 +5,7 @@
 #include <Localization/LocalizedStrings.h>
 #include "RegisterMenu.h"
 #include "MultiplayerMenu.h"
-#include "MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
 
 USING_NS_CC;
 
@@ -174,8 +174,7 @@ void RegisterMenu::onEnter() {
 }
 
 void RegisterMenu::onQuit() {
-    auto scene = (MainScene *) this->getParent();
-    scene->replaceMain(MultiplayerMenu::create());
+    MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
 }
 
 void RegisterMenu::_showScrollView() {

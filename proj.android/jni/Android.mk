@@ -16,12 +16,12 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Producer.cpp\
                                  ../../Classes/Scenes/Layers/PauseScene.cpp\
                                  ../../Classes/Scenes/PlayLayers/GameOverScene.cpp\
-                                 ../../Classes/Scenes/MenuLayers/EquipmentScene.cpp\
+                                 ../../Classes/Scenes/MenuLayers/Main/EquipmentScene.cpp\
                                  ../../Classes/Scenes/MenuLayers/SplashScene.cpp\
-                                 ../../Classes/Scenes/MenuLayers/Randomizer.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Main/Randomizer.cpp \
                                  ../../Classes/Scenes/Layers/UI.cpp\
                                  ../../Classes/Scenes/Layers/BackgroundLayer.cpp\
-                                 ../../Classes/Scenes/MenuLayers/Settings.cpp\
+                                 ../../Classes/Scenes/MenuLayers/Main/Settings.cpp\
                                  ../../Classes/GameEngine/Objects/Stickman.cpp\
                                  ../../Classes/GameEngine/Objects/Aim/AimPreview.cpp\
                                  ../../Classes/GameEngine/Objects/Environment/Gate.cpp\
@@ -59,7 +59,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Apple.cpp\
                                  ../../Classes/Scenes/PlayLayers/Apple/AppleBattle.cpp\
                                  ../../Classes/Scenes/PlayLayers/Duel/DuelScene.cpp\
-                                 ../../Classes/Scenes/MenuLayers/MainMenu.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Main/MainMenu.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/Ground.cpp \
                                  ../../Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.cpp \
                                  ../../Classes/Scenes/PlayLayers/Duel/DuelScene2P.cpp \
@@ -74,14 +74,15 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/PlayLayers/BattleParent.cpp \
                                  ../../Classes/Scenes/PlayLayers/MultiplayerBattle.cpp \
                                  ../../Classes/Scenes/PlayLayers/Apple/AppleParent.cpp \
-                                 ../../Classes/Scenes/MenuLayers/Lobby.cpp \
-                                 ../../Classes/Scenes/MenuLayers/RegisterMenu.cpp \
-                                 ../../Classes/Scenes/MenuLayers/MultiplayerMenu.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Multiplayer/Lobby.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Multiplayer/RegisterMenu.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Multiplayer/MultiplayerMenu.cpp \
                                  ../../Classes/GameEngine/Global/Misc/DBPlayer.cpp \
                                  ../../Classes/Scenes/MenuLayers/Loading.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/MainClip.cpp \
                                  ../../Classes/GameEngine/Global/Misc/RichSearchButton.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/Asset.cpp
+                                 ../../Classes/GameEngine/Global/Misc/Asset.cpp \
+                                 ../../Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

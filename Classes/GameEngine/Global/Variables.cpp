@@ -96,8 +96,8 @@ const std::string Variables::COIN = "coin.png";
 
 const std::string Variables::VIDEO_BUTTON = "video.png";
 
-const std::string Variables::EVENT_BUTTON = "event.png";
-const std::string Variables::EVENT_PRESSED_BUTTON = "event_pressed.png";
+const std::string Variables::EVENT_BUTTON = "events.png";
+const std::string Variables::EVENT_PRESSED_BUTTON = "events_pressed.png";
 
 const std::string Variables::STAND = "stand.png";
 

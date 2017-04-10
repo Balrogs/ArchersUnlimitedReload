@@ -1,5 +1,5 @@
 #include <GameEngine/Global/Variables.h>
-#include <Scenes/MenuLayers/MainMenu.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
 #include "MainClip.h"
 
 USING_NS_CC;

@@ -4,7 +4,7 @@
 #include <GameEngine/Global/Misc/PopUp.h>
 #include "MultiplayerMenu.h"
 #include "RegisterMenu.h"
-#include "MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
 
 USING_NS_CC;
 
@@ -173,7 +173,7 @@ void MultiplayerMenu::onMenuClick(int id) {
             break;
         }
         case 2: {
-            ((MainScene *) this->getParent())->replaceMain(RegisterMenu::create());
+            MainScene::getInstance()->replaceMain(RegisterMenu::create());
         }
             break;
         case 3: {

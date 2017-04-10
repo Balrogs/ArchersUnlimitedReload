@@ -2,7 +2,7 @@
 // Created by igor on 13.12.16.
 //
 #include <Localization/LocalizedStrings.h>
-#include "MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
 #include "SplashScene.h"
 
 USING_NS_CC;

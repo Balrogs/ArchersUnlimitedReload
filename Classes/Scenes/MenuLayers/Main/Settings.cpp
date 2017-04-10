@@ -3,7 +3,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <Localization/LocalizedStrings.h>
 #include "Settings.h"
-#include "MainMenu.h"
+#include "Scenes/MenuLayers/Main/MainMenu.h"
 
 USING_NS_CC;
 
