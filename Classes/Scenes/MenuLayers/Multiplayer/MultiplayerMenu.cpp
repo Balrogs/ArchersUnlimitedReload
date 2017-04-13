@@ -1,7 +1,7 @@
 #include <Scenes/Layers/BackgroundLayer.h>
 #include <GameEngine/Global/Variables.h>
 #include <Localization/LocalizedStrings.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include "MultiplayerMenu.h"
 #include "RegisterMenu.h"
 #include "Scenes/MenuLayers/Main/MainMenu.h"

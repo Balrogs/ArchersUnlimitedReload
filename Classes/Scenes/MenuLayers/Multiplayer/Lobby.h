@@ -8,9 +8,9 @@
 
 #include <GameEngine/Player.h>
 #include <ui/UIScrollView.h>
-#include <GameEngine/Global/Misc/RichSearchButton.h>
+#include <GameEngine/Global/Misc/UI/RichSearchButton.h>
 #include "MultiplayerMenu.h"
-#include "GameEngine/Global/Misc/PopUp.h"
+#include "GameEngine/Global/Misc/UI/PopUp.h"
 #include "cocos2d.h"
 
 class Lobby : public cocos2d::Layer {

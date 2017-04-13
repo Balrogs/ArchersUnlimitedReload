@@ -1,8 +1,8 @@
-#include <GameEngine/Global/Misc/Views.h>
+#include <GameEngine/Global/Misc/UI/Views.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
 #include <Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h>
 #include <GameEngine/Global/Variables.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include "MainMenu.h"
 #include "Settings.h"

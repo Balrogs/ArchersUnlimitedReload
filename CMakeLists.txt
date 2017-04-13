@@ -302,8 +302,8 @@ set(GAME_HEADERS
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.cpp
         Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.cpp
         Classes/GameEngine/Global/Misc/JSONParser.cpp
-        Classes/GameEngine/Global/Misc/Views.cpp
-        Classes/GameEngine/Global/Misc/PopUp.cpp
+        Classes/GameEngine/Global/Misc/UI/Views.cpp
+        Classes/GameEngine/Global/Misc/UI/PopUp.cpp
         Classes/Scenes/MenuLayers/SplashScene.cpp
         Classes/Localization/LocalizedStrings.cpp
         Classes/GameEngine/Objects/Environment/Box.cpp
@@ -318,16 +318,19 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/DBPlayer.cpp
         Classes/Scenes/MenuLayers/Loading.cpp
         Classes/GameEngine/Objects/Environment/MainClip.cpp
-        Classes/GameEngine/Global/Misc/RichSearchButton.cpp
+        Classes/GameEngine/Global/Misc/UI/RichSearchButton.cpp
         Classes/GameEngine/Global/Misc/Asset.cpp
         Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp
+        Classes/GameEngine/Global/Misc/UI/Clocks.cpp
+        Classes/GameEngine/Global/Misc/UI/RichEventButton.cpp
+        Classes/GameEngine/Global/Misc/UI/InfoButton.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
         Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h
         Classes/GameEngine/Global/Misc/SocketClient.h
-        Classes/GameEngine/Global/Misc/Views.h
-        Classes/GameEngine/Global/Misc/PopUp.h
+        Classes/GameEngine/Global/Misc/UI/Views.h
+        Classes/GameEngine/Global/Misc/UI/PopUp.h
         Classes/GameEngine/Global/Misc/JSONParser.h
         Classes/Scenes/MenuLayers/SplashScene.h
         Classes/Localization/LocalizedStrings.h
@@ -343,9 +346,12 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/DBPlayer.h
         Classes/Scenes/MenuLayers/Loading.h
         Classes/GameEngine/Objects/Environment/MainClip.h
-        Classes/GameEngine/Global/Misc/RichSearchButton.h
+        Classes/GameEngine/Global/Misc/UI/RichSearchButton.h
         Classes/GameEngine/Global/Misc/Asset.h
-        Classes/Scenes/MenuLayers/Multiplayer/EventView.h)
+        Classes/Scenes/MenuLayers/Multiplayer/EventView.h
+        Classes/GameEngine/Global/Misc/UI/Clocks.h
+        Classes/GameEngine/Global/Misc/UI/RichEventButton.h
+        Classes/GameEngine/Global/Misc/UI/InfoButton.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

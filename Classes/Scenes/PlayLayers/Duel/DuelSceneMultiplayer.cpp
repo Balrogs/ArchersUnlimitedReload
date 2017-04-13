@@ -1,6 +1,6 @@
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Objects/Environment/Ground.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <GameEngine/Global/Variables.h>
 #include "DuelSceneMultiplayer.h"
 

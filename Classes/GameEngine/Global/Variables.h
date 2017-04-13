@@ -33,8 +33,12 @@ public:
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node1,  cocos2d::Node *node2);
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node);
 
+    static long getCurrentTime();
 
     static void setResolution(Resolution resolution);
+
+    static const int RESET_INTERVAL;
+    static const int MAX_TRY_COUNT;
 
     static const std::string FONT_NAME;
     static float FONT_SIZE();

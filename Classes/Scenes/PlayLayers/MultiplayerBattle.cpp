@@ -1,5 +1,5 @@
 #include <GameEngine/Global/Variables.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include "MultiplayerBattle.h"
 #include <math.h>
 #include <Localization/LocalizedStrings.h>

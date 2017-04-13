@@ -1,7 +1,7 @@
 #include <GameEngine/Objects/Stickman.h>
 #include <GameEngine/Global/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Scenes/Layers/BackgroundLayer.h>
 #include <Localization/LocalizedStrings.h>
 #include "Battle.h"

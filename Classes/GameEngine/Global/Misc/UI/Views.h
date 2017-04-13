@@ -6,7 +6,7 @@
 #define ARCHERSUNLIMITED_VIEWS_H
 
 #include "cocos2d.h"
-#include "SocketClient.h"
+#include "GameEngine/Global/Misc/SocketClient.h"
 
 class Views : public cocos2d::Node {
 public:

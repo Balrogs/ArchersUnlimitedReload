@@ -1,5 +1,5 @@
 #include "BattleParent.h"
-#include <GameEngine/Global/Misc/PopUp.h>
+#include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/PlayLayers/Apple/AppleMultiplayer.h>
 #include "Battle.h"

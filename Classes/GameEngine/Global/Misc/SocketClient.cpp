@@ -433,7 +433,7 @@ void SocketClient::_parseReply(string reply) {
     if(!JSONParser::isValid(reply)){
         return;
     }
-//    CCLOG(reply.c_str());
+    CCLOG(reply.c_str());
     if (JSONParser::isError(reply)) {
         _parseError(atoi(JSONParser::parseError(reply, "answer").c_str()));
     } else {

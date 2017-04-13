@@ -29,6 +29,10 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
     return cocos2d::Vec2(localPoint.x, localPoint.y);
 }
 
+const int Variables::RESET_INTERVAL = 10 * 1000;
+const int Variables::MAX_TRY_COUNT = 5;
+
+
 const std::string Variables::FONT_NAME = "FSEX300.ttf";
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
 
@@ -174,6 +178,12 @@ float Variables::H_FONT_SIZE() {
         case IPAD:
             return 144.f;
     }
+}
+
+long Variables::getCurrentTime() {
+    std::time_t now= std::time(0);
+    std::tm* now_tm= std::gmtime(&now);
+    return mktime(now_tm) * 1000;
 }
 
 

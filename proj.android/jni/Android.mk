@@ -82,7 +82,10 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/MainClip.cpp \
                                  ../../Classes/GameEngine/Global/Misc/RichSearchButton.cpp \
                                  ../../Classes/GameEngine/Global/Misc/Asset.cpp \
-                                 ../../Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp
+                                 ../../Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/Clocks.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/RichEventButton.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/InfoButton.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

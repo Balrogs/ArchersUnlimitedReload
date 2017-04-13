@@ -5,7 +5,7 @@
 #ifndef ARCUNLIM_MAINMENU_H
 #define ARCUNLIM_MAINMENU_H
 
-#include <GameEngine/Global/Misc/Views.h>
+#include <GameEngine/Global/Misc/UI/Views.h>
 #include "cocos2d.h"
 #include "EquipmentScene.h"
 #include "Scenes/Layers/BackgroundLayer.h"

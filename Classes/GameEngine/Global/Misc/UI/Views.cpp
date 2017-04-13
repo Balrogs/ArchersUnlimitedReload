@@ -4,7 +4,7 @@
 
 #include <GameEngine/Global/Variables.h>
 #include "Views.h"
-#include "JSONParser.h"
+#include "GameEngine/Global/Misc/JSONParser.h"
 
 USING_NS_CC;
 /*

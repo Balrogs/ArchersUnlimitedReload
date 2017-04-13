@@ -72,29 +72,24 @@ void RichSearchButton::_switchState(State state) {
 
         case State::Searching : {
             _stopButton->runAction(RepeatForever::create(
-                    Sequence::createWithTwoActions(
+                    Sequence::create(
                             DelayTime::create(.5f),
-                            Sequence::createWithTwoActions(
-                                    RotateBy::create(1.f, 360.f),
-                                    Sequence::createWithTwoActions(
-                                            DelayTime::create(.3f),
-                                            RotateBy::create(1.f, -360.f)
-                                    )))
-                                   )
-            );
+                            RotateBy::create(1.f, 360.f),
+                            DelayTime::create(.3f),
+                            RotateBy::create(1.f, -360.f),
+                            NULL
+                    )));
 
             _stopButton->runAction(
-                    Sequence::createWithTwoActions(
-                            Spawn::createWithTwoActions(
+                    Sequence::create(
+                            Spawn::create(
                                     CallFunc::create(
                                             [&]() {
                                                 _switchState(State::Busy);
                                             }
                                     ),
-                                    Spawn::createWithTwoActions(
-                                            ScaleTo::create(.5f, _scale),
-                                            RotateBy::create(.5f, 360.f)
-                                    )),
+                                    ScaleTo::create(.5f, _scale),
+                                    RotateBy::create(.5f, 360.f)),
                             CallFunc::create(
                                     [&]() {
                                         _state = State::Searching;
@@ -102,22 +97,22 @@ void RichSearchButton::_switchState(State state) {
                                             lobby->showSearchPopUp();
                                         }
                                     }
-                            ))
-
-            );
+                            ),
+                            NULL
+                    ));
 
             break;
         }
 
         case State::Idle : {
             _stopButton->runAction(
-                    Spawn::createWithTwoActions(
+                    Spawn::create(
                             CallFunc::create(
                                     [&]() {
                                         _switchState(State::Busy);
                                     }
                             ),
-                            Sequence::createWithTwoActions(
+                            Sequence::create(
                                     ScaleTo::create(.5f, 0.f),
                                     CallFunc::create(
                                             [&]() {
@@ -127,8 +122,10 @@ void RichSearchButton::_switchState(State state) {
                                                     lobby->leaveLobby();
                                                 }
                                             }
-                                    )
-                            )
+                                    ),
+                                    NULL
+                            ),
+                            NULL
                     )
             );
             break;
