@@ -67,6 +67,8 @@ public:
     //{"winner_id":0, "room_id":1,"v_type":0,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"} ,"code":7}
     void gameOver(int winner_id, int v_type);
 
+    void leaveLobby();
+    void getEventInfo();
 };
 
 

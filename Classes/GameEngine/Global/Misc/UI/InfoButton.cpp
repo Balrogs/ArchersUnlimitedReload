@@ -3,11 +3,11 @@
 #include "InfoButton.h"
 
 bool InfoButton::init(std::string text, std::string buttonPath) {
-    if(!Node::init()){
+    if(!cocos2d::Node::init()){
         return  false;
     }
 
-    auto button = ui::Button::create(buttonPath, buttonPath, buttonPath, ui::Widget::TextureResType::PLIST);
+    auto button = cocos2d::ui::Button::create(buttonPath, buttonPath, buttonPath, cocos2d::ui::Widget::TextureResType::PLIST);
 
     button->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
@@ -31,27 +31,27 @@ bool InfoButton::init(std::string text, std::string buttonPath) {
 
     this->addChild(button, 1);
 
-    _idlePos = Vec2(
+    _idlePos = cocos2d::Vec2(
             button->getPosition().x,
             button->getBoundingBox().getMaxY()
     );
 
 
-    _cloud = Sprite::createWithSpriteFrameName(Variables::GREEN_BUTTON);
-    _cloud->setPosition(Vec2(
+    _cloud = cocos2d::Sprite::createWithSpriteFrameName(Variables::GREEN_BUTTON);
+    _cloud->setPosition(cocos2d::Vec2(
             button->getPosition().x,
             button->getBoundingBox().getMaxY()
     ));
     this->addChild(_cloud, 2);
 
-    _showingPos = Vec2(
+    _showingPos = cocos2d::Vec2(
             button->getPosition().x,
             button->getBoundingBox().getMaxY() + _cloud->getContentSize().height
     );
 
     _cloud->setScale(0);
 
-    auto label = Label::createWithTTF(text, Variables::FONT_NAME, Variables::FONT_SIZE());
+    auto label = cocos2d::Label::createWithTTF(text, Variables::FONT_NAME, Variables::FONT_SIZE());
     label->setPosition(_cloud->getPosition());
     _cloud->addChild(label);
 
@@ -67,18 +67,18 @@ void InfoButton::_switchState(InfoButton::State state) {
 
     switch(state){
         case State::Showing : {
-            _cloud->runAction(Spawn::create(
-                    MoveTo::create(0.5f, _showingPos),
-                    ScaleTo::create(0.5f, 1.0f),
+            _cloud->runAction(cocos2d::Spawn::create(
+                    cocos2d::MoveTo::create(0.5f, _showingPos),
+                    cocos2d::ScaleTo::create(0.5f, 1.0f),
                     NULL
             ));
             break;
         }
 
         case State::Idle : {
-            _cloud->runAction(Spawn::create(
-                    MoveTo::create(0.5f, _idlePos),
-                    ScaleTo::create(0.5f, 0.0f),
+            _cloud->runAction(cocos2d::Spawn::create(
+                    cocos2d::MoveTo::create(0.5f, _idlePos),
+                    cocos2d::ScaleTo::create(0.5f, 0.0f),
                     NULL
             ));
             break;

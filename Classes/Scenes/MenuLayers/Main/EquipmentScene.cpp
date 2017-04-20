@@ -123,6 +123,7 @@ void EquipmentScene::onQuit() {
                     _bowsCount->setVisible(false);
                     _hatsCount->setVisible(false);
                     _arrowsCount->setVisible(false);
+                    _hero->getShoulders()->getAnimation().fadeIn("equipment_idle", -1.f, 1);
                 }
             }),
             Spawn::createWithTwoActions(
@@ -257,8 +258,8 @@ bool EquipmentScene::UIControls::init(HeroPreview *hero) {
     auto arrowCenter = Vec2(arrowPoint.x, arrowPoint.y);
 
     auto arrowSelector = SelectorVertical::create(arrowSelectorArea,
-                                                  arrowCenter,
-                                                  _hero->getArrowRotation(),
+                                                  Vec2(100, 100),
+                                                  -180,
                                                   _hero->getPlayerView()->getArrow()->Id(),
                                                   Type::Arrow);
     _selectors.push_back(arrowSelector);
@@ -271,7 +272,7 @@ bool EquipmentScene::UIControls::init(HeroPreview *hero) {
     auto bowCenter = Vec2(bowPoint.x, bowPoint.y);
     auto bowSelector = SelectorVertical::create(bowSelectorArea,
                                                 bowCenter,
-                                                _hero->getBowRotation(),
+                                                0,
                                                 _hero->getPlayerView()->getBow()->Id(),
                                                 Type::Bow);
     _selectors.push_back(bowSelector);
@@ -401,6 +402,7 @@ bool EquipmentScene::Selector::init(Rect rect, Vec2 center, float rotation, int 
         auto node = EquipmentScene::getInstance()->factory.buildArmatureDisplay(a->Path());
         auto item = Item::create(node, a->Id(), _type, a->isAvailable());
         item->setScale(0.f);
+        item->setRotation(rotation);
         this->addChild(item);
         _items.push_back(item);
     }
@@ -465,12 +467,14 @@ void EquipmentScene::Selector::_setItem(int index, float mainScale, float mainDu
         }
 
         _items[i]->runAction(
-                Sequence::createWithTwoActions(
-                        Spawn::createWithTwoActions(
+                Sequence::create(
+                        Spawn::create(
                                 MoveTo::create(dur, pos),
-                                ScaleTo::create(dur, s)
+                                ScaleTo::create(dur, s),
+                                NULL
                         ),
-                        action)
+                        action,
+                        NULL)
         );
     }
     this->runAction(Sequence::createWithTwoActions(

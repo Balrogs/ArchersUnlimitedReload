@@ -351,7 +351,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Multiplayer/EventView.h
         Classes/GameEngine/Global/Misc/UI/Clocks.h
         Classes/GameEngine/Global/Misc/UI/RichEventButton.h
-        Classes/GameEngine/Global/Misc/UI/InfoButton.h)
+        Classes/GameEngine/Global/Misc/UI/InfoButton.h Classes/GameEngine/Global/Misc/EventInfo.cpp Classes/GameEngine/Global/Misc/EventInfo.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

@@ -460,19 +460,27 @@ bool InputNamePopUp::init() {
     _buttons->addChild(ok);
     _buttons->setPosition(0, -POPUP_SIZE.height / 2 + ok->getBoundingBox().size.height / 2 + 25.f);
 
+    _errorMessage = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
+    _errorMessage->setPosition(cocos2d::Vec2(
+            0,
+            _editName->getPosition().y - editBoxSize.height
+    ));
+    _errorMessage->setTextColor(Color4B::RED);
+    this->addChild(_errorMessage, 3);
+
     this->addChild(_buttons, 2);
     return true;
 }
 
 void InputNamePopUp::okAction() {
     auto name  = string(_editName->getText());
-    if(name.length() < 3){
+    if(name.length() > 3){
         if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
             lobby->addFriend(name);
         }
         this->removeFromParent();
     } else {
-        _errorMessage ->setString(LocalizedStrings::getInstance()->getString("NAME IS EMPTY"));
+        _errorMessage ->setString(LocalizedStrings::getInstance()->getString("INPUT NAME"));
     }
 }
 

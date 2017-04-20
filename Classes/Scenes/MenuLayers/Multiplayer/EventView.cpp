@@ -14,6 +14,8 @@ bool EventView::init() {
         return false;
     }
 
+    _client =SocketClient::getInstance();
+
     _def = cocos2d::UserDefault::getInstance();
 
     _visibleSize = Director::getInstance()->getVisibleSize();
@@ -27,11 +29,11 @@ bool EventView::init() {
 
     this->addChild(_bg, 1);
 
-    auto title = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("EVENTS"), Variables::FONT_NAME,
+    _title = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("EVENTS"), Variables::FONT_NAME,
                                                 Variables::H_FONT_SIZE());
-    title->setPosition(_bg->getBoundingBox().getMinX() + 50.f + title->getContentSize().width / 2,
-                       _bg->getBoundingBox().getMaxY() - title->getContentSize().height / 2 - 50.f);
-    this->addChild(title, 2);
+    _title->setPosition(_bg->getBoundingBox().getMinX() + 50.f + _title->getContentSize().width / 2,
+                       _bg->getBoundingBox().getMaxY() - _title->getContentSize().height / 2 - 50.f);
+    this->addChild(_title, 2);
 
     auto backButton = cocos2d::ui::Button::create();
     backButton->loadTextures(Variables::BUTTON_PATH, Variables::PRESSED_BUTTON_PATH,
@@ -70,28 +72,10 @@ bool EventView::init() {
 
     this->setPosition(_visibleSize.width, 0);
 
-    // TODO show event table(label)
-    // TODO current reward
-
-    auto timeButton = InfoButtonTime::create();
-    timeButton->setPosition(_visibleSize.width / 2, _visibleSize.height / 3);
-    this->addChild(timeButton, 3);
-    
-    Clocks* eventEndClock = Clocks::create(Variables::getCurrentTime() + 3 * 60 * 60 * 1000, [&](){
-        _updateEvent();
-    });
-    eventEndClock->setPosition(Vec2(
-            _bg->getBoundingBox().getMaxX() - 50.f - title->getContentSize().width / 2,
-            title->getPosition().y
-    ));
-
-    this->addChild(eventEndClock, 2);
-
-
     auto timeLeft = cocos2d::Label::createWithTTF( LocalizedStrings::getInstance()->getString("TIMELEFT"), Variables::FONT_NAME,
                                                    Variables::FONT_SIZE());
-    timeLeft->setPosition(eventEndClock->getPosition().x - timeLeft->getContentSize().width - 50.f,
-                          eventEndClock->getPosition().y);
+    timeLeft->setPosition(_bg->getBoundingBox().getMaxX() - 50.f - _title->getContentSize().width / 2 - timeLeft->getContentSize().width - 50.f,
+                          _title->getPosition().y);
     this->addChild(timeLeft, 2);
 
     _richEventButton = RichEventButton::create();
@@ -99,6 +83,9 @@ bool EventView::init() {
     _richEventButton->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
 
     this->addChild(_richEventButton, 3);
+
+    _client->getEventInfo();
+
     return true;
 }
 
@@ -117,6 +104,30 @@ void EventView::onQuit() {
     );
 }
 
-void EventView::_updateEvent() {
+void EventView::updateEvent(EventInfo* info) {
+    if(_info->getId() == info->getId()) {
+        return;
+    }
 
+    _info = info;
+
+    if(_clocks){
+        _clocks->removeFromParent();
+    }
+    _clocks = Clocks::create(info->getEndTime() * 1000, [&](){
+        _updateEvent();
+    });
+    _clocks->setPosition(Vec2(
+            _bg->getBoundingBox().getMaxX() - 50.f - _title->getContentSize().width / 2,
+            _title->getPosition().y
+    ));
+    this->addChild(_clocks, 2);
+
+    //TODO update info
+
+    _client->getPlayerInfo(_info->getId(), _client->getDBPlayer()->getName());
+}
+
+void EventView::_updateEvent() {
+    _client->getEventInfo();
 }

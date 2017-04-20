@@ -3,9 +3,7 @@
 
 #include "cocos2d.h"
 
-USING_NS_CC;
-
-class InfoButton : public Node {
+class InfoButton : public cocos2d::Node {
 public:
     void show();
 
@@ -21,9 +19,9 @@ protected:
 
     State _state;
 
-    Sprite* _cloud;
-    Vec2 _idlePos;
-    Vec2 _showingPos;
+    cocos2d::Sprite* _cloud;
+    cocos2d::Vec2 _idlePos;
+    cocos2d::Vec2 _showingPos;
 
     void _switchState(State state);
 };

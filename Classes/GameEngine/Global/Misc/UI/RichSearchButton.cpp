@@ -89,7 +89,8 @@ void RichSearchButton::_switchState(State state) {
                                             }
                                     ),
                                     ScaleTo::create(.5f, _scale),
-                                    RotateBy::create(.5f, 360.f)),
+                                    RotateBy::create(.5f, 360.f),
+                            NULL),
                             CallFunc::create(
                                     [&]() {
                                         _state = State::Searching;

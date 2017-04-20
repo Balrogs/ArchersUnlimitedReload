@@ -8,6 +8,7 @@
 #include <vector>
 #include "rapidjson/document.h"
 #include "Asset.h"
+#include "EventInfo.h"
 
 using namespace rapidjson;
 using namespace std;
@@ -28,6 +29,14 @@ public:
     static std::vector<AssetInfo*> parseAsset(string key);
     static AssetInfo* parseAsset(string key, int id);
     static void setAssetAvailable(string key, int id);
+
+
+    static EventInfo* parseEvent(string message);
+private:
+    static std::vector<InfoButton*> parseInfo(string message);
+    static std::vector<Reward*> parseRewards(string message);
+    static std::vector<EventScore*> parseEventScore(string message);
+
 };
 
 

@@ -112,12 +112,10 @@ AssetInfo *JSONParser::parseAsset(string key, int id) {
     return nullptr;
 }
 
-//TODO test this
 void JSONParser::setAssetAvailable(string key, int id) {
     auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets/assets.json");
     Document document;
     document.Parse(content.c_str());
-    std::vector<AssetInfo*> assets;
 
     Value& parent = document[key.c_str()];
     Value& asset = parent[id];
@@ -126,7 +124,109 @@ void JSONParser::setAssetAvailable(string key, int id) {
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
     document.Accept(writer);
-    auto fullpath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets/assets.json");
-    cocos2d::FileUtils::getInstance()->writeStringToFile(buffer.GetString(), fullpath);
+    auto fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets/assets.json");
+    cocos2d::FileUtils::getInstance()->writeStringToFile(buffer.GetString(), fullPath);
 
+}
+
+EventInfo *JSONParser::parseEvent(string message) {
+
+    Document document;
+    document.Parse(message.c_str());
+
+    if (document.HasParseError() &&
+            !document.HasMember("id") &&
+            !document.HasMember("type") &&
+            !document.HasMember("date_end") &&
+            !document.HasMember("infos") &&
+            !document.HasMember("rewards")) {
+        return nullptr;
+    }
+
+    auto id = document["id"].GetInt();
+    auto type = document["description"]["e_type"].GetInt();
+
+    struct tm tm;
+    auto time = document["date_end"].GetString();
+    strptime(time, "%Y-%m-%dT%H:%M:%S", &tm);
+    auto endTime = mktime(&tm);
+
+    auto infos = parseInfo(message);
+    auto rewards = parseRewards(message);
+    auto scores = parseEventScore(message);
+
+    return new EventInfo(id, type, endTime, infos, rewards, scores);
+}
+
+std::vector<InfoButton *> JSONParser::parseInfo(string message) {
+    std::vector<InfoButton*> infos;
+    Document document;
+    document.Parse(message.c_str());
+    Value& b = document["description"]["infos"];
+
+    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+    {
+        const Value& c = b[i];
+
+        infos.push_back(InfoButtonTime::create());
+    }
+
+    return infos;
+}
+
+std::vector<Reward *> JSONParser::parseRewards(string message) {
+    std::vector<Reward*> rewards;
+    Document document;
+    document.Parse(message.c_str());
+    Value& b = document["description"]["rewards"];
+
+    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+    {
+        const Value& c = b[i];
+        switch(c.GetInt()){
+            case 1:
+                rewards.push_back(RewardArrow::create());
+                break;
+            case 2:
+                rewards.push_back(RewardBow::create());
+                break;
+            case 3:
+                rewards.push_back(RewardHat::create());
+                break;
+            case 4:
+                rewards.push_back(RewardCoin::create(100));
+                break;
+            case 5:
+                rewards.push_back(RewardCoin::create(250));
+                break;
+            case 6:
+                rewards.push_back(RewardCoin::create(500));
+                break;
+            case 7:
+                rewards.push_back(RewardCoin::create(750));
+                break;
+            case 8:
+                rewards.push_back(RewardCoin::create(1000));
+                break;
+            default:
+                break;
+        }
+    }
+    return rewards;
+}
+
+std::vector<EventScore *> JSONParser::parseEventScore(string message) {
+    std::vector<EventScore*> scores;
+//    Document document;
+//    document.Parse(message.c_str());
+//    Value& b = document["scores"];
+//
+//    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+//    {
+//        const Value& c = b[i];
+//
+//        scores.push_back(new EventScore(c["name"].GetString(), c["score"].GetInt()));
+//    }
+
+    return scores;
 }

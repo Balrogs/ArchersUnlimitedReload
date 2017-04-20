@@ -2,19 +2,12 @@
 #define ARCHERSUNLIMITED_DBPLAYER_H
 
 #include<string>
+#include <GameEngine/Player.h>
 
 using namespace std;
 
 
 class DBPlayer {
-
-private:
-    int _id;
-    string _name;
-    string _token;
-    string _password;
-    int _roomId;
-    int _country;
 
 public:
     DBPlayer();
@@ -27,12 +20,25 @@ public:
     int getRoomId() ;
     int getCountry() ;
     bool canLogin();
+    PlayerView* getView();
 
     void setId(int id);
     void setRoomId(int roomId);
     void setToken(string token);
     void setPassword(string password);
     void setName(string name);
+    void setView(PlayerView* view);
+
+
+private:
+    int _id;
+    string _name;
+    string _token;
+    string _password;
+    int _roomId;
+    int _country;
+
+    PlayerView* _view;
 };
 
 

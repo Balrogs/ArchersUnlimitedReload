@@ -246,25 +246,3 @@ void HeroPreview::_changeBow() {
 dragonBones::Armature *HeroPreview::getShoulders() {
     return _shoulders;
 }
-
-float HeroPreview::getArrowRotation() {
-    auto head = _arrow->getBone("head")->global;
-    auto tail = _arrow->getBone("tail")->global;
-
-    float x = head.x - tail.x;
-    float y = head.y - tail.y;
-    auto angle = std::atan2(y, x);
-
-    return -angle * dragonBones::RADIAN_TO_ANGLE;
-}
-
-float HeroPreview::getBowRotation() {
-    auto head = _bow->getBone("bottom")->global;
-    auto tail = _bow->getBone("top")->global;
-
-    float x = head.x - tail.x;
-    float y = head.y - tail.y;
-    auto angle = std::atan2(y, x);
-
-    return -angle * dragonBones::RADIAN_TO_ANGLE;
-}

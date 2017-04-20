@@ -44,14 +44,11 @@ public:
 
     PlayerView* getPlayerView();
     dragonBones::Armature* getShoulders();
+    void playAnimation(std::string name);
 
     float getHatHeight();
 
-    float getArrowRotation();
-    float getBowRotation();
-
     cocos2d::Vec2 getSlotPosition(std::string name);
-
 protected:
 
     PlayerView* _playerView;
@@ -79,6 +76,7 @@ protected:
     void _changeHat(std::string path);
 
     void _changeBow(std::string path);
+
 };
 
 

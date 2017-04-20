@@ -5,6 +5,7 @@
 #include <Scenes/MenuLayers/Multiplayer/Lobby.h>
 #include <Scenes/MenuLayers/Loading.h>
 #include <Scenes/MenuLayers/Multiplayer/RegisterMenu.h>
+#include <Scenes/MenuLayers/Multiplayer/EventView.h>
 #include "JSONParser.h"
 
 static SocketClient *instance = nullptr;
@@ -33,8 +34,8 @@ void SocketClient::destroyInstance() {
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-    // _address = "127.0.0.1";
-    _address = "188.120.237.20";
+     _address = "127.0.0.1";
+   // _address = "188.120.237.20";
     _isConnected = false;
     _player = new DBPlayer();
 }
@@ -127,8 +128,12 @@ void SocketClient::receive() {
 void SocketClient::login() {
     char x[256];
     sprintf(x,
-            "{\"name\":\"%s\",\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            _player->getName().c_str(), _player->getPassword().c_str());
+            "{\"name\":\"%s\",\"password\":\"%s\",\"playerView\":{\"hat\":%d,\"bow\":%d,\"arrow\":%d},\"code\":1}",
+            _player->getName().c_str(),
+            _player->getPassword().c_str(),
+            _player->getView()->getHat()->Id(),
+            _player->getView()->getBow()->Id(),
+            _player->getView()->getArrow()->Id());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -179,6 +184,18 @@ void SocketClient::denyInvite() {
             "{\"player_id\":%d,\"room_id\":%d,\"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":41}",
             _player->getId(),
             _player->getRoomId(),
+            _player->getId(),
+            _player->getToken().c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
+void SocketClient::leaveLobby() {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%d, \"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":42}",
+            _player->getId(),
             _player->getId(),
             _player->getToken().c_str());
     string message = x;
@@ -264,13 +281,16 @@ void SocketClient::changeArrow(string arrow) {
     t.detach();
 
 }
-
+//TODO
 void SocketClient::invite(int playerId) {
     char x[256];
     sprintf(x,
-            "{\"id\":%d,\"password\":\"%s\",\"playerView\":{\"color\":{\"red\":0,\"green\":0,\"blue\":0},\"helmet\":0,\"hood\":0, \"bow\":0},\"code\":1}",
-            _player->getId(),
-            _player->getPassword().c_str());
+            "{\"name\":\"%s\",\"password\":\"%s\",\"playerView\":{\"hat\":%d,\"bow\":%d,\"arrow\":%d},\"code\":1}",
+            _player->getName().c_str(),
+            _player->getPassword().c_str(),
+            _player->getView()->getHat()->Id(),
+            _player->getView()->getBow()->Id(),
+            _player->getView()->getArrow()->Id());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -279,9 +299,11 @@ void SocketClient::invite(int playerId) {
 void SocketClient::addToFriends(string name) {
     char x[256];
     sprintf(x,
-            "{\"id\":%d, \"friend_name\":%s, \"code\":11}",
+            "{\"id\":%d, \"friend_name\":\"%s\",\"token\":{\"id\":%d,\"token\":\"%s\"}, \"code\":14}",
             _player->getId(),
-            name.c_str());
+            name.c_str(),
+            _player->getId(),
+            _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -293,6 +315,18 @@ void SocketClient::getPlayerInfo(int s_type, string playerName) {
             "{\"s_type\":%d, \"name\":\"%s\",\"code\":9}",
             s_type,
             playerName.c_str());
+    string message = x;
+    auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
+    t.detach();
+}
+
+void SocketClient::getEventInfo() {
+    char x[256];
+    sprintf(x,
+            "{\"player_id\":%d, \"token\":{\"id\":%d,\"token\":\"%s\"},\"code\":81}",
+            _player->getId(),
+            _player->getId(),
+            _player->getToken().c_str());
     string message = x;
     auto t = std::thread(CC_CALLBACK_0(SocketClient::sendMessage, this, message));
     t.detach();
@@ -413,6 +447,24 @@ void SocketClient::_parseError(int error) {
             });
         }
             break;
+            //TODO
+        case -801: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->joinLobby();
+                }
+            });
+        }
+            break;
+            //TODO
+        case -802: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                    lobby->joinLobby();
+                }
+            });
+        }
+            break;
         default :
             break;
     }
@@ -504,6 +556,16 @@ void SocketClient::_parseReply(string reply) {
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                     if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
                         lobby->receiveCountryStats(reply);
+                    }
+                });
+            }
+                return;
+
+            case 13: {
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                    if (auto eventView = dynamic_cast<EventView *>(MainScene::getInstance()->getMain())) {
+                        auto info = JSONParser::parseEvent(reply);
+                        eventView->updateEvent(info);
                     }
                 });
             }

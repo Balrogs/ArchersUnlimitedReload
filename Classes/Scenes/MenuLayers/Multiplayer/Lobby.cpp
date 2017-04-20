@@ -463,19 +463,13 @@ void Lobby::onEnter() {
     _rightPart1->runAction(MoveTo::create(0.4f, Vec2::ZERO));
     _rightPart2->runAction(MoveTo::create(0.4f, Vec2::ZERO));
 
-    this->runAction(Sequence::create(
-            DelayTime::create(0.5f),
-            CallFunc::create([&](){
-                _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
-                _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
-                _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
-            }),
-            NULL)
-    );
+    _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
+    _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+    _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
 }
 
 void Lobby::leaveLobby() {
-    //TODO
+   _client->leaveLobby();
 }
 
 void Lobby::_resetPlayer() {
