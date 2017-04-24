@@ -295,7 +295,7 @@ void BattleParent::showPopUp() {
     if (popUp == nullptr) {
         pauseBattle();
         popUp = PausePopUp::create(LocalizedStrings::getInstance()->getString("PAUSE"));
-        popUp->setPosition(visibleSize.width / 2, visibleSize.height / 2);
+        popUp->setPosition(visibleSize.width / 2, - visibleSize.height);
         this->_ui->addChild(popUp, 0, "PopUp");
     } else {
         unPause();

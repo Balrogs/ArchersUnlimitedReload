@@ -34,8 +34,8 @@ void SocketClient::destroyInstance() {
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-     _address = "127.0.0.1";
-   // _address = "188.120.237.20";
+    // _address = "127.0.0.1";
+    _address = "188.120.237.20";
     _isConnected = false;
     _player = new DBPlayer();
 }
@@ -447,11 +447,10 @@ void SocketClient::_parseError(int error) {
             });
         }
             break;
-            //TODO
+
         case -801: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
-                    lobby->joinLobby();
                 }
             });
         }
@@ -460,7 +459,14 @@ void SocketClient::_parseError(int error) {
         case -802: {
             cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
                 if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
-                    lobby->joinLobby();
+                }
+            });
+        }
+            break;
+            //TODO
+        case -803: {
+            cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+                if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
                 }
             });
         }

@@ -33,13 +33,13 @@ bool PopUp::init(std::string title) {
     if (!Node::init()) {
         return false;
     }
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    POPUP_SIZE = Size(visibleSize.width / 2, visibleSize.height - 100.f);
+    _visibleSize = Director::getInstance()->getVisibleSize();
+    POPUP_SIZE = Size(_visibleSize.width / 2, _visibleSize.height - 100.f);
 
 
-    auto black = LayerColor::create(Color4B(0, 0, 0, 160));
-    auto pos = Vec2(-Director::getInstance()->getVisibleSize().width / 2,
-                    -Director::getInstance()->getVisibleSize().height / 2);
+    auto black = LayerColor::create(Color4B(0, 0, 0, 160), _visibleSize.width, _visibleSize.height * 4);
+    auto pos = Vec2(-_visibleSize.width / 2,
+                    - 2 *_visibleSize.height);
     black->setPosition(pos);
     this->addChild(black);
 
@@ -120,6 +120,21 @@ void PopUp::yesAction() {
 void PopUp::okAction() {
     this->removeFromParent();
     BattleParent::getInstance()->onPopScene();
+}
+
+void PopUp::onEnterTransitionDidFinish() {
+    Node::onEnterTransitionDidFinish();
+    this->runAction(MoveTo::create(.5f, Vec2(_visibleSize.width / 2, _visibleSize.height / 2)));
+}
+
+void PopUp::removeFromParentAndCleanup(bool cleanup) {
+    this->runAction(Sequence::create(
+            MoveTo::create(.3f, Vec2(_visibleSize.width / 2, 1.5f * _visibleSize.height)),
+            CallFunc::create([&](){
+                Node::removeFromParentAndCleanup(cleanup);
+            }),
+            NULL)
+    );
 }
 
 void MainMenuPopUp::noAction() {

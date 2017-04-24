@@ -86,43 +86,27 @@ Node *Views::getPlayerInfoView(std::string message) {
     return view;
 }
 
-
-
-Node *Views::getInviteView(std::string message) {
-    auto view = Node::create();
-
-    auto name = JSONParser::parseAnswer(message, "player_name");
-    auto rank = JSONParser::parseIntAnswer(message, "player_rank");
-
-    auto name_view = cocos2d::Label::createWithTTF("Name : " + name, Variables::FONT_NAME, 25.f);
-    auto rank_view = cocos2d::Label::createWithTTF("Rank : " + cocos2d::StringUtils::toString(rank), Variables::FONT_NAME, 25.f);
-    rank_view->setPosition(name_view->getPosition().x, name_view->getPosition().y - 30.f);
-    view->addChild(name_view);
-    view->addChild(rank_view);
-
-    return view;
-}
-
-Node *Views::getPlayerStatisticsView(std::string message) {
-    auto view = Node::create();
-    return view;
-}
-
-
 Node *Views::getGlobalStatisticsView(std::string message) {
   //  CCLOG(message.c_str());
-    auto view = Node::create();
-    return view;
+    return getStatisticsView(message);
 }
 
 Node *Views::getCountryStatisticsView(std::string message) {
  //   CCLOG(message.c_str());
-    auto view = Node::create();
-    return view;
+    return getStatisticsView(message);
 }
 
 Node *Views::getEventStatisticsView(std::string message) {
   //  CCLOG(message.c_str());
+    return getStatisticsView(message);
+}
+
+cocos2d::Node *Views::getStatisticsView(std::string message) {
+    auto view = Node::create();
+    return view;
+}
+
+cocos2d::Node *Views::getFriendsView(std::string message) {
     auto view = Node::create();
     return view;
 }

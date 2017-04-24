@@ -23,7 +23,13 @@ public:
 
     cocos2d::Size POPUP_SIZE;
 
+    virtual void onEnterTransitionDidFinish() override;
+
+    virtual void removeFromParentAndCleanup(bool cleanup) override ;
+
 protected:
+
+    cocos2d::Size _visibleSize;
     cocos2d::Vec2 _scale;
     cocos2d::Label *_title;
     cocos2d::Node *_buttons;

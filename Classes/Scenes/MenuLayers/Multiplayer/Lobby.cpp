@@ -357,7 +357,7 @@ void Lobby::_showPopUp(PopUp *popUp) {
     if(auto child = this->getChildByName("PopUp")) {
         child->removeFromParent();
     }
-    popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
+    popUp->setPosition(_visibleSize.width / 2, - _visibleSize.height);
     this->addChild(popUp, 10, "PopUp");
 }
 

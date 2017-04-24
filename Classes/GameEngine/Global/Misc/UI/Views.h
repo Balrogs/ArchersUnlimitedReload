@@ -21,11 +21,7 @@ public:
 {"s_type":3, "name":"some other username","code":9}
      */
 
-    static cocos2d::Node *getPlayerStatisticsView(std::string message);
-
     static cocos2d::Node *getPlayerInfoView(std::string message);
-
-    static cocos2d::Node *getInviteView(std::string message);
 
     static cocos2d::Node *getGlobalStatisticsView(std::string message);
 
@@ -33,7 +29,9 @@ public:
 
     static cocos2d::Node *getEventStatisticsView(std::string message);
 
+    static cocos2d::Node *getStatisticsView(std::string message);
 
+    static cocos2d::Node *getFriendsView(std::string message);
 };
 
 

@@ -210,7 +210,7 @@ void MultiplayerMenu::update(float dt) {
         auto popUp = MainMenuPopUp::create("",
                                            label);
         auto _visibleSize = Director::getInstance()->getVisibleSize();
-        popUp->setPosition(_visibleSize.width / 2, _visibleSize.height / 2);
+        popUp->setPosition(_visibleSize.width / 2, - _visibleSize.height);
         this->addChild(popUp, 0, "PopUp");
     }
 }
