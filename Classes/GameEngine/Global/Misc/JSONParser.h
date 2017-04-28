@@ -9,6 +9,7 @@
 #include "rapidjson/document.h"
 #include "Asset.h"
 #include "EventInfo.h"
+#include <GameEngine/Global/Misc/UI/Views.h>
 
 using namespace rapidjson;
 using namespace std;
@@ -30,6 +31,8 @@ public:
     static AssetInfo* parseAsset(string key, int id);
     static void setAssetAvailable(string key, int id);
 
+    static int getListSize(string message);
+    static vector<RankView *> parseRankings(string message);
 
     static EventInfo* parseEvent(string message);
 private:

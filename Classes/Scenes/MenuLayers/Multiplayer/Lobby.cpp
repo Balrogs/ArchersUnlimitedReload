@@ -305,6 +305,7 @@ void Lobby::deleteInvite() {
 void Lobby::receivePlayerInfo(string message) {
     auto name = JSONParser::parseAnswer(message, "name");
     if (name == _client->getDBPlayer()->getName()) {
+        _client->getDBPlayer()->setCountry(JSONParser::parseIntAnswer(message, "country"));
         auto view = Views::getPlayerInfoView(message);
         view->setPosition(Vec2(_playerInfoBox->getPosition().x,
                                0.9f * _playerInfoBox->getBoundingBox().getMaxY()));
@@ -317,13 +318,33 @@ void Lobby::receivePlayerInfo(string message) {
 }
 
 void Lobby::receiveGlobalStats(string message) {
-    auto view = Views::getGlobalStatisticsView(message);
-    _playerGlobalStatistics->addChild(view, 2);
+    auto size = _playerGlobalStatisticsBox->getBoundingBox().size * 0.95f;
+    auto marginSize = _playerGlobalStatisticsBox->getBoundingBox().size * 0.05f / 2.f;
+    auto view = Views::getGlobalStatisticsView(message, size);
+    if(auto child = _playerGlobalStatistics->getChildByName("table")){
+        child->removeFromParent();
+    }
+    view->setPosition(Vec2(
+            _playerGlobalStatisticsBox->getBoundingBox().getMinX() + marginSize.width,
+            _playerGlobalStatisticsBox->getBoundingBox().getMaxY() - marginSize.height
+
+    ));
+    _playerGlobalStatistics->addChild(view, 2, "table");
 }
 
 void Lobby::receiveCountryStats(string message) {
-    auto view = Views::getCountryStatisticsView(message);
-    _playerCountryStatistics->addChild(view, 2);
+    auto size = _playerCountryStatisticsBox->getBoundingBox().size * 0.95f;
+    auto marginSize = _playerCountryStatisticsBox->getBoundingBox().size * 0.05f / 2.f;
+    auto view = Views::getGlobalStatisticsView(message, size);
+    if(auto child = _playerCountryStatistics->getChildByName("table")){
+        child->removeFromParent();
+    }
+    view->setPosition(Vec2(
+            _playerCountryStatisticsBox->getBoundingBox().getMinX() + marginSize.width,
+            _playerCountryStatisticsBox->getBoundingBox().getMaxY() - marginSize.height
+
+    ));
+    _playerCountryStatistics->addChild(view, 2, "table");
 }
 
 void Lobby::joinLobby() {
@@ -463,8 +484,8 @@ void Lobby::onEnter() {
     _rightPart1->runAction(MoveTo::create(0.4f, Vec2::ZERO));
     _rightPart2->runAction(MoveTo::create(0.4f, Vec2::ZERO));
 
-    _client->getPlayerInfo(1, _client->getDBPlayer()->getName());
-    _client->getPlayerInfo(2, _client->getDBPlayer()->getName());
+    _client->getPlayerInfo(1, "global");
+    _client->getPlayerInfo(2, StringUtils::format("country-%d", _client->getDBPlayer()->getCountry()));
     _client->getPlayerInfo(3, _client->getDBPlayer()->getName());
 }
 

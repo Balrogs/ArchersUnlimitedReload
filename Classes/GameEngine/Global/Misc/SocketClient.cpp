@@ -34,8 +34,8 @@ void SocketClient::destroyInstance() {
 SocketClient::SocketClient() {
     _sock = -1;
     _port = 8888;
-    // _address = "127.0.0.1";
-    _address = "188.120.237.20";
+     _address = "127.0.0.1";
+    //_address = "188.120.237.20";
     _isConnected = false;
     _player = new DBPlayer();
 }

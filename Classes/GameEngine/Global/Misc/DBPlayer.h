@@ -30,6 +30,8 @@ public:
     void setView(PlayerView* view);
 
 
+    void setCountry(int country);
+
 private:
     int _id;
     string _name;

@@ -13,7 +13,7 @@ DBPlayer::DBPlayer() {
     _password = def->getStringForKey("PASSWORD", "");
     _token = def->getStringForKey("TOKEN", "");
     _roomId = def->getIntegerForKey("ROOMID", -1);
-    _country = def->getIntegerForKey("COUNTRY", -1);
+    _country = def->getIntegerForKey("COUNTRY", 6);
     _view = PlayerView::readPlayerView();
 
     def->flush();
@@ -121,5 +121,17 @@ PlayerView *DBPlayer::getView() {
 
 void DBPlayer::setView(PlayerView *view) {
     _view = view;
+}
+
+void DBPlayer::setCountry(int country) {
+    if(_country != country) {
+        cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+
+        def->setIntegerForKey("COUNTRY", country);
+
+        def->flush();
+
+        _country = country;
+    }
 }
 

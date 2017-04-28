@@ -360,8 +360,9 @@ void MainMenu::onMenuClick(int id) {
                         case cocos2d::ui::Widget::TouchEventType::ENDED: {
                             if (SocketClient::getInstance()->connected() &&
                                 SocketClient::getInstance()->getDBPlayer()->canLogin()) {
-                                SocketClient::getInstance()->login();
-                                MainScene::getInstance()->pushMain(Loading::create());
+//                                SocketClient::getInstance()->login();
+//                                MainScene::getInstance()->pushMain(Loading::create());
+                                MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
                             } else {
                                 MainScene::getInstance()->replaceMain(MultiplayerMenu::create());
                             }

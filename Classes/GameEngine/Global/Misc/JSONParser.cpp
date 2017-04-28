@@ -1,6 +1,7 @@
 #include <platform/CCFileUtils.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+#include <GameEngine/Global/Misc/UI/Views.h>
 #include "JSONParser.h"
 
 string JSONParser::parse(string message, string key) {
@@ -229,4 +230,26 @@ std::vector<EventScore *> JSONParser::parseEventScore(string message) {
 //    }
 
     return scores;
+}
+
+std::vector<RankView *> JSONParser::parseRankings(string message) {
+    std::vector<RankView *> ranks;
+    Document document;
+    document.Parse(message.c_str());
+    Value& b = document["list"];
+
+    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+    {
+        const Value& c = b[i];
+
+        ranks.push_back(new RankView(c["player_name"].GetString(), c["country"].GetInt(), c["rank"].GetInt()));
+    }
+
+    return  ranks;
+}
+
+int JSONParser::getListSize(string message) {
+    Document document;
+    document.Parse(message.c_str());
+    return document["list"].GetArray().Size();
 }
