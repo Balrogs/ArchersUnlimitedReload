@@ -23,6 +23,8 @@ public:
 
     void acceptInvite();
 
+    void inviteFriend(string name, int id, int gameType);
+
     void denyInvite();
 
     void leaveLobby();

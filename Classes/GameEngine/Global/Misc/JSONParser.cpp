@@ -248,6 +248,23 @@ std::vector<RankView *> JSONParser::parseRankings(string message) {
     return  ranks;
 }
 
+std::vector<FriendView *> JSONParser::parseFriends(string message) {
+    std::vector<FriendView *> ranks;
+    Document document;
+    document.Parse(message.c_str());
+    Value& b = document["friends"];
+
+    for (rapidjson::SizeType i = 0; i < b.Size(); i++)
+    {
+        const Value& c = b[i];
+
+        ranks.push_back(new FriendView(c["player_name"].GetString(), c["player_id"].GetInt(), c["online"].GetBool()));
+    }
+
+    return  ranks;
+}
+
+
 int JSONParser::getListSize(string message) {
     Document document;
     document.Parse(message.c_str());

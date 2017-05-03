@@ -376,7 +376,6 @@ bool GameTypePopUp::init() {
     if (!PopUp::init(LocalizedStrings::getInstance()->getString("CHOOSE GAME"))) {
         return false;
     }
-
     auto duel = ui::Button::create();
     duel->loadTextures(Variables::RED_BUTTON, Variables::RED_PRESSED_BUTTON, Variables::RED_BUTTON,
                            cocos2d::ui::Widget::TextureResType::PLIST);
@@ -386,7 +385,11 @@ bool GameTypePopUp::init() {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
-                    lobby->startSearch(4);
+                    if(_name == "" || _id){
+                        lobby->startSearch(4);
+                    } else {
+                        lobby->inviteFriend(_name, _id, 4);
+                    }
                 }
                 this->removeFromParent();
             }
@@ -413,7 +416,11 @@ bool GameTypePopUp::init() {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 if (auto lobby = dynamic_cast<Lobby *>(this->getParent())) {
-                    lobby->startSearch(5);
+                    if(_name == "" || _id){
+                        lobby->startSearch(5);
+                    } else {
+                        lobby->inviteFriend(_name, _id, 5);
+                    }
                 }
                 this->removeFromParent();
             }
@@ -433,6 +440,23 @@ bool GameTypePopUp::init() {
 
     return true;
 
+}
+
+GameTypePopUp *GameTypePopUp::create(std::string name, int id) {
+    GameTypePopUp *ret = new(std::nothrow) GameTypePopUp();
+    if (ret && ret->init(name, id)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool GameTypePopUp::init(std::string name, int id) {
+    _name = name;
+    _id = id;
+
+    return GameTypePopUp::init();
 }
 
 InputNamePopUp *InputNamePopUp::create() {

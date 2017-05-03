@@ -58,8 +58,8 @@ public:
     void aim(float angle, float power);
     // {"player_id":0,"room_id":1,"arrow":"name", "token":{"id":0,"token":"⥿貧ဵට觱鞻㊆ꢖ풶꿘儐➧責鄆읽领ྯք뤘櫨"}, "code":6}
     void changeArrow(string arrow);
-    // {"player_id":1, "room_id":1,"token":{"id":1,"token":"顥鵰泏茙퍨ꅑꯛ೜㑓Ꮖ軼쭏籱ƹ槞⃥뚭薿咂튑"},"code":4}
-    void invite(int playerId);
+
+    void invite(std::string name, int id, int game_type);
     // {"id":0, "friend_id":1, "code":11}
     void addToFriends(string name);
     //{"s_type":3, "name":"some other username","code":9}

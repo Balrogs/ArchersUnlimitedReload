@@ -1,9 +1,8 @@
-//
-// Created by igor on 24.11.16.
-//
-
 #include <GameEngine/Global/Variables.h>
 #include <Localization/LocalizedStrings.h>
+#include <ui/UIButton.h>
+#include <Scenes/MenuLayers/Multiplayer/Lobby.h>
+#include <Scenes/MenuLayers/Main/MainMenu.h>
 #include "Views.h"
 #include "GameEngine/Global/Misc/JSONParser.h"
 
@@ -87,7 +86,7 @@ Node *Views::getPlayerInfoView(std::string message) {
     return view;
 }
 
-Node *Views::getGlobalStatisticsView(std::string message, cocos2d::Size size) {
+Node *Views::getStatisticsView(std::string message, cocos2d::Size size) {
     auto length = JSONParser::getListSize(message);
     auto view = RankTable::create(length, size);
     auto rankings = JSONParser::parseRankings(message);
@@ -101,26 +100,29 @@ Node *Views::getGlobalStatisticsView(std::string message, cocos2d::Size size) {
     return view;
 }
 
-Node *Views::getCountryStatisticsView(std::string message, cocos2d::Size size) {
-    auto length = JSONParser::getListSize(message);
-    auto view = RankTable::create(length, size);
-    auto rankings = JSONParser::parseRankings(message);
-    auto name = SocketClient::getInstance()->getDBPlayer()->getName();
-    view->addRank(RankView::getHeader(view->getRankSize()), 0);
-    for(int i = 0; i < rankings.size(); i++){
-        view->addRank(rankings[i]->getView(view->getRankSize(), name == rankings[i]->getPlayerName()), i + 1);
-    }
-    return view;
-}
-
 Node *Views::getEventStatisticsView(std::string message) {
     auto view = Node::create();
     return view;
 }
 
-cocos2d::Node *Views::getFriendsView(std::string message) {
-    auto view = Node::create();
-    return view;
+std::vector<cocos2d::Node*> Views::getFriendsView(std::string message, cocos2d::Size size) {
+    auto friends = JSONParser::parseFriends(message);
+    std::vector<cocos2d::Node*>  views;
+    if(friends.size() == 0){
+        auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("NO FRIENDS"),
+                                                   Variables::FONT_NAME,
+                                                   Variables::FONT_SIZE(),
+                                                   size,
+                                                   TextHAlignment::LEFT,
+                                                   TextVAlignment::CENTER);
+        label->setColor(Color3B::GRAY);
+        views.push_back(label);
+        return views;
+    }
+    for(auto friendItem : friends){
+        views.push_back(friendItem->getView(size));
+    }
+    return views;
 }
 
 RankViewBase *RankViewBase::create(cocos2d::Size size, cocos2d::Color4B color) {
@@ -264,4 +266,81 @@ void RankTable::addRank(cocos2d::Node* rankView, int id) {
 
 cocos2d::Size RankTable::getRankSize() {
     return _rankSize;
+}
+
+
+const cocos2d::Color3B FriendView::PLAYER_ONLINE_COLOR = Color3B::BLACK;
+const cocos2d::Color3B FriendView::PLAYER_OFFLINE_COLOR = Color3B::GRAY;
+
+FriendView::FriendView(string name, int id, bool isOnline) {
+    _name = name;
+    _isOnline = isOnline;
+    _id = id;
+}
+
+string FriendView::getPlayerName() {
+    return _name;
+}
+
+cocos2d::Node *FriendView::getView(cocos2d::Size size) {
+    Node* view = Node::create();
+    view->setContentSize(size);
+
+    Color3B color;
+    if(_isOnline){
+        color = PLAYER_ONLINE_COLOR;
+    } else {
+        color = PLAYER_OFFLINE_COLOR;
+    }
+
+    auto nameSize = _getNameSize(size);
+    auto dotSize = _getDotSize(size);
+
+    auto button = cocos2d::ui::Button::create();
+    button->addTouchEventListener(
+            [&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+                switch (type) {
+                    case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                        if (auto lobby = dynamic_cast<Lobby *>(MainScene::getInstance()->getMain())) {
+                            if(auto child = lobby->getChildByName("PopUp")) {
+                                child->removeFromParent();
+                            }
+                            auto popUp = GameTypePopUp::create(_name, _id);
+                            auto visibleSize = Director::getInstance()->getVisibleSize();
+                            popUp->setPosition(visibleSize.width / 2, - visibleSize.height);
+                            lobby->addChild(popUp, 10, "PopUp");
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            });
+    button->setTitleText(_name);
+    button->setTitleFontSize(Variables::FONT_SIZE());
+    button->setTitleFontName(Variables::FONT_NAME);
+    button->setColor(color);
+    //auto labelRank = cocos2d::Label::createWithTTF(StringUtils::toString(""), Variables::FONT_NAME, Variables::FONT_SIZE(), nameSize, TextHAlignment::RIGHT, TextVAlignment::CENTER);
+
+    button->setPosition(Vec2(button->getContentSize().width / 2, size.height / 2));
+   // labelRank->setPosition(Vec2(size.width - rankSize.width / 2, size.height / 2));
+
+    view->addChild(button);
+   // view->addChild(labelRank);
+
+    return view;
+}
+
+cocos2d::Size FriendView::_getNameSize(cocos2d::Size size) {
+    return Size(
+            0.8f * size.width,
+            size.height
+    );
+}
+
+cocos2d::Size FriendView::_getDotSize(cocos2d::Size size) {
+    return Size(
+            0.2f * size.width,
+            size.height
+    );
 }

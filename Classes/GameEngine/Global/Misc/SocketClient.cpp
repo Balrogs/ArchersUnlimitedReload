@@ -282,7 +282,7 @@ void SocketClient::changeArrow(string arrow) {
 
 }
 //TODO
-void SocketClient::invite(int playerId) {
+void SocketClient::invite(std::string name, int id, int game_type) {
     char x[256];
     sprintf(x,
             "{\"name\":\"%s\",\"password\":\"%s\",\"playerView\":{\"hat\":%d,\"bow\":%d,\"arrow\":%d},\"code\":1}",

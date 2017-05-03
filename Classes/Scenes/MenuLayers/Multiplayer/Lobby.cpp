@@ -310,6 +310,17 @@ void Lobby::receivePlayerInfo(string message) {
         view->setPosition(Vec2(_playerInfoBox->getPosition().x,
                                0.9f * _playerInfoBox->getBoundingBox().getMaxY()));
         _playerInfo->addChild(view, 2);
+
+        _scrollView->removeAllChildren();
+        auto size = Size(_scrollView->getInnerContainerSize().width, Variables::FONT_SIZE());
+        auto friendsView = Views::getFriendsView(message, size);
+        for (unsigned long i = 0; i < friendsView.size(); i++) {
+            auto friendItem = friendsView.at(i);
+            friendItem->setPosition(Vec2(0, _scrollView->getInnerContainerSize().height - 25.f - (i > 0) * 25.f - (i + 1) * size.height / 2));
+            _scrollView->addChild(friendItem, 3);
+        }
+        this->addChild(_scrollView, 4);
+
     } else {
         _showPopUp(InvitePopUp::create(LocalizedStrings::getInstance()->getString("INVITE"),
                                       Views::getPlayerInfoView(message), true));
@@ -320,7 +331,7 @@ void Lobby::receivePlayerInfo(string message) {
 void Lobby::receiveGlobalStats(string message) {
     auto size = _playerGlobalStatisticsBox->getBoundingBox().size * 0.95f;
     auto marginSize = _playerGlobalStatisticsBox->getBoundingBox().size * 0.05f / 2.f;
-    auto view = Views::getGlobalStatisticsView(message, size);
+    auto view = Views::getStatisticsView(message, size);
     if(auto child = _playerGlobalStatistics->getChildByName("table")){
         child->removeFromParent();
     }
@@ -335,7 +346,7 @@ void Lobby::receiveGlobalStats(string message) {
 void Lobby::receiveCountryStats(string message) {
     auto size = _playerCountryStatisticsBox->getBoundingBox().size * 0.95f;
     auto marginSize = _playerCountryStatisticsBox->getBoundingBox().size * 0.05f / 2.f;
-    auto view = Views::getGlobalStatisticsView(message, size);
+    auto view = Views::getStatisticsView(message, size);
     if(auto child = _playerCountryStatistics->getChildByName("table")){
         child->removeFromParent();
     }
@@ -382,7 +393,7 @@ void Lobby::_showPopUp(PopUp *popUp) {
     this->addChild(popUp, 10, "PopUp");
 }
 
-void Lobby::startSearch(int gameType) {
+void Lobby::startSearch( int gameType) {
     _gameType = gameType;
     _client->enterLobby(_gameType);
 }
@@ -391,7 +402,6 @@ void Lobby::addFriend(string name) {
     _client->addToFriends(name);
 }
 
-//TODO
 void Lobby::_showScrollView() {
 
     _scrollView = cocos2d::ui::ScrollView::create();
@@ -407,33 +417,6 @@ void Lobby::_showScrollView() {
     _scrollView->setInertiaScrollEnabled(true);
     _scrollView->setPosition(Vec2(_friendsBox->getPosition().x - _scrollView->getContentSize().width / 2,
                                   _friendsBox->getBoundingBox().getMinY() + _findFriendButton->getContentSize().height + Variables::FONT_SIZE()));
-//    
-//        for (unsigned long i = 0; i < language_list.size(); i++) {
-//            auto language = language_list.at(i);
-//            auto languageButton = cocos2d::ui::Button::create();
-//            languageButton->setTitleText(language);
-//            languageButton->setTitleFontSize(Variables::FONT_SIZE);
-//            languageButton->setTitleFontName(Variables::FONT_NAME);
-//            languageButton->setColor(Color3B::BLACK);
-//            languageButton->addTouchEventListener(
-//                    [&, language](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-//                        switch (type) {
-//                            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-//                                cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
-//                                def->setStringForKey("LANGUAGE", language);
-//                                onQuit();
-//                                break;
-//                            }
-//                            default:
-//                                break;
-//                        }
-//                    });
-//            languageButton->setPosition(Vec2(_scrollView->getInnerContainerSize().width / 2,
-//                                             _scrollView->getInnerContainerSize().height - 25.f -
-//                                             i * _languageBox->getContentSize().height));
-//            _scrollView->addChild(languageButton, 3);
-//
-//        }
     _rightPart2->addChild(_scrollView, 4);
 
 }
@@ -519,4 +502,8 @@ void Lobby::onQuit() {
                 MainScene::getInstance()->popAndReplace();
             }), NULL)
     );
+}
+
+void Lobby::inviteFriend(string name, int id, int gameType) {
+    _client->invite(name, id, gameType);
 }

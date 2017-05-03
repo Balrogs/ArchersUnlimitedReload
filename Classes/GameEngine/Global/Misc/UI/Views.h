@@ -16,6 +16,26 @@ private:
     cocos2d::Node* _bg;
 };
 
+class FriendView {
+public:
+    static const cocos2d::Color3B PLAYER_ONLINE_COLOR;
+    static const cocos2d::Color3B PLAYER_OFFLINE_COLOR;
+
+    FriendView(string name, int id, bool isOnline);
+
+    string getPlayerName();
+
+    cocos2d::Node* getView(cocos2d::Size size);
+
+private:
+    string _name;
+    bool _isOnline;
+    int _id;
+
+    static cocos2d::Size _getNameSize(cocos2d::Size size);
+    static cocos2d::Size _getDotSize(cocos2d::Size size);
+};
+
 class RankView {
 public:
     static const cocos2d::Color4B BG_COLOR;
@@ -71,14 +91,11 @@ public:
 
     static cocos2d::Node *getPlayerInfoView(std::string message);
 
-
-    static cocos2d::Node *getCountryStatisticsView(std::string message, cocos2d::Size size);
+    static cocos2d::Node *getStatisticsView(std::string message, cocos2d::Size size);
 
     static cocos2d::Node *getEventStatisticsView(std::string message);
 
-    static cocos2d::Node *getFriendsView(std::string message);
-
-    static cocos2d::Node *getGlobalStatisticsView(string message, cocos2d::Size size);
+    static std::vector<cocos2d::Node*> getFriendsView(std::string message, cocos2d::Size size);
 };
 
 

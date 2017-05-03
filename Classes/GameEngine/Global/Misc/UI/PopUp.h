@@ -95,6 +95,13 @@ class GameTypePopUp : public PopUp {
 public:
     static GameTypePopUp *create();
     bool init();
+
+    static GameTypePopUp *create(std::string name, int id);
+    bool init(std::string name, int id);
+
+protected:
+    std::string _name;
+    int _id;
 };
 
 class InputNamePopUp : public PopUp {

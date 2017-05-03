@@ -33,6 +33,7 @@ public:
 
     static int getListSize(string message);
     static vector<RankView *> parseRankings(string message);
+    static std::vector<FriendView *> parseFriends(string message);
 
     static EventInfo* parseEvent(string message);
 private:
