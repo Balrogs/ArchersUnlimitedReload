@@ -39,6 +39,8 @@ public:
     static PlayerView* readPlayerView();
     static PlayerView* randomBotView();
 
+    PlayerView(int hat, int bow, int arrow);
+
     AssetInfo* getHat();
     AssetInfo* getBow();
     AssetInfo* getArrow();
@@ -50,9 +52,6 @@ public:
     std::string toString();
 
 private:
-
-    PlayerView(int hat, int bow, int arrow);
-
     int _hatId;
     int _bowId;
     int _arrowId;

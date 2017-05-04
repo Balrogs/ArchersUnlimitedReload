@@ -36,6 +36,9 @@ public:
     static std::vector<FriendView *> parseFriends(string message);
 
     static EventInfo* parseEvent(string message);
+
+    static PlayerView *parsePlayerView(string message);
+
 private:
     static std::vector<InfoButton*> parseInfo(string message);
     static std::vector<Reward*> parseRewards(string message);

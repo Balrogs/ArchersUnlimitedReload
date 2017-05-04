@@ -322,6 +322,7 @@ void Lobby::receivePlayerInfo(string message) {
         this->addChild(_scrollView, 4);
 
     } else {
+        _playerView = JSONParser::parsePlayerView(message);
         _showPopUp(InvitePopUp::create(LocalizedStrings::getInstance()->getString("INVITE"),
                                       Views::getPlayerInfoView(message), true));
         _setSearchButtonState();
@@ -368,7 +369,7 @@ void Lobby::acceptInvite() {
     Director::getInstance()->pushScene(scene);
 
     if (auto gameScene = dynamic_cast<MultiplayerBattle *>(BattleParent::getInstance())) {
-        gameScene->createPlayers(_player2Id, _player2Name);
+        gameScene->createPlayers(_player2Id, _player2Name, _playerView);
     }
 }
 
@@ -458,8 +459,6 @@ void Lobby::onEnter() {
 
     _setSearchButtonState();
 
-    _resetPlayer();
-
     MainScene::getInstance()->wait(false);
 
     _leftPart1->runAction(MoveTo::create(0.4f, Vec2::ZERO));
@@ -479,7 +478,7 @@ void Lobby::leaveLobby() {
 void Lobby::_resetPlayer() {
     _player2Id = 0;
     _player2Name = "";
-
+    _playerView = nullptr;
 }
 
 void Lobby::onError(string message) {

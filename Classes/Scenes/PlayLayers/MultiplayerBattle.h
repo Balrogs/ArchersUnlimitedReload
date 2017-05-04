@@ -7,7 +7,7 @@
 
 class MultiplayerBattle : public DuelScene2P {
 public:
-    virtual void createPlayers(int id, std::string name) = 0;
+    virtual void createPlayers(int id, std::string name, PlayerView* playerView) = 0;
 
     virtual void receiveAction(float angle, float power, int id, int x, int y);
 

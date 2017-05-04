@@ -249,3 +249,10 @@ void Body::_setPlayerView() {
     _changeHat();
     _changeBow();
 }
+void Body::setPlayerView(PlayerView* playerView) {
+    _playerView = playerView;
+
+    _setPlayerView();
+}
+
+

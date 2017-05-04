@@ -17,7 +17,7 @@ bool RichEventButton::init() {
                   decreaseTryCount();
                     // TODO start event
                 } else {
-                    // TODO show ads that start event
+                    // TODO show ads that increases try count
                 }
                 default:
                     break;

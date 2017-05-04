@@ -331,11 +331,14 @@ void AppleMultiplayer::receiveAim(float angle, float power, int id) {
     }
 }
 
-void AppleMultiplayer::createPlayers(int id, std::string name) {
+void AppleMultiplayer::createPlayers(int id, std::string name, PlayerView* playerView) {
+
     _player1 = PlayerOnlineApple::create(_client->getDBPlayer()->getId(),
                                   _client->getDBPlayer()->getName()
     );
     _player2 = PlayerOnlineApple::create(id, name);
+
+    _hero2->setPlayerView(playerView);
 }
 
 int AppleMultiplayer::_getGainedCoinsByActionType(int type) {

@@ -30,6 +30,8 @@ protected:
 
     void _setPlayerView();
 
+
+
     virtual void _changeArrow() = 0;
 
     virtual void _changeHat() = 0;
@@ -66,6 +68,8 @@ public:
     virtual void dealDamage(float d) = 0;
 
     virtual Player *getPlayer() = 0;
+
+    void setPlayerView(PlayerView* playerView);
 };
 
 class Stickman : public Body {

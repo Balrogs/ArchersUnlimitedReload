@@ -52,9 +52,6 @@ public:
 protected:
     void _showPopUp(PopUp* popUp);
 
-    int _player2Id;
-    std::string _player2Name;
-
     void onEnter() override;
 
     void _resetPlayer();
@@ -73,6 +70,9 @@ private:
     cocos2d::Node *_rightPart2;
 
     int _gameType;
+    int _player2Id;
+    std::string _player2Name;
+    PlayerView* _playerView;
 
     RichSearchButton* _findPlayerButton;
     cocos2d::Node *_friendsBox;

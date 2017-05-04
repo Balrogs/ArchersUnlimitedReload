@@ -22,7 +22,7 @@ public:
 
     void receiveAim(float angle, float power, int id) override;
 
-    virtual void createPlayers(int id, std::string name);
+    virtual void createPlayers(int id, std::string name, PlayerView* playerView);
 
     virtual int _getGainedCoinsByActionType(int type);
 

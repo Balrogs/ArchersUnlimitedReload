@@ -21,7 +21,7 @@ USING_NS_CC;
  * "battles_win":0}
 
  */
-// TODO  playerview
+// TODO customize
 Node *Views::getPlayerInfoView(std::string message) {
     auto view = Node::create();
 

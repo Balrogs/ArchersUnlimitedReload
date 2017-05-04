@@ -270,3 +270,8 @@ int JSONParser::getListSize(string message) {
     document.Parse(message.c_str());
     return document["list"].GetArray().Size();
 }
+
+//TODO
+PlayerView *JSONParser::parsePlayerView(string message) {
+    return new PlayerView(2, 2, 2);
+}

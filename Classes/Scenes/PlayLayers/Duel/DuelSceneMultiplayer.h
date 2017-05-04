@@ -14,7 +14,7 @@ public:
 
     void setPlayer(int id) override;
 
-    virtual void createPlayers(int id, std::string name);
+    virtual void createPlayers(int id, std::string name, PlayerView* playerView);
 
 protected:
 

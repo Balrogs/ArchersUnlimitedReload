@@ -78,10 +78,12 @@ void DuelSceneMultiplayer::setPlayer(int id) {
     _ui->initDuel(visibleSize, _hero1, _hero2);
 }
 
-void DuelSceneMultiplayer::createPlayers(int id, std::string name) {
+void DuelSceneMultiplayer::createPlayers(int id, std::string name, PlayerView* playerView) {
     _player1 = PlayerDuel::create(_client->getDBPlayer()->getId(),
                                   _client->getDBPlayer()->getName()
     );
     _player2 = PlayerDuel::create(id, name);
+
+    _hero2->setPlayerView(playerView);
 }
 
