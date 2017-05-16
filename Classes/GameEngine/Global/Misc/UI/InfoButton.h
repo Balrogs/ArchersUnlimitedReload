@@ -10,7 +10,7 @@ public:
     void hide();
 
 protected:
-    bool init(std::string text,std::string buttonPath);
+    virtual bool init(std::string text,std::string buttonPath);
 
     enum State{
         Idle,
@@ -31,5 +31,6 @@ class InfoButtonTime : public InfoButton {
 public:
     static InfoButtonTime* create();
 };
+
 
 #endif //ARCHERSUNLIMITED_INFOBUTTON_H

@@ -133,7 +133,7 @@ void RichEventButton::_onCreate() {
         auto time = _def->getStringForKey("tryCountTime", "0");
         if(time != "0") {
 
-            auto ts = std::stol(time);
+            auto ts = std::atol(time.c_str());
             auto curr = Variables::getCurrentTime();
             auto diff = curr - ts;
             auto interval = Variables::RESET_INTERVAL;

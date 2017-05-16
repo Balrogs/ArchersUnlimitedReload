@@ -1,7 +1,3 @@
-//
-// Created by igor on 22.11.16.
-//
-
 #ifndef ARCHERSUNLIMITED_JSONPARSER_H
 #define ARCHERSUNLIMITED_JSONPARSER_H
 

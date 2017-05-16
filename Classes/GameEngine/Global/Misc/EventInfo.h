@@ -5,41 +5,8 @@
 #include <string>
 #include <vector>
 #include <GameEngine/Global/Misc/UI/InfoButton.h>
-
-class EventScore {
-public:
-    EventScore(std::string name, int score);
-    int getScore();
-    std::string getName();
-private:
-    std::string _name;
-    int _score;
-};
-
-class Reward : public InfoButton {
-protected:
-    bool init(std::string text, std::string path);
-};
-
-class RewardCoin : public Reward {
-public:
-    static RewardCoin* create(int coins);
-};
-
-class RewardHat : public Reward {
-public:
-    static RewardHat* create();
-};
-
-class RewardArrow : public Reward {
-public:
-    static RewardArrow* create();
-};
-
-class RewardBow : public Reward {
-public:
-    static RewardBow* create();
-};
+#include <GameEngine/Global/Misc/UI/Reward.h>
+#include "EventScore.h"
 
 
 class EventInfo {
