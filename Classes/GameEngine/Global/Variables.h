@@ -42,6 +42,7 @@ public:
 
     static const std::string FONT_NAME;
     static float FONT_SIZE();
+    static float FONT_SIZE_2();
     static float H_FONT_SIZE();
     static const cocos2d::Color3B FONT_COLOR;
 
@@ -109,6 +110,9 @@ public:
     static const std::string BLUE_BUTTON;
     static const std::string BLUE_PRESSED_BUTTON;
 
+    static const std::string BLUE_EMPTY_BUTTON;
+    static const std::string BLUE_EMPTY_PRESSED_BUTTON;
+
     static const std::string GREEN_BUTTON;
     static const std::string GREEN_PRESSED_BUTTON;
 
@@ -151,6 +155,11 @@ public:
     static const std::string CLOUD_1;
     static const std::string CLOUD_2;
     static const std::string CLOUD_3;
+
+
+    static const std::string UI_ARROW;
+    static const std::string HAND;
+    static const std::string WHEEL;
 
 private:
     static Resolution _resolution;

@@ -115,6 +115,10 @@ const std::string Variables::RED_PRESSED_BUTTON = "red_pressed.png";
 const std::string Variables::BLUE_BUTTON = "blue_normal.png";
 const std::string Variables::BLUE_PRESSED_BUTTON = "blue_pressed.png";
 
+
+const std::string Variables::BLUE_EMPTY_BUTTON = "blue_empty.png";
+const std::string Variables::BLUE_EMPTY_PRESSED_BUTTON = "blue_empty_pressed.png";
+
 const std::string Variables::GREEN_BUTTON = "green_normal.png";
 const std::string Variables::GREEN_PRESSED_BUTTON = "green_pressed.png";
 
@@ -154,6 +158,11 @@ const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
 const std::string Variables::CLOUD_3 = "cloud3.png";
 
+const std::string Variables::UI_ARROW = "selector_arrow.png";
+const std::string Variables::HAND = "hand.png";
+const std::string Variables::WHEEL = "wheel.png";
+
+
 void Variables::setResolution(Resolution resolution) {
     Variables::_resolution = resolution;
 }
@@ -166,6 +175,17 @@ float Variables::FONT_SIZE() {
             return 42.f;
         case IPAD:
             return 72.f;
+    }
+}
+
+float Variables::FONT_SIZE_2() {
+    switch(Variables::_resolution){
+        case SD:
+            return 30.f;
+        case HD:
+            return 60.f;
+        case IPAD:
+            return 90.f;
     }
 }
 

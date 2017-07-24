@@ -4,6 +4,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
+#include <GameEngine/Global/Misc/UI/RichWheelButton.h>
 #include "MainMenu.h"
 #include "Settings.h"
 #include "Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h"
@@ -206,52 +207,24 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
     this->addChild(coins_bar);
 
-    auto chest = cocos2d::ui::Button::create();
-    chest->loadTextures(Variables::CHEST_BUTTON, Variables::CHEST_PRESSED_BUTTON, Variables::CHEST_BUTTON,
-                        cocos2d::ui::Widget::TextureResType::PLIST);
+    auto wheelButton = RichWheelButton::create();
+    wheelButton->setScale(0.9f);
+    wheelButton->setPosition(Vec2(wheelButton->getBoundingBox().width / 2 + 20.f,
+                            _visibleSize.height - wheelButton->getBoundingBox().height / 2 - 20.f));
 
-    chest->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                MainScene::getInstance()->replaceMain(Randomizer::create());
-            }
-                break;
-            default:
-                break;
-        }
-    });
-    chest->setScale(0.6f);
-    chest->setPosition(Vec2(chest->getBoundingBox().size.width / 2 + 15.f,
-                            _visibleSize.height - chest->getBoundingBox().size.height / 2 - 15.f));
+    this->addChild(wheelButton);
 
-    this->addChild(chest);
-
-    auto customize = cocos2d::ui::Button::create();
-    customize->loadTextureNormal(Variables::CUSTOMIZE_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
-
-    customize->addTouchEventListener([&, equipmentLayer](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-        switch (type) {
-            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                equipmentLayer->resumeEquipment();
-                MainScene::getInstance()->popMain();
-            }
-                break;
-            default:
-                break;
-        }
-    });
-
-    auto pos = equipmentLayer->getButtonPosition();
-    customize->setPosition(Vec2(pos.x, pos.y + customize->getBoundingBox().size.height));
-
-    auto customize_label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CUSTOMIZE"),
-                                                         Variables::FONT_NAME,
-                                                         Variables::FONT_SIZE());
-    customize_label->setPosition(customize_label->getBoundingBox().size.width / 2 + 10.f,
-                                 customize->getContentSize().height / 2);
-    customize->addChild(customize_label, 4);
-
-    this->addChild(customize);
+//    _armatureDisplay->addTouchEventListener([&, equipmentLayer](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+//                equipmentLayer->resumeEquipment();
+//                MainScene::getInstance()->popMain();
+//            }
+//                break;
+//            default:
+//                break;
+//        }
+//    });
 
     return true;
 }
@@ -384,6 +357,7 @@ void MainMenu::onMenuClick(int id) {
                 multiP_label->setPosition(multiP->getContentSize().width / 2,
                                           multiP->getContentSize().height / 2);
                 multiP->addChild(multiP_label, 4);
+                multiP->setEnabled(false);
 
                 _menu->addChild(multiP);
 

@@ -49,16 +49,25 @@ bool HPBar::init(cocos2d::Size size) {
     _hp = 100;
     _alignment = true;
     _state = NONE;
+    _font_2 =  Variables::FONT_SIZE_2();
+
+    _counter = cocos2d::Label::createWithTTF(StringUtils::format("%d%%", _hp), Variables::FONT_NAME, _font_2);
+    _counter->setColor(Color3B::BLACK);
+    _counter->setPosition(Vec2(_size.width - 1.2f * _font_2, _font_2 / 2));
+
+    this->addChild(_counter, 2);
+
     setHp(_hp);
 
     return true;
 }
 
-void HPBar::setHp(float hp) {
-
+void HPBar::setHp(int hp) {
     _hp = hp;
-    auto percents = hp / 100.f;
 
+    _counter->setString(StringUtils::format("%d%%", hp));
+
+    auto percents = hp / 100.f;
 
     if (percents < 0.3f) {
         changeState(DANGER);
@@ -80,13 +89,17 @@ void HPBar::setHp(float hp) {
                 Spawn::createWithTwoActions(
                         MoveTo::create(0.2f, Vec2(_size.width - new_Size, 0)),
                         ScaleTo::create(0.2f, x, y)));
+        if(percents < 0.8f) _counter->runAction(MoveTo::create(0.2f, Vec2(_size.width - new_Size - _font_2, _counter->getPositionY())));
     } else {
         _bar->runAction(ScaleTo::create(0.2f, x, y));
+        if(percents < 0.8f) _counter->runAction(MoveTo::create(0.2f, Vec2(new_Size + _font_2, _counter->getPositionY())));
     }
 }
 
 void HPBar::setAlignment(bool isLeft) {
     _alignment = isLeft;
+    if(!isLeft)
+        _counter->setPosition(Vec2(1.2f * _font_2, _font_2 / 2));
     setHp(_hp);
 }
 
@@ -95,7 +108,9 @@ void HPBar::changeState(HPState state) {
         return;
     }
 
-    this->removeAllChildren();
+    if (_bar != nullptr){
+        _bar->removeFromParent();
+    }
     _state = state;
 
     switch (state) {
@@ -128,7 +143,7 @@ void HPBar::changeState(HPState state) {
         _bar->setPosition(Vec2(_size.width - _bar->getContentSize().width, 0));
     }
 
-    this->addChild(_bar);
+    this->addChild(_bar, 1, "bar");
 }
 
 PlayerDuel *PlayerDuel::create(int id, std::string name, int hp, int shotsCount) {

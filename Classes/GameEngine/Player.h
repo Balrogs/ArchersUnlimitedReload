@@ -18,18 +18,22 @@ public:
 
     bool init(cocos2d::Size size);
 
-    void setHp(float hp);
+    void setHp(int hp);
 
     void setAlignment(bool alignment);
 
 protected:
+
     bool _alignment;
-    float _hp;
+    int _hp;
     cocos2d::Size _spriteSize;
     cocos2d::Size _prevSize;
     cocos2d::Size _size;
     cocos2d::Sprite *_bar;
+    cocos2d::Label *_counter;
     HPState _state;
+
+    float _font_2;
 
     void changeState(HPState state);
 };

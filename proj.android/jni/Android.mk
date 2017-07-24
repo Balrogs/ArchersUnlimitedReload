@@ -88,7 +88,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/InfoButton.cpp \
                                  ../../Classes/GameEngine/Global/Misc/EventInfo.cpp \
                                  ../../Classes/GameEngine/Global/Misc/EventScore.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/UI/Reward.cpp
+                                 ../../Classes/GameEngine/Global/Misc/UI/Reward.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/RichWheelButton.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

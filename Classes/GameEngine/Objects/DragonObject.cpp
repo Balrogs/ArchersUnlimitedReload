@@ -120,6 +120,8 @@ HeroPreview::HeroPreview() {
 
     dragonBones::WorldClock::clock.add(_armature);
     this->addChild(_armatureDisplay);
+
+
 }
 
 void HeroPreview::changeHat(int id) {

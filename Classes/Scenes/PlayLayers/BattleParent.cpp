@@ -153,6 +153,7 @@ bool BattleParent::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Even
         return false;
     const auto start = touch->getStartLocation();
     if (this->_ui->checkTouch(start)) {
+        _touch = -1;
         return false;
     }
     _player->startAim();

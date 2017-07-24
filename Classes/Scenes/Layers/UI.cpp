@@ -27,7 +27,9 @@ bool UI::init() {
         }
     });
 
-    this->bounds.push_back(pause->getBoundingBox());
+    this->_bounds.push_back(Rect(0, pause->getBoundingBox().getMinY(), visibleSize.width, visibleSize.height / 3));
+
+    this->_bounds.push_back(pause->getBoundingBox());
 
     this->addChild(pause);
 
@@ -35,7 +37,7 @@ bool UI::init() {
     _warningLabel->setColor(Color3B::BLACK);
     _warningLabel->setPosition(
             Vec2(pause->getPosition().x, pause->getPosition().y - pause->getBoundingBox().size.height));
-    this->bounds.push_back(_warningLabel->getBoundingBox());
+    this->_bounds.push_back(_warningLabel->getBoundingBox());
     this->addChild(_warningLabel);
 
     return true;
@@ -44,7 +46,7 @@ bool UI::init() {
 void UI::initBattle(Size visibleSize, Hero *player) {
 
     auto selector = new WeaponSelector(player);
-    this->bounds.push_back(selector->getBoundingBox());
+    this->_bounds.push_back(selector->getBoundingBox());
     this->addChild(selector);
 }
 
@@ -53,12 +55,12 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     auto player1_view = player1->getPlayer();
     player1_view->setPosition(10.f, 0.f);
     this->addChild(player1_view);
-    this->bounds.push_back(player1_view->getBoundingBox());
+    this->_bounds.push_back(player1_view->getBoundingBox());
 
     auto player2_view = player2->getPlayer();
     player2_view->setPosition(visibleSize.width / 2 + 60.f, 0.f);
     this->addChild(player2_view);
-    this->bounds.push_back(player2_view->getBoundingBox());
+    this->_bounds.push_back(player2_view->getBoundingBox());
 
     addMoveArrows(player1);
     addMoveArrows(player2);
@@ -70,12 +72,12 @@ void UI::initApple(Size visibleSize, Hero *player) {
     auto player1_view = player->getPlayer();
     player1_view->setPosition(10.f, 0.f);
     this->addChild(player1_view);
-    this->bounds.push_back(player1_view->getBoundingBox());
+    this->_bounds.push_back(player1_view->getBoundingBox());
 
 }
 
 bool UI::checkTouch(cocos2d::Vec2 touch) {
-    for (auto bound : bounds) {
+    for (auto bound : _bounds) {
         if (bound.containsPoint(touch))
             return true;
     }
@@ -137,8 +139,8 @@ void UI::addMoveArrows(Hero *player) {
     });
 
 
-    this->bounds.push_back(left_arrow->getBoundingBox());
-    this->bounds.push_back(right_arrow->getBoundingBox());
+    this->_bounds.push_back(left_arrow->getBoundingBox());
+    this->_bounds.push_back(right_arrow->getBoundingBox());
 
     player->addChild(left_arrow, 1, "left arrow");
     player->addChild(right_arrow, 1, "right arrow");
@@ -154,12 +156,12 @@ void UI::initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *pl
     auto player1_view = player1->getPlayer();
     player1_view->setPosition(10.f, 0.f);
     this->addChild(player1_view);
-    this->bounds.push_back(player1_view->getBoundingBox());
+    this->_bounds.push_back(player1_view->getBoundingBox());
 
     auto player2_view = player2->getPlayer();
     player2_view->setPosition(visibleSize.width / 2 + 60.f, 0.f);
     this->addChild(player2_view);
-    this->bounds.push_back(player2_view->getBoundingBox());
+    this->_bounds.push_back(player2_view->getBoundingBox());
 
 }
 
@@ -211,14 +213,14 @@ void UI::startGame() {
 //    maxspeed_label->setColor(Color3B::BLACK);
 //    maxspeed_label->setPosition(
 //            Vec2(visibleSize.width / 4, visibleSize.height - maxspeed_label->getBoundingBox().size.height / 2 - 25.f));
-//    this->bounds.push_back(maxspeed_label->getBoundingBox());
+//    this->_bounds.push_back(maxspeed_label->getBoundingBox());
 //    this->addChild(maxspeed_label);
 //
 //    auto maxspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MAX_ARROW_POWER), Variables::FONT_NAME, 32.f);
 //    maxspeed_value->setColor(Color3B::BLACK);
 //    maxspeed_value->setPosition(
 //            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 40.f));
-//    this->bounds.push_back(maxspeed_value->getBoundingBox());
+//    this->_bounds.push_back(maxspeed_value->getBoundingBox());
 //    this->addChild(maxspeed_value);
 //
 //    auto arrow_maxspeed_up = cocos2d::ui::Button::create();
@@ -240,7 +242,7 @@ void UI::startGame() {
 //                }
 //            });
 //
-//    this->bounds.push_back(arrow_maxspeed_up->getBoundingBox());
+//    this->_bounds.push_back(arrow_maxspeed_up->getBoundingBox());
 //
 //    this->addChild(arrow_maxspeed_up);
 //
@@ -262,7 +264,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_maxspeed_down->getBoundingBox());
+//    this->_bounds.push_back(arrow_maxspeed_down->getBoundingBox());
 //
 //    this->addChild(arrow_maxspeed_down);
 //
@@ -270,14 +272,14 @@ void UI::startGame() {
 //    minspeed_label->setColor(Color3B::BLACK);
 //    minspeed_label->setPosition(
 //            Vec2(maxspeed_label->getPosition().x, maxspeed_label->getPosition().y - 100.f));
-//    this->bounds.push_back(minspeed_label->getBoundingBox());
+//    this->_bounds.push_back(minspeed_label->getBoundingBox());
 //    this->addChild(minspeed_label);
 //
 //    auto minspeed_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::MIN_ARROW_POWER), Variables::FONT_NAME, 32.f);
 //    minspeed_value->setColor(Color3B::BLACK);
 //    minspeed_value->setPosition(
 //            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 40.f));
-//    this->bounds.push_back(minspeed_value->getBoundingBox());
+//    this->_bounds.push_back(minspeed_value->getBoundingBox());
 //    this->addChild(minspeed_value);
 //
 //    auto arrow_minspeed_up = cocos2d::ui::Button::create();
@@ -298,7 +300,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_minspeed_up->getBoundingBox());
+//    this->_bounds.push_back(arrow_minspeed_up->getBoundingBox());
 //
 //    this->addChild(arrow_minspeed_up);
 //
@@ -320,7 +322,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_minspeed_down->getBoundingBox());
+//    this->_bounds.push_back(arrow_minspeed_down->getBoundingBox());
 //
 //    this->addChild(arrow_minspeed_down);
 //
@@ -328,14 +330,14 @@ void UI::startGame() {
 //    update_label->setColor(Color3B::BLACK);
 //    update_label->setPosition(
 //            Vec2(minspeed_label->getPosition().x, minspeed_label->getPosition().y - 100.f));
-//    this->bounds.push_back(update_label->getBoundingBox());
+//    this->_bounds.push_back(update_label->getBoundingBox());
 //    this->addChild(update_label);
 //
 //    auto update_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
 //    update_value->setColor(Color3B::BLACK);
 //    update_value->setPosition(
 //            Vec2(update_label->getPosition().x, update_label->getPosition().y - 40.f));
-//    this->bounds.push_back(update_value->getBoundingBox());
+//    this->_bounds.push_back(update_value->getBoundingBox());
 //    this->addChild(update_value);
 //
 //    auto arrow_update_up = cocos2d::ui::Button::create();
@@ -356,7 +358,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_update_up->getBoundingBox());
+//    this->_bounds.push_back(arrow_update_up->getBoundingBox());
 //
 //    this->addChild(arrow_update_up);
 //
@@ -378,21 +380,21 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_update_down->getBoundingBox());
+//    this->_bounds.push_back(arrow_update_down->getBoundingBox());
 //
 //    this->addChild(arrow_update_down);
 //    auto gravity_label = cocos2d::Label::createWithTTF("GRAVITY", Variables::FONT_NAME, 32.f);
 //    gravity_label->setColor(Color3B::BLACK);
 //    gravity_label->setPosition(
 //            Vec2(update_label->getPosition().x, update_label->getPosition().y - 100.f));
-//    this->bounds.push_back(gravity_label->getBoundingBox());
+//    this->_bounds.push_back(gravity_label->getBoundingBox());
 //    this->addChild(gravity_label);
 //
 //    auto gravity_value = cocos2d::Label::createWithTTF(StringUtils::toString(BattleScene::ARROW_UPDATE), Variables::FONT_NAME, 32.f);
 //    gravity_value->setColor(Color3B::BLACK);
 //    gravity_value->setPosition(
 //            Vec2(gravity_label->getPosition().x, gravity_label->getPosition().y - 40.f));
-//    this->bounds.push_back(gravity_value->getBoundingBox());
+//    this->_bounds.push_back(gravity_value->getBoundingBox());
 //    this->addChild(gravity_value);
 //
 //    auto arrow_gravity_up = cocos2d::ui::Button::create();
@@ -413,7 +415,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_gravity_up->getBoundingBox());
+//    this->_bounds.push_back(arrow_gravity_up->getBoundingBox());
 //
 //    this->addChild(arrow_gravity_up);
 //
@@ -435,7 +437,7 @@ void UI::startGame() {
 //        }
 //    });
 //
-//    this->bounds.push_back(arrow_gravity_down->getBoundingBox());
+//    this->_bounds.push_back(arrow_gravity_down->getBoundingBox());
 //
 //    this->addChild(arrow_gravity_down);
 //

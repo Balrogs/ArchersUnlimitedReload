@@ -38,7 +38,7 @@ public:
 protected:
 
     cocos2d::Label* _warningLabel;
-    std::vector<cocos2d::Rect> bounds;
+    std::vector<cocos2d::Rect> _bounds;
 
 };
 

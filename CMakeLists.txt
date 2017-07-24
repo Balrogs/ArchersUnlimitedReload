@@ -327,6 +327,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/EventInfo.cpp
         Classes/GameEngine/Global/Misc/EventScore.cpp
         Classes/GameEngine/Global/Misc/UI/Reward.cpp
+        Classes/GameEngine/Global/Misc/UI/RichWheelButton.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -357,7 +358,9 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/InfoButton.h
         Classes/GameEngine/Global/Misc/EventInfo.h
         Classes/GameEngine/Global/Misc/EventScore.h
-        Classes/GameEngine/Global/Misc/UI/Reward.h)
+        Classes/GameEngine/Global/Misc/UI/Reward.h
+        Classes/GameEngine/Global/Misc/UI/RichWheelButton.h
+        )
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})
