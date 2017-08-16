@@ -3,7 +3,7 @@
 
 
 #include <cocos2d.h>
-#include <GameEngine/Global/Misc/Asset.h>
+#include <GameEngine/Global/Misc/UI/Asset.h>
 
 enum HPState {
     FULL,

@@ -1,6 +1,6 @@
 
 #include <Scenes/PlayLayers/Battle.h>
-#include <GameEngine/Global/WeaponSelector.h>
+#include <GameEngine/Objects/WeaponSelector.h>
 #include <ui/UIButton.h>
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/PlayLayers/MultiplayerBattle.h>

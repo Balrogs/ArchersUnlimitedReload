@@ -4,7 +4,7 @@
 #include <GameEngine/Player.h>
 #include <Scenes/PlayLayers/BattleParent.h>
 #include <GameEngine/Objects/Hero.h>
-#include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Brains/Brain.h>
 
 class DuelScene : public BattleParent {
 public:

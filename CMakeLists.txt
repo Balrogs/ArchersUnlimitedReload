@@ -177,8 +177,8 @@ set(GAME_SRC
         Classes/GameEngine/Objects/Arrows/Arrow.cpp
         Classes/GameEngine/Objects/Hero.cpp
         Classes/GameEngine/Objects/Aim/Aim.cpp
-        Classes/GameEngine/Objects/Brains/Brain.cpp
-        Classes/GameEngine/Global/WeaponSelector.cpp
+        Classes/GameEngine/Brains/Brain.cpp
+        Classes/GameEngine/Objects/WeaponSelector.cpp
         Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Global/Variables.cpp
         Classes/GameEngine/Objects/DragonObject.cpp
@@ -278,8 +278,8 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Arrows/Arrow.h
         Classes/GameEngine/Objects/Hero.h
         Classes/GameEngine/Objects/Aim/Aim.h
-        Classes/GameEngine/Objects/Brains/Brain.h
-        Classes/GameEngine/Global/WeaponSelector.h
+        Classes/GameEngine/Brains/Brain.h
+        Classes/GameEngine/Objects/WeaponSelector.h
         Classes/GameEngine/Global/Variables.h
         Classes/GameEngine/Objects/Aim/AimPreview.h
         Classes/GameEngine/Objects/Environment/Apple.h
@@ -319,7 +319,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Loading.cpp
         Classes/GameEngine/Objects/Environment/MainClip.cpp
         Classes/GameEngine/Global/Misc/UI/RichSearchButton.cpp
-        Classes/GameEngine/Global/Misc/Asset.cpp
+        Classes/GameEngine/Global/Misc/UI/Asset.cpp
         Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp
         Classes/GameEngine/Global/Misc/UI/Clocks.cpp
         Classes/GameEngine/Global/Misc/UI/RichEventButton.cpp
@@ -351,7 +351,7 @@ set(GAME_HEADERS
         Classes/Scenes/MenuLayers/Loading.h
         Classes/GameEngine/Objects/Environment/MainClip.h
         Classes/GameEngine/Global/Misc/UI/RichSearchButton.h
-        Classes/GameEngine/Global/Misc/Asset.h
+        Classes/GameEngine/Global/Misc/UI/Asset.h
         Classes/Scenes/MenuLayers/Multiplayer/EventView.h
         Classes/GameEngine/Global/Misc/UI/Clocks.h
         Classes/GameEngine/Global/Misc/UI/RichEventButton.h

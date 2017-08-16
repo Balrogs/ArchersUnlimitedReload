@@ -1,6 +1,6 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Objects/Environment/Box.h>
-#include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Brains/Brain.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;

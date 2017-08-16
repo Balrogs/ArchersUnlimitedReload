@@ -1,7 +1,7 @@
 //
 // Created by igor on 04.10.16.
 //
-#include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Brains/Brain.h>
 #include <Scenes/PlayLayers/Battle.h>
 #include "Producer.h"
 

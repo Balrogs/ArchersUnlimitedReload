@@ -1,15 +1,8 @@
 #include <GameEngine/Objects/Stickman.h>
-#include <GameEngine/Global/WeaponSelector.h>
+#include <GameEngine/Objects/WeaponSelector.h>
 #include <GameEngine/Global/Producer.h>
 #include <GameEngine/Global/Misc/UI/PopUp.h>
-#include <Scenes/Layers/BackgroundLayer.h>
-#include <Localization/LocalizedStrings.h>
-#include "Battle.h"
-#include "Scenes/PlayLayers/Apple/AppleBattle.h"
-#include "Scenes/PlayLayers/Duel/DuelScene.h"
-#include "Scenes/PlayLayers/Duel/DuelScene2P.h"
-#include "Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h"
-#include "GameOverScene.h"
+
 
 USING_NS_CC;
 

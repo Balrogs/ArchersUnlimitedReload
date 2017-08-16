@@ -5,7 +5,7 @@
 #include <GameEngine/Objects/Hero.h>
 #include <GameEngine/Objects/Stickman.h>
 #include <GameEngine/Objects/Aim/Aim.h>
-#include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Brains/Brain.h>
 #include <GameEngine/Global/Misc/SocketClient.h>
 #include <GameEngine/Statistics.h>
 #include "cocos2d.h"

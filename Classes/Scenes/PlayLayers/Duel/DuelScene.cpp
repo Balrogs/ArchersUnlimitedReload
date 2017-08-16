@@ -1,5 +1,5 @@
 #include <GameEngine/Objects/Environment/Apple.h>
-#include <GameEngine/Global/WeaponSelector.h>
+#include <GameEngine/Objects/WeaponSelector.h>
 #include <GameEngine/Objects/Environment/Ground.h>
 #include <Localization/LocalizedStrings.h>
 #include "DuelScene.h"

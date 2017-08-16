@@ -28,8 +28,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Objects/Arrows/Arrow.cpp\
                                  ../../Classes/GameEngine/Objects/Hero.cpp\
                                  ../../Classes/GameEngine/Objects/Aim/Aim.cpp\
-                                 ../../Classes/GameEngine/Objects/Brains/Brain.cpp\
-                                 ../../Classes/GameEngine/Global/WeaponSelector.cpp\
+                                 ../../Classes/GameEngine/Brains/Brain.cpp\
+                                 ../../Classes/GameEngine/Objects/WeaponSelector.cpp\
                                  ../../Classes/GameEngine/Global/Variables.cpp\
                                  ../../Classes/GameEngine/Objects/DragonObject.cpp\
                                  ../../Classes/AppDelegate.cpp\
@@ -81,7 +81,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/Scenes/MenuLayers/Loading.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/MainClip.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/RichSearchButton.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/Asset.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/Asset.cpp \
                                  ../../Classes/Scenes/MenuLayers/Multiplayer/EventView.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/Clocks.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/RichEventButton.cpp \

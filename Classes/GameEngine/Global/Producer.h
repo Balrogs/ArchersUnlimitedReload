@@ -5,7 +5,7 @@
 #ifndef ARCUNLIM_PRODUCER_H
 #define ARCUNLIM_PRODUCER_H
 
-#include <GameEngine/Objects/Brains/Brain.h>
+#include <GameEngine/Brains/Brain.h>
 #include "Scenes/PlayLayers/Battle.h"
 #include "cocos2d.h"
 
