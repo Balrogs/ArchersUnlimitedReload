@@ -58,13 +58,18 @@ public:
 
 private:
 
+    bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event);
+
+    void _showHint();
     void _enterFrameHandler(float passedTime);
+    void onMenuClick(int id);
 
     cocos2d::Size _visibleSize;
     int _menuId;
     cocos2d::Label* _coinsCount;
     cocos2d::Node* _menu;
-    void onMenuClick(int id);
+    EquipmentScene *_equipmentScene;
+
 };
 
 #endif //ARCUNLIM_MAINMENU_H

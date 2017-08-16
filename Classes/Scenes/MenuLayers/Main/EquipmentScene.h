@@ -22,6 +22,8 @@ public:
 
     dragonBones::CCFactory factory;
 
+    bool checkTouch(Vec2 pos);
+
 protected:
 
     enum Type {
@@ -139,6 +141,7 @@ protected:
     static EquipmentScene *_instance;
 
     Size _visibleSize;
+    Rect _heroBox;
 
     UIControls* _controls;
     HeroPreview* _hero;

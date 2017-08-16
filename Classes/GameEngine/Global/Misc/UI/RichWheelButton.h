@@ -2,6 +2,7 @@
 #define ARCHERSUNLIMITED_RICHWHEELBUTTON_H
 
 #include "cocos2d.h"
+#include "Clocks.h"
 
 USING_NS_CC;
 
@@ -14,9 +15,13 @@ public:
     Size getBoundingBox();
 
 protected:
-
+    cocos2d::UserDefault* _def;
+    Clocks* _clocks;
     ui::Button* _button;
-    float _scale;
+    Sprite* _wheel;
+    Sprite* _highlighting;
+
+    void _highlight();
 };
 
 #endif //ARCHERSUNLIMITED_RICHWHEELBUTTON_H

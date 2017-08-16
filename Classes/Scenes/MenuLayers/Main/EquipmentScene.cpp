@@ -79,7 +79,7 @@ bool EquipmentScene::init() {
     _hero->setScale(1.5f);
     _hero->setPosition(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2);
     _stand->addChild(_hero, 2);
-
+    _heroBox = Rect(_hero->getPosition().x * 0.5f, _hero->getPosition().y, _hero->getPosition().x,  _hero->getGlobalHeight("head"));
     this->pause();
     return true;
 
@@ -136,7 +136,7 @@ void EquipmentScene::onQuit() {
 }
 
 cocos2d::Vec2 EquipmentScene::getButtonPosition() {
-    return Vec2(_hero->getPosition().x, _hero->getGlobalHeight("head"));
+    return Vec2(_hero->getPosition().x, _hero->getGlobalHeight("head") * 0.8f);
 }
 
 void EquipmentScene::_readAssets() {
@@ -205,6 +205,10 @@ std::string EquipmentScene::animationName(EquipmentScene::Type v) {
         case Hat:
             return "equipment_idle";
     }
+}
+
+bool EquipmentScene::checkTouch(Vec2 pos) {
+    return _heroBox.containsPoint(pos);
 }
 
 EquipmentScene::UIControls *EquipmentScene::UIControls::create(HeroPreview *hero) {

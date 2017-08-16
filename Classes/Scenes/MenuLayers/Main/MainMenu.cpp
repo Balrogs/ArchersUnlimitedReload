@@ -105,8 +105,9 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     if (!Layer::init()) {
         return false;
     }
+    _equipmentScene = equipmentLayer;
 
-    equipmentLayer->pause();
+    _equipmentScene->pause();
 
     _visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -176,6 +177,10 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
 
+    const auto touchListener = cocos2d::EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(MainMenu::_touchHandlerBegin, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
+
     auto coins_bar = cocos2d::ui::Button::create();
     coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
 
@@ -213,18 +218,6 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                             _visibleSize.height - wheelButton->getBoundingBox().height / 2 - 20.f));
 
     this->addChild(wheelButton);
-
-//    _armatureDisplay->addTouchEventListener([&, equipmentLayer](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-//        switch (type) {
-//            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-//                equipmentLayer->resumeEquipment();
-//                MainScene::getInstance()->popMain();
-//            }
-//                break;
-//            default:
-//                break;
-//        }
-//    });
 
     return true;
 }
@@ -482,6 +475,8 @@ void MainMenu::onMenuClick(int id) {
         }
     });
     _menu->runAction(Sequence::create(action, changeAction, postAction, NULL));
+
+    _showHint();
 }
 
 void MainMenu::showErrorPopUp() {
@@ -496,4 +491,41 @@ void MainMenu::showErrorPopUp() {
         popUp->setPosition(_visibleSize.width / 2, - _visibleSize.height);
         this->addChild(popUp, 0, "PopUp");
     }
+}
+
+void MainMenu::_showHint() {
+    this->removeChildByName("hint");
+
+    auto hand = Sprite::createWithSpriteFrameName(Variables::HAND);
+    auto previewPos = _equipmentScene->getButtonPosition();
+    auto startPos = Vec2(previewPos.x * 2.f, previewPos.y * 0.8f);
+    hand->setPosition(startPos);
+    hand->setScale(0.f);
+    this->addChild(hand, 1, "hint");
+
+    hand->runAction(Sequence::create(
+            ScaleTo::create(0.8f, 1.f),
+            Repeat::create(
+                    Sequence::create(
+                            MoveTo::create(1.f, previewPos),
+                            Repeat::create(
+                                    Sequence::create(
+                                            ScaleTo::create(0.3f, 0.7f),
+                                            ScaleTo::create(0.3f, 1.f),
+                                            NULL),2),
+                            MoveTo::create(1.f, startPos),
+                            NULL),
+                    2),
+            ScaleTo::create(0.8f, 0.f),
+            RemoveSelf::create(),
+            NULL
+    ));
+}
+
+bool MainMenu::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if(_equipmentScene->checkTouch(touch->getLocation())){
+        _equipmentScene->resumeEquipment();
+        MainScene::getInstance()->popMain();
+    }
+    return true;
 }
