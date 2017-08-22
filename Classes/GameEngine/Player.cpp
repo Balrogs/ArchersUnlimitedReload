@@ -1,6 +1,8 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
+#include <iostream>
+#include <iomanip>
 
 USING_NS_CC;
 
@@ -49,11 +51,11 @@ bool HPBar::init(cocos2d::Size size) {
     _hp = 100;
     _alignment = true;
     _state = NONE;
-    _font_2 =  Variables::FONT_SIZE_2();
+    _font_2 =  Variables::FONT_SIZE();
 
     _counter = cocos2d::Label::createWithTTF(StringUtils::format("%d%%", _hp), Variables::FONT_NAME, _font_2);
     _counter->setColor(Color3B::BLACK);
-    _counter->setPosition(Vec2(_size.width - 1.2f * _font_2, _font_2 / 2));
+    _counter->setPosition(Vec2(_size.width - 1.2f * _font_2, size.height / 2));
 
     this->addChild(_counter, 2);
 
@@ -99,7 +101,7 @@ void HPBar::setHp(int hp) {
 void HPBar::setAlignment(bool isLeft) {
     _alignment = isLeft;
     if(!isLeft)
-        _counter->setPosition(Vec2(1.2f * _font_2, _font_2 / 2));
+        _counter->setPositionX(1.2f * _font_2);
     setHp(_hp);
 }
 
@@ -277,7 +279,7 @@ bool PlayerApple::init(int id, std::string name, int score) {
         return false;
     }
 
-    _nameView = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, 32.f,
+    _nameView = cocos2d::Label::createWithTTF(_name.c_str(), Variables::FONT_NAME, Variables::FONT_SIZE(),
                                               cocos2d::Size(_visibleSize.width / 2 - 70.f, 0.f));
 
     _nameView->setAnchorPoint(Vec2::ZERO);
@@ -297,14 +299,20 @@ bool PlayerApple::init(int id, std::string name, int score) {
 
     _scoreView->addChild(coin, 2, "coin");
 
-    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(score), Variables::FONT_NAME,
-                                                    Variables::H_FONT_SIZE());
+    auto coinsCount = cocos2d::Label::createWithTTF("",
+                                                    Variables::FONT_NAME,
+                                                    Variables::H_FONT_SIZE(),
+                                                    Size(Variables::H_FONT_SIZE() * 6, Variables::H_FONT_SIZE()),
+                                                    TextHAlignment::RIGHT);
+
     coinsCount->setColor(Color3B::BLACK);
 
-    coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f + coinsCount->getBoundingBox().size.width / 2,
+    coinsCount->setPosition(coin->getBoundingBox().size.width + 10.f,
                             coin->getBoundingBox().size.height / 2);
 
     _scoreView->addChild(coinsCount, 2, "count");
+
+    addScore(score);
 
     this->addChild(_nameView, 1, "name");
     this->addChild(_scoreView, 1, "coins_view");
@@ -315,11 +323,12 @@ bool PlayerApple::init(int id, std::string name, int score) {
 }
 
 void PlayerApple::addScore(int newCount) {
-    Node *coin = _scoreView->getChildByName("count");
     Label *count = (Label *) _scoreView->getChildByName("count");
-    count->setString(StringUtils::toString(newCount));
-    count->setPosition(coin->getBoundingBox().size.width + 10.f,
-                       count->getPosition().y);
+    string str = StringUtils::format("%d", newCount);
+    std::ostringstream ss;
+    ss << str << std::setw(6 - str.length()) << std::setfill(' ') << "";
+    std::string s4(ss.str());
+    count->setString(s4);
 }
 
 void PlayerApple::_updateView() {
@@ -436,6 +445,10 @@ std::string Bot::getPlayerView() {
     return std::string();
 }
 
+
+PlayerView *PlayerView::defaultView() {
+    return new PlayerView(0, 0, 0);
+}
 
 PlayerView *PlayerView::randomBotView() {
     int hat = RandomHelper::random_int(0, (int) JSONParser::parseAsset("hats").size());

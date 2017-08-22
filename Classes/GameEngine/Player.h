@@ -42,6 +42,7 @@ class PlayerView {
 public:
     static PlayerView* readPlayerView();
     static PlayerView* randomBotView();
+    static PlayerView* defaultView();
 
     PlayerView(int hat, int bow, int arrow);
 

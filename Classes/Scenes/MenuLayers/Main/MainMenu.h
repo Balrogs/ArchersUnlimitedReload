@@ -61,6 +61,7 @@ private:
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event);
 
     void _showHint();
+    void _removeHint();
     void _enterFrameHandler(float passedTime);
     void onMenuClick(int id);
 

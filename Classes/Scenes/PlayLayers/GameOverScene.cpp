@@ -3,6 +3,7 @@
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/MenuLayers/Main/MainMenu.h>
 #include <Scenes/MenuLayers/Main/Randomizer.h>
+#include <GameEngine/Global/Misc/UI/ContinueButton.h>
 #include "GameOverScene.h"
 #include "Battle.h"
 
@@ -109,11 +110,10 @@ bool GameOverScene::init(Statistics *stats) {
     this->addChild(backButton, 3);
 
     if (stats->getType() < 3) {
-        auto continueButton = ui::Button::create();
-        continueButton->loadTextures(Variables::CONTINUE_BUTTON, Variables::CONTINUE_PRESSED_BUTTON,
-                                     Variables::CONTINUE_BUTTON, ui::Widget::TextureResType::PLIST);
 
-        continueButton->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
+        auto continueButton = ContinueButton::create();
+
+        continueButton->button()->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
             switch (type) {
                 case ui::Widget::TouchEventType::ENDED: {
                     // TODO show media
@@ -124,9 +124,11 @@ bool GameOverScene::init(Statistics *stats) {
                     break;
             }
         });
+
         continueButton->setPosition(Vec2(repeatButton->getPosition().x + repeatButton->getBoundingBox().size.width / 2 +
-                                         continueButton->getBoundingBox().size.width,
+                                         continueButton->getBoundingBox().width,
                                          repeatButton->getPosition().y));
+        continueButton->enable();
 
         this->addChild(continueButton, 3);
     }

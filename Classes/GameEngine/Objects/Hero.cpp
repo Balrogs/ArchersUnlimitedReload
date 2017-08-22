@@ -246,7 +246,6 @@ void Hero::setWeapon(int index) {
 }
 
 void Hero::_fire(Arrow *arrow) {
-    UI::enableArrows(this, false);
 
     if(auto player = dynamic_cast<PlayerDuel *>(getPlayer())){
         player->addShotsCount();
@@ -310,6 +309,8 @@ bool Hero::checkAimDiff(float angle, float power) {
 }
 
 void Hero::startAim() {
+    UI::enableArrows(this, false);
+
     _aim->set_aiming(true);
     _aimPowerState = _shoulders->getAnimation().fadeIn(
             Variables::AIM_ANIMATION, 0.f, 1,

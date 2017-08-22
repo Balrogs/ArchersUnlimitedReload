@@ -57,7 +57,7 @@ cocos2d::Scene *BattleParent::createScene(Statistics *stats) {
 
     UI *hud = UI::create();
 
-    int id = RandomHelper::random_int(1, 3);
+    int id = RandomHelper::random_int(1, 2);
     BackgroundLayer *bg = BackgroundLayer::create(id);
 
     scene->addChild(bg, 2);

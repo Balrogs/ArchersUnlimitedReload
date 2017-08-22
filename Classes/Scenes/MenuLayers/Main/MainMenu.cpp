@@ -148,7 +148,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                 if (_menuId == 0) {
                     auto popUp = this->getChildByName("PopUp");
                     if (popUp == nullptr) {
-
+                        _removeHint();
                         auto size = Director::getInstance()->getVisibleSize();
 
                         auto label = cocos2d::Label::createWithTTF(
@@ -218,6 +218,14 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                             _visibleSize.height - wheelButton->getBoundingBox().height / 2 - 20.f));
 
     this->addChild(wheelButton);
+
+    this->runAction(RepeatForever::create(
+            Sequence::create(
+                    DelayTime::create(15.f),
+                    CallFunc::create([&](){
+                        _showHint();
+                    }),
+                    NULL)));
 
     return true;
 }
@@ -476,11 +484,11 @@ void MainMenu::onMenuClick(int id) {
     });
     _menu->runAction(Sequence::create(action, changeAction, postAction, NULL));
 
-    _showHint();
 }
 
 void MainMenu::showErrorPopUp() {
     if (this->getChildByName("PopUp") == nullptr) {
+        _removeHint();
         auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("SERVER ERROR"),
                                                    Variables::FONT_NAME,
                                                    Variables::FONT_SIZE());
@@ -520,6 +528,12 @@ void MainMenu::_showHint() {
             RemoveSelf::create(),
             NULL
     ));
+}
+
+void MainMenu::_removeHint() {
+    auto hint = this->getChildByName("hint");
+    hint->stopAllActions();
+    hint->removeFromParent();
 }
 
 bool MainMenu::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {

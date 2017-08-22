@@ -174,7 +174,7 @@ float Variables::FONT_SIZE() {
         case HD:
             return 42.f;
         case IPAD:
-            return 72.f;
+            return 68.f;
     }
 }
 
@@ -185,7 +185,7 @@ float Variables::FONT_SIZE_2() {
         case HD:
             return 60.f;
         case IPAD:
-            return 90.f;
+            return 80.f;
     }
 }
 
@@ -196,7 +196,7 @@ float Variables::H_FONT_SIZE() {
         case HD:
             return 72.f;
         case IPAD:
-            return 144.f;
+            return 134.f;
     }
 }
 

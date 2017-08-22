@@ -45,6 +45,7 @@ void AppleBattle::initObjects() {
 
     auto target = new Stickman(visibleSize.width - 100.f * this->_GLOBAL_SCALE, AppleBattle::GROUND, 0.3f, 10);
     target->changeFacedir(-1);
+    target->setPlayerView(PlayerView::defaultView());
 
     _targets.push_back(target);
     new PassiveBrain(target);
@@ -323,7 +324,7 @@ void AppleBattle::_nextLevelAction() {
 
 }
 
-
+//TODO Add localization
 void AppleBattle::completeShot() {
     AppleParent::completeShot();
 
