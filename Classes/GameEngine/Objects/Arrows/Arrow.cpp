@@ -158,7 +158,7 @@ bool Arrow::processContact(Node *bone) {
 
         _disableArrow();
 
-        target->dealDamage(_damage);
+        target->dealDamage(_damage, bone);
 
         addToNode(bone);
 

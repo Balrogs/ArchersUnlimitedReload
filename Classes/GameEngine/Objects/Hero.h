@@ -92,7 +92,7 @@ public:
 
     virtual bool getHP();
 
-    virtual void dealDamage(float d);
+    virtual void dealDamage(float d, cocos2d::Node* bone);
 
     virtual Player *getPlayer();
 
@@ -109,7 +109,7 @@ public:
 
     virtual bool getHP();
 
-    virtual void dealDamage(float d);
+    virtual void dealDamage(float d, cocos2d::Node* bone);
 
     virtual Player *getPlayer();
 protected:
@@ -130,7 +130,7 @@ public:
 
     virtual bool getHP();
 
-    virtual void dealDamage(float d);
+    virtual void dealDamage(float d, cocos2d::Node* bone);
 
     virtual Player *getPlayer();
 
@@ -151,7 +151,7 @@ public:
 
     virtual bool getHP();
 
-    virtual void dealDamage(float d);
+    virtual void dealDamage(float d, cocos2d::Node* bone);
 
     virtual Player *getPlayer();
 

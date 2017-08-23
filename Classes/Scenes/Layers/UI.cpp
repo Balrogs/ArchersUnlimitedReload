@@ -50,7 +50,7 @@ void UI::initBattle(Size visibleSize, Hero *player) {
     this->addChild(selector);
 }
 
-void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
+void UI::initDuelBot(Size visibleSize, Hero *player1, Hero *player2) {
 
     auto player1_view = player1->getPlayer();
     player1_view->setPosition(10.f, 0.f);
@@ -63,6 +63,11 @@ void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
     this->_bounds.push_back(player2_view->getBoundingBox());
 
     addMoveArrows(player1);
+}
+
+void UI::initDuel(Size visibleSize, Hero *player1, Hero *player2) {
+
+    initDuelBot(visibleSize, player1, player2);
     addMoveArrows(player2);
 }
 

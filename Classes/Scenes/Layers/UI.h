@@ -15,6 +15,8 @@ public:
 
     CREATE_FUNC(UI);
 
+    void initDuelBot(cocos2d::Size visibleSize, Hero *player1, Hero *player2);
+
     void initDuel(cocos2d::Size visibleSize, Hero *player1, Hero *player2);
 
     void initAppleMultiPlayer(cocos2d::Size visibleSize, Hero *player1, Hero *player2);

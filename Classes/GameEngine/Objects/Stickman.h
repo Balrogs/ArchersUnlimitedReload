@@ -10,6 +10,7 @@
 #include "dragonBones/cocos2dx/CCDragonBonesHeaders.h"
 #include "DragonObject.h"
 
+USING_NS_CC;
 
 enum State {
     JUMPING, SITTING, ATTACKING, IDLE, MOVING, HITTED
@@ -30,7 +31,7 @@ protected:
 
     void _setPlayerView();
 
-
+    float getBoneFactor(std::string name);
 
     virtual void _changeArrow() = 0;
 
@@ -65,7 +66,7 @@ public:
 
     virtual bool getHP() = 0;
 
-    virtual void dealDamage(float d) = 0;
+    virtual void dealDamage(float d, Node* bone) = 0;
 
     virtual Player *getPlayer() = 0;
 
@@ -93,7 +94,7 @@ public:
 
     virtual bool getHP();
 
-    virtual void dealDamage(float d);
+    virtual void dealDamage(float d, Node* bone);
 
     Bot *_bot;
 

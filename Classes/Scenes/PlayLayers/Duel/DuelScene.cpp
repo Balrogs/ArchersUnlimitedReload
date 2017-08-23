@@ -25,7 +25,7 @@ void DuelScene::initWorld() {
     auto player1 = PlayerDuel::create(_client->getDBPlayer()->getId(),
                                     _client->getDBPlayer()->getName());
 
-    auto player2 =  PlayerDuel::create(0, LocalizedStrings::getInstance()->getString("BOT"));
+    auto player2 =  PlayerDuel::create(-2, LocalizedStrings::getInstance()->getString("BOT"));
     player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
     _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
@@ -40,7 +40,7 @@ void DuelScene::initWorld() {
     _createEnvForStickman(_player, _stats->getPlayerEnvType());
     _createEnvForStickman(_hero2, _stats->getTargetEnvType());
 
-    _ui->initDuel(visibleSize, _player, _hero2);
+    _ui->initDuelBot(visibleSize, _player, _hero2);
 
     _startGame();
 

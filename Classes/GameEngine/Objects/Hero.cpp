@@ -463,8 +463,10 @@ bool DuelMPHero::getHP() {
     return _player->getHp() > 0;
 }
 
-void DuelMPHero::dealDamage(float d) {
-    _player->setHp((int)d);
+void DuelMPHero::dealDamage(float d, cocos2d::Node* bone) {
+    auto name = bone->getPhysicsBody()->getName();
+    float factor = getBoneFactor(name);
+    _player->setHp((int)(d * factor));
 }
 
 Player *DuelMPHero::getPlayer() {
@@ -518,8 +520,11 @@ bool DuelHero::getHP() {
     return _player->getHp() > 0;
 }
 
-void DuelHero::dealDamage(float d) {
-    _player->setHp((int)d);
+void DuelHero::dealDamage(float d, cocos2d::Node* bone) {
+    auto name = bone->getPhysicsBody()->getName();
+    float factor = getBoneFactor(name);
+    _player->setHp((int)(d * factor));
+
 }
 
 Player *DuelHero::getPlayer() {
@@ -550,7 +555,10 @@ bool AppleHero::getHP() {
     return true;
 }
 
-void AppleHero::dealDamage(float d) {
+void AppleHero::dealDamage(float d, cocos2d::Node* bone) {
+    auto name = bone->getPhysicsBody()->getName();
+    float factor = getBoneFactor(name);
+    _player->setHp((int)(d * factor));
 }
 
 Player *AppleHero::getPlayer() {
@@ -582,8 +590,10 @@ bool MPHero::getHP() {
     return true;
 }
 
-void MPHero::dealDamage(float d) {
-
+void MPHero::dealDamage(float d, cocos2d::Node* bone) {
+    auto name = bone->getPhysicsBody()->getName();
+    float factor = getBoneFactor(name);
+    _player->setHp((int)(d * factor));
 }
 
 Player *MPHero::getPlayer() {

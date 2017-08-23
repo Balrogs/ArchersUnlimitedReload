@@ -15,6 +15,7 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, float hp): Body(x_pos,
         if (bone == nullptr) {
             continue;
         }
+        CCLOG(bone->name.c_str());
         if (bone->name == "head") {
             child->setPhysicsBody(cocos2d::PhysicsBody::createCircle(child->getBoundingBox().size.height / 2,
                                                                      cocos2d::PHYSICSBODY_MATERIAL_DEFAULT));
@@ -135,8 +136,10 @@ bool Stickman::getHP() {
     return _bot->getHp() > 0;
 }
 
-void Stickman::dealDamage(float d) {
-    _bot->setHp((int)d);
+void Stickman::dealDamage(float d, Node* bone) {
+    auto name = bone->getPhysicsBody()->getName();
+    float factor = getBoneFactor(name);
+    _bot->setHp((int)(d * factor));
 }
 
 Player *Stickman::getPlayer() {
@@ -253,6 +256,24 @@ void Body::setPlayerView(PlayerView* playerView) {
     _playerView = playerView;
 
     _setPlayerView();
+}
+
+float Body::getBoneFactor(std::string name) {
+    if(name == "head"){
+        return 1.5f;
+    } else if(name == "body") {
+        return 1.f;
+    } else if(name == "left arm" || name == "right arm"){
+        return 0.75f;
+    } else if(name == "left leg" || name == "right leg"){
+        return 0.75f;
+    }  else if(name == "left a" || name == "right a"){
+        return .5f;
+    } else if(name == "left l" || name == "right l"){
+        return .5f;
+    } else {
+        return 0.f;
+    }
 }
 
 
