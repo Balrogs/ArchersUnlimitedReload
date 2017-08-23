@@ -124,7 +124,14 @@ void DuelScene::makeTurn(int id) {
 }
 
 bool DuelScene::isGameOver() {
-    return _player1->getHp() <= 0 || _player2->getHp() <= 0;
+    bool v1 = _player2->getHp() <= 0;
+    bool v2 = _player1->getHp() <= 0;
+    if(v1){
+        _stats->setWin();
+    }
+    auto isGameOver = v1 || v2;
+
+    return isGameOver;
 }
 
 void DuelScene::_startGame() {

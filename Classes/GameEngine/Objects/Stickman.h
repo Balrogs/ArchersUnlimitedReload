@@ -76,7 +76,7 @@ public:
 class Stickman : public Body {
 
 public:
-    Stickman(float x_pos, float y_pos, float scale, float hp);
+    Stickman(float x_pos, float y_pos, float scale, int hp);
 
     ~Stickman();
 

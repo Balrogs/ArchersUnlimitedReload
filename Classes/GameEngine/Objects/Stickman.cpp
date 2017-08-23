@@ -4,8 +4,8 @@
 
 USING_NS_CC;
 
-Stickman::Stickman(float x_pos, float y_pos, float scale, float hp): Body(x_pos, y_pos, scale, 1, PlayerView::randomBotView()) {
-    _bot =  Bot::create("BOT", 100);
+Stickman::Stickman(float x_pos, float y_pos, float scale, int hp): Body(x_pos, y_pos, scale, 1, PlayerView::randomBotView()) {
+    _bot =  Bot::create("BOT", hp);
     _armature = BattleScene::getInstance()->factory.buildArmature("Stickman");
     _armatureDisplay = (dragonBones::CCArmatureDisplay *) _armature->getDisplay();
     _armature->removeSlot(_armature->getSlot("Hands"));
