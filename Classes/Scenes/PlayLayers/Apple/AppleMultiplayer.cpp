@@ -341,9 +341,9 @@ void AppleMultiplayer::createPlayers(int id, std::string name, PlayerView* playe
     _hero2->setPlayerView(playerView);
 }
 
-int AppleMultiplayer::_getGainedCoinsByActionType(int type) {
+int AppleMultiplayer::getGainedCoinsByActionType(int type) {
 
     //TODO
-    return DuelScene::_getGainedCoinsByActionType(type);
+    return DuelScene::getGainedCoinsByActionType(type);
 }
 

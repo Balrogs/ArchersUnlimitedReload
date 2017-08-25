@@ -70,7 +70,7 @@ bool AppleBattle::isGameOver() {
 
 
 
-int AppleBattle::_getGainedCoinsByActionType(int type) {
+int AppleBattle::getGainedCoinsByActionType(int type) {
     int value = 0;
     switch (type) {
         case 1: {

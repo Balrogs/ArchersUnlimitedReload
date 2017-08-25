@@ -55,6 +55,6 @@ void BattleScene::initWorld() {
 }
 
 
-int BattleScene::_getGainedCoinsByActionType(int type) {
+int BattleScene::getGainedCoinsByActionType(int type) {
     return 0;
 }

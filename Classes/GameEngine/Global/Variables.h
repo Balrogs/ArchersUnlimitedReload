@@ -161,6 +161,8 @@ public:
     static const std::string HAND;
     static const std::string WHEEL;
 
+    static float getBoneFactor(std::string name);
+
 private:
     static Resolution _resolution;
 

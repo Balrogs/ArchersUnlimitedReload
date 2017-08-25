@@ -1,5 +1,6 @@
 #include <Localization/LocalizedStrings.h>
 #include <GameEngine/Global/Variables.h>
+#include <ui/UIButton.h>
 #include "Statistics.h"
 
 Statistics *Statistics::create(int type) {
@@ -100,28 +101,54 @@ Node *Statistics::getView(Size contentSize) {
 
         victory->setPosition(Vec2(
                 contentSize.width / 2,
-                contentSize.height - victory->getContentSize().height - 15.f
+                contentSize.height - victory->getContentSize().height
         ));
         parent->addChild(victory);
     }
 
     auto coins = Label::createWithTTF(
-            StringUtils::format("+ %d", _coinsGained),
+            StringUtils::format("%d", _coinsGained),
             Variables::FONT_NAME,
             Variables::FONT_SIZE());
     coins->setColor(Color3B::BLACK);
-    coins->setPosition(contentSize.width / 2 - coins->getContentSize().width / 2,
-                       0 + coins->getContentSize().height + 15.f);
+    coins->setPosition(contentSize.width / 2 - coins->getContentSize().width,
+                       coins->getContentSize().height);
     parent->addChild(coins);
 
     auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
     coin->setPosition(Vec2(
-            coins->getPosition().x + coins->getContentSize().width + 15.f,
+            coins->getBoundingBox().getMaxX() + coin->getBoundingBox().size.width,
             coins->getPosition().y
     ));
     parent->addChild(coin);
 
+    //TODO replace with x2 button
+
+    auto doubleButton = cocos2d::ui::Button::create();
+    doubleButton->loadTextures(Variables::CHEST_BUTTON, Variables::CHEST_PRESSED_BUTTON,
+                              Variables::CHEST_BUTTON, ui::Widget::TextureResType::PLIST);
+
+    doubleButton->addTouchEventListener([&, coins](Ref *sender, ui::Widget::TouchEventType type) {
+        switch (type) {
+            case ui::Widget::TouchEventType::ENDED: {
+                //TODO show ad then double earned coins
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    doubleButton->setPosition(Vec2(
+            coin->getBoundingBox().getMaxX() + 2 * doubleButton->getBoundingBox().size.width / 3,
+            coin->getPositionY()
+    ));
+
+    parent->addChild(doubleButton, 3);
 
     return parent;
+}
+
+bool Statistics::isVictory() {
+    return _victory;
 }
 

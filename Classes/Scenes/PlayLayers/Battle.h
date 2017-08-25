@@ -27,6 +27,8 @@ public:
 
     void removeTarget(cocos2d::Node *target);
 
+    virtual int getGainedCoinsByActionType(int type) override;
+
 protected:
 
     std::vector<Brain *> _brains;
@@ -34,8 +36,6 @@ protected:
     std::vector<cocos2d::Node *> _targets;
 
     virtual void initWorld() override;
-
-    virtual int _getGainedCoinsByActionType(int type) override;
 };
 
 #endif // __BATTLE_H__

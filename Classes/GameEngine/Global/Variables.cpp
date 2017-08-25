@@ -206,6 +206,24 @@ long Variables::getCurrentTime() {
     return mktime(now_tm) * 1000;
 }
 
+float Variables::getBoneFactor(std::string name) {
+    if(name == "head"){
+        return 1.5f;
+    } else if(name == "body") {
+        return 1.f;
+    } else if(name == "left arm" || name == "right arm"){
+        return 0.75f;
+    } else if(name == "left leg" || name == "right leg"){
+        return 0.75f;
+    }  else if(name == "left a" || name == "right a"){
+        return .5f;
+    } else if(name == "left l" || name == "right l"){
+        return .5f;
+    } else {
+        return 0.f;
+    }
+}
+
 
 
 

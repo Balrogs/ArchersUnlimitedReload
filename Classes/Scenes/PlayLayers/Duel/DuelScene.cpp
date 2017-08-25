@@ -144,7 +144,7 @@ void DuelScene::_startGame() {
     _ui->startGame();
 }
 
-int DuelScene::_getGainedCoinsByActionType(int type) {
+int DuelScene::getGainedCoinsByActionType(int type) {
     return type;
 }
 

@@ -24,7 +24,7 @@ public:
 
     virtual void createPlayers(int id, std::string name, PlayerView* playerView);
 
-    virtual int _getGainedCoinsByActionType(int type);
+    virtual int getGainedCoinsByActionType(int type);
 
 protected:
 

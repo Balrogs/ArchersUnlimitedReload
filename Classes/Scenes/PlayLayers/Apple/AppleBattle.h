@@ -15,9 +15,9 @@ public:
 
     void completeShot() override;
 
-protected:
+    virtual int getGainedCoinsByActionType(int type) override;
 
-    virtual int _getGainedCoinsByActionType(int type) override ;
+protected:
 
     void initWorld() override;
 

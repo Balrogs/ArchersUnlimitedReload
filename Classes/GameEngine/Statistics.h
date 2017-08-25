@@ -35,6 +35,8 @@ public:
 
     void setWin();
 
+    bool isVictory();
+
     int getPlayerEnvType();
     void setPlayerEnvType(int type);
 

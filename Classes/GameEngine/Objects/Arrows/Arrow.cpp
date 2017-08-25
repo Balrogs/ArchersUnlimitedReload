@@ -4,6 +4,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Objects/Environment/Box.h>
 #include <Scenes/PlayLayers/Duel/DuelScene2P.h>
+#include <GameEngine/Objects/Environment/HitInfo.h>
 
 USING_NS_CC;
 
@@ -116,7 +117,9 @@ bool Arrow::processContact(Node *bone) {
 
                 appleb->setAppleHit();
 
-                BattleParent::getInstance()->addCoins(1);
+                auto parent = BattleParent::getInstance();
+                parent->addChild(CoinInfo::create(this->getPosition(), parent->getGainedCoinsByActionType(1)));
+                parent->addCoins(1);
 
                 return true;
             } else {
@@ -158,11 +161,13 @@ bool Arrow::processContact(Node *bone) {
 
         _disableArrow();
 
+        auto parent = BattleParent::getInstance();
+
+        parent->addChild(DamageInfo::create(this->getPosition(), (int) (Variables::getBoneFactor(bone->getPhysicsBody()->getName()) * _damage)));
+
         target->dealDamage(_damage, bone);
 
         addToNode(bone);
-
-        BattleParent::getInstance()->addCoins((int) _damage);
 
         return true;
     }

@@ -17,11 +17,11 @@ public:
 
     virtual int getPlayerId();
 
+    int getGainedCoinsByActionType(int type) override;
+
 protected:
 
     int _turnId;
-
-    int _getGainedCoinsByActionType(int type) override;
 
     Player *_player1;
     Player *_player2;

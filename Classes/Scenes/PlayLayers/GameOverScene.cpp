@@ -109,14 +109,14 @@ bool GameOverScene::init(Statistics *stats) {
                                  repeatButton->getPosition().y));
     this->addChild(backButton, 3);
 
-    if (stats->getType() < 3) {
+    if (stats->getType() < 2 || (stats->getType() == 2 && !stats->isVictory())) {
 
         auto continueButton = ContinueButton::create();
 
         continueButton->button()->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
             switch (type) {
                 case ui::Widget::TouchEventType::ENDED: {
-                    // TODO show media
+                    // TODO show media then continue game
                     Director::getInstance()->replaceScene(BattleScene::createScene(stats));
                 }
                     break;
@@ -133,43 +133,16 @@ bool GameOverScene::init(Statistics *stats) {
         this->addChild(continueButton, 3);
     }
 
-    auto coins = def->getIntegerForKey("COINS", 0);
-
-    auto chestButton = ui::Button::create();
-    chestButton->loadTextures(Variables::CHEST_BUTTON, Variables::CHEST_PRESSED_BUTTON,
-                              Variables::CHEST_BUTTON, ui::Widget::TextureResType::PLIST);
-
-    chestButton->addTouchEventListener([&, stats, def, coins](Ref *sender, ui::Widget::TouchEventType type) {
-        switch (type) {
-            case ui::Widget::TouchEventType::ENDED: {
-                if (coins + stats->getCoinsGained() >= 1000) {
-                    def->setIntegerForKey("COINS", coins - 1000);
-                    def->destroyInstance();
-                    _saveStats(stats);
-                    onQuit();
-                    MainScene::getInstance()->replaceMain(Randomizer::create());
-                } else {
-                    //TODO show media
-                }
-            }
-                break;
-            default:
-                break;
-        }
-    });
-    chestButton->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-
-    this->addChild(chestButton, 3);
 
     auto stats_size = Size(
             bg->getContentSize().width / 2,
-            _title1->getPosition().y - chestButton->getPosition().y + chestButton->getBoundingBox().size.height / 2
+            _title1->getPosition().y - repeatButton->getPosition().y + repeatButton->getBoundingBox().size.height / 2
     );
     auto stats_view = stats->getView(stats_size);
 
     stats_view->setPosition(Vec2(
             bg->getBoundingBox().getMinX() +  stats_size.width,
-            chestButton->getPosition().y + chestButton->getBoundingBox().size.height / 2
+            repeatButton->getPosition().y + repeatButton->getBoundingBox().size.height
     ));
     this->addChild(stats_view, 2);
 

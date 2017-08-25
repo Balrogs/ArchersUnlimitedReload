@@ -31,14 +31,11 @@ protected:
 
     void _setPlayerView();
 
-    float getBoneFactor(std::string name);
-
     virtual void _changeArrow() = 0;
 
     virtual void _changeHat() = 0;
 
     virtual void _changeBow() = 0;
-
 
 public:
 

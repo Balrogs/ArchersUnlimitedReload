@@ -2,6 +2,7 @@
 #include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/PlayLayers/Apple/AppleMultiplayer.h>
+#include <GameEngine/Objects/Environment/HitInfo.h>
 #include "Battle.h"
 #include "Scenes/PlayLayers/Apple/AppleBattle.h"
 #include "Scenes/PlayLayers/Duel/DuelScene.h"
@@ -57,7 +58,7 @@ cocos2d::Scene *BattleParent::createScene(Statistics *stats) {
 
     UI *hud = UI::create();
 
-    int id = RandomHelper::random_int(1, 2);
+    int id = RandomHelper::random_int(2, 3);
     BackgroundLayer *bg = BackgroundLayer::create(id);
 
     scene->addChild(bg, 2);
@@ -310,13 +311,19 @@ Hero *BattleParent::getPlayer() {
 
 void BattleParent::_gameOver() {
 
-    this->_bg->removeSprites();
-
     this->getEventDispatcher()->removeEventListenersForTarget(this);
     this->getScheduler()->unscheduleAllForTarget(this);
-    this->getActionManager()->removeAllActionsFromTarget(this);
 
-    this->getParent()->addChild(GameOverScene::create(_stats), 5);
+    this->runAction(Sequence::create(DelayTime::create(1.f),
+                                     CallFunc::create([&](){
+                                         this->_bg->removeSprites();
+
+                                         this->getActionManager()->removeAllActionsFromTarget(this);
+
+                                         this->getParent()->addChild(GameOverScene::create(_stats), 5);
+                                     }),
+                                     NULL
+    ));
 }
 
 BackgroundLayer *BattleParent::getBackground() {
@@ -360,7 +367,7 @@ void BattleParent::_createEnvForStickman(Body *stickman, int type) {
 }
 
 void BattleParent::addCoins(int value) {
-    int diff = _getGainedCoinsByActionType(value);
+    int diff = getGainedCoinsByActionType(value);
     _stats->increaseCoins(diff);
     if (PlayerApple *pl = dynamic_cast<PlayerApple *>(_player->getPlayer())) {
         pl->addScore(_stats->getCoinsGained());

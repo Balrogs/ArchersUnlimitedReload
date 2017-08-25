@@ -57,6 +57,8 @@ public:
 
     virtual void addCoins(int value);
 
+    virtual int getGainedCoinsByActionType(int type) = 0;
+
 protected:
 
     static BattleParent *_instance;
@@ -101,8 +103,6 @@ protected:
     virtual bool isGameOver();
 
     virtual void _gameOver();
-
-    virtual int _getGainedCoinsByActionType(int type) = 0;
 
     void _pauseRecursive(cocos2d::Node *_node, bool _pause);
 
