@@ -34,6 +34,8 @@ bool GameOverScene::init(Statistics *stats) {
 
     bg->setScaleX((2 * visibleSize.width / 3) / bg->getContentSize().width);
 
+    bg->setScaleY((visibleSize.height / 2) / bg->getContentSize().height);
+
     this->addChild(bg, 1);
 
     _title1 = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GAME OVER"),
@@ -84,10 +86,8 @@ bool GameOverScene::init(Statistics *stats) {
                 break;
         }
     });
-    repeatButton->setPosition(Vec2(visibleSize.width / 2,
-                                   repeatButton->getBoundingBox().size.height / 2 + bg->getBoundingBox().getMinY() +
-                                   25.f));
-    this->addChild(repeatButton, 3);
+
+
 
     auto backButton = ui::Button::create();
     backButton->loadTextures(Variables::CLOSE_BUTTON_PATH, Variables::CLOSE_PRESSED_BUTTON_PATH,
@@ -104,19 +104,23 @@ bool GameOverScene::init(Statistics *stats) {
                 break;
         }
     });
-    backButton->setPosition(Vec2(repeatButton->getPosition().x - repeatButton->getBoundingBox().size.width / 2 -
-                                 backButton->getBoundingBox().size.width,
-                                 repeatButton->getPosition().y));
-    this->addChild(backButton, 3);
 
-    if (stats->getType() < 2 || (stats->getType() == 2 && !stats->isVictory())) {
+    auto coins = def->getIntegerForKey("COINS", 0);
+
+    if (coins >= Variables::continueCost() && (stats->getType() < 2 || (stats->getType() == 2 && !stats->isVictory()))) {
+
+        repeatButton->setPosition(Vec2(visibleSize.width / 2,
+                                       bg->getBoundingBox().getMinY()));
+        backButton->setPosition(Vec2(repeatButton->getPosition().x - repeatButton->getBoundingBox().size.width / 2 -
+                                     backButton->getBoundingBox().size.width,
+                                     repeatButton->getPosition().y));
 
         auto continueButton = ContinueButton::create();
 
-        continueButton->button()->addTouchEventListener([&, stats](Ref *sender, ui::Widget::TouchEventType type) {
+        continueButton->button()->addTouchEventListener([def, coins, stats](Ref *sender, ui::Widget::TouchEventType type) {
             switch (type) {
                 case ui::Widget::TouchEventType::ENDED: {
-                    // TODO show media then continue game
+                    def->setIntegerForKey("COINS", coins - Variables::continueCost());
                     Director::getInstance()->replaceScene(BattleScene::createScene(stats));
                 }
                     break;
@@ -131,8 +135,18 @@ bool GameOverScene::init(Statistics *stats) {
         continueButton->enable();
 
         this->addChild(continueButton, 3);
+    } else {
+        repeatButton->setPosition(Vec2(visibleSize.width / 2 + repeatButton->getBoundingBox().size.width,
+                                       bg->getBoundingBox().getMinY()));
+
+        backButton->setScale(1.5f);
+        backButton->setPosition(Vec2(visibleSize.width / 2 - backButton->getBoundingBox().size.width,
+                                     repeatButton->getPosition().y));
     }
 
+
+    this->addChild(repeatButton, 3);
+    this->addChild(backButton, 3);
 
     auto stats_size = Size(
             bg->getContentSize().width / 2,
@@ -145,6 +159,40 @@ bool GameOverScene::init(Statistics *stats) {
             repeatButton->getPosition().y + repeatButton->getBoundingBox().size.height
     ));
     this->addChild(stats_view, 2);
+
+
+    auto coins_bar = cocos2d::ui::Button::create();
+    coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
+
+    coins_bar->addTouchEventListener([&, stats](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+        switch (type) {
+            case cocos2d::ui::Widget::TouchEventType::ENDED: {
+                if(coins >= Variables::wheelCost()){
+                    _saveStats(stats);
+                    onQuit();
+                    MainScene::getInstance()->replaceMain(Randomizer::create());
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    });
+    coins_bar->setScale(0.5f);
+    coins_bar->setPosition(Vec2(visibleSize.width - coins_bar->getBoundingBox().size.width / 2 - 15.f,
+                                visibleSize.height - coins_bar->getBoundingBox().size.height / 2 - 15.f));
+
+
+    auto coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
+                                                Variables::FONT_SIZE(), Size(3 * coins_bar->getContentSize().width / 5, Variables::FONT_SIZE()));
+    coinsCount->setHorizontalAlignment(TextHAlignment::RIGHT);
+    coinsCount->setColor(Color3B::WHITE);
+    coinsCount->setAnchorPoint(Vec2(0, 0));
+    coinsCount->setPosition(15.f, coins_bar->getContentSize().height / 2 - Variables::FONT_SIZE() / 2);
+
+    coins_bar->addChild(coinsCount, 5);
+
+    this->addChild(coins_bar);
 
     return true;
 }

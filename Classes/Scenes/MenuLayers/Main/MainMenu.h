@@ -33,6 +33,8 @@ public:
 
     cocos2d::Layer *getMain();
 
+    void resumeEquipment();
+
 private:
 
     static MainScene *_instance;
@@ -55,6 +57,8 @@ public:
     void onPushScene(int id);
 
     void showErrorPopUp();
+
+    void showPopUp(Node* popUp);
 
 private:
 

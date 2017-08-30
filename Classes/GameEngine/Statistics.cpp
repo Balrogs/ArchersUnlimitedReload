@@ -122,28 +122,28 @@ Node *Statistics::getView(Size contentSize) {
     ));
     parent->addChild(coin);
 
-    //TODO replace with x2 button
-
-    auto doubleButton = cocos2d::ui::Button::create();
-    doubleButton->loadTextures(Variables::CHEST_BUTTON, Variables::CHEST_PRESSED_BUTTON,
-                              Variables::CHEST_BUTTON, ui::Widget::TextureResType::PLIST);
-
-    doubleButton->addTouchEventListener([&, coins](Ref *sender, ui::Widget::TouchEventType type) {
-        switch (type) {
-            case ui::Widget::TouchEventType::ENDED: {
-                //TODO show ad then double earned coins
-            }
-                break;
-            default:
-                break;
-        }
-    });
-    doubleButton->setPosition(Vec2(
-            coin->getBoundingBox().getMaxX() + 2 * doubleButton->getBoundingBox().size.width / 3,
-            coin->getPositionY()
-    ));
-
-    parent->addChild(doubleButton, 3);
+//    //TODO replace with x2 button
+//
+//    auto doubleButton = cocos2d::ui::Button::create();
+//    doubleButton->loadTextures(Variables::CHEST_BUTTON, Variables::CHEST_PRESSED_BUTTON,
+//                              Variables::CHEST_BUTTON, ui::Widget::TextureResType::PLIST);
+//
+//    doubleButton->addTouchEventListener([&, coins](Ref *sender, ui::Widget::TouchEventType type) {
+//        switch (type) {
+//            case ui::Widget::TouchEventType::ENDED: {
+//                //TODO show ad then double earned coins
+//            }
+//                break;
+//            default:
+//                break;
+//        }
+//    });
+//    doubleButton->setPosition(Vec2(
+//            coin->getBoundingBox().getMaxX() + 2 * doubleButton->getBoundingBox().size.width / 3,
+//            coin->getPositionY()
+//    ));
+//
+//    parent->addChild(doubleButton, 3);
 
     return parent;
 }

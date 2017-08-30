@@ -224,6 +224,14 @@ float Variables::getBoneFactor(std::string name) {
     }
 }
 
+int Variables::wheelCost() {
+    return 500;
+}
+
+int Variables::continueCost() {
+    return 1000;
+}
+
 
 
 

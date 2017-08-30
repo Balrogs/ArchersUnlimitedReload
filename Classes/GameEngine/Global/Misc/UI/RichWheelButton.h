@@ -15,13 +15,30 @@ public:
     Size getBoundingBox();
 
 protected:
+
+    bool _enabled;
     cocos2d::UserDefault* _def;
     Clocks* _clocks;
     ui::Button* _button;
     Sprite* _wheel;
     Sprite* _highlighting;
 
+    virtual void _showMessage();
+    virtual void _checkEnabled();
     void _highlight();
+};
+
+
+class RichWheelButtonCoins : public RichWheelButton {
+public:
+    CREATE_FUNC(RichWheelButtonCoins);
+
+    bool init() override;
+
+protected:
+    void _showMessage() override;
+    void _checkEnabled() override;
+
 };
 
 #endif //ARCHERSUNLIMITED_RICHWHEELBUTTON_H

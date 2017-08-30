@@ -118,7 +118,7 @@ void EquipmentScene::onQuit() {
 
     _stand->runAction(Sequence::createWithTwoActions(
             CallFunc::create([&]() {
-                if(_controls) {
+                if(_controls != nullptr) {
                     _controls->removeFromParent();
                     _bowsCount->setVisible(false);
                     _hatsCount->setVisible(false);
@@ -129,9 +129,7 @@ void EquipmentScene::onQuit() {
             Spawn::createWithTwoActions(
                     ScaleTo::create(.7f, 1.f),
                     MoveTo::create(.7f, Vec2(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2))
-            )
-                      )
-    );
+            )));
     MainScene::getInstance()->popAndReplace();
 }
 

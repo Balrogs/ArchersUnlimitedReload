@@ -152,8 +152,8 @@ void MainMenuPopUp::yesAction() {
 }
 
 void MainMenuPopUp::okAction() {
+    this->getParent()->getEventDispatcher()->resumeEventListenersForTarget(this->getParent(), true);
     this->removeFromParent();
-    MainScene::getInstance()->popAndReplace();
 }
 
 MainMenuPopUp *MainMenuPopUp::create(std::string title, cocos2d::Node *message, bool isTwoButtons) {

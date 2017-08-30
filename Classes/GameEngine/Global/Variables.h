@@ -162,6 +162,8 @@ public:
     static const std::string WHEEL;
 
     static float getBoneFactor(std::string name);
+    static int wheelCost();
+    static int continueCost();
 
 private:
     static Resolution _resolution;

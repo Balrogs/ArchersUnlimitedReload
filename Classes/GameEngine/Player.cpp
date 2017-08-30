@@ -221,9 +221,10 @@ int PlayerDuel::getHp() {
 
 void PlayerDuel::setHp(int diff) {
     _hp -= diff;
-    if (_hp > 0) {
-        _hpView->setHp(_hp);
+    if (_hp < 0) {
+        _hp = 0;
     }
+    _hpView->setHp(_hp);
 }
 
 void PlayerDuel::_updateView() {
@@ -428,9 +429,10 @@ int Bot::getHp() {
 
 void Bot::setHp(int diff) {
     _hp -= diff;
-    if (_hp > 0) {
-        _hpView->setHp(_hp);
+    if (_hp < 0) {
+        _hp = 0;
     }
+    _hpView->setHp(_hp);
 }
 
 void Bot::_updateView() {

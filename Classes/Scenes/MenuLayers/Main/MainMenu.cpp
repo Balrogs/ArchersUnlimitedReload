@@ -78,6 +78,10 @@ cocos2d::Layer *MainScene::getMain() {
     return _main;
 }
 
+void MainScene::resumeEquipment() {
+    _equipmentScene->resumeEquipment();
+}
+
 void MainScene::popAndReplace() {
     while(_mainStack.size()){
         popMain();
@@ -148,9 +152,6 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                 if (_menuId == 0) {
                     auto popUp = this->getChildByName("PopUp");
                     if (popUp == nullptr) {
-                        _removeHint();
-                        auto size = Director::getInstance()->getVisibleSize();
-
                         auto label = cocos2d::Label::createWithTTF(
                                 LocalizedStrings::getInstance()->getString("EXIT THE GAME?"), Variables::FONT_NAME,
                                 Variables::FONT_SIZE());
@@ -158,9 +159,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                         popUp = MainMenuPopUp::create(LocalizedStrings::getInstance()->getString("ARE YOU SURE?"),
                                                            label,
                                                            true);
-
-                        popUp->setPosition(size.width / 2, - size.height);
-                        this->addChild(popUp, 0, "PopUp");
+                        showPopUp(popUp);
                     } else {
                         popUp->removeFromParent();
                     }
@@ -173,7 +172,8 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
                 break;
         }
     };
-
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+    auto coins = def->getIntegerForKey("COINS", 0);
 
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
 
@@ -184,10 +184,12 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     auto coins_bar = cocos2d::ui::Button::create();
     coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
 
-    coins_bar->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    coins_bar->addTouchEventListener([&, coins](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
-                //TODO add action
+                if(coins >= Variables::wheelCost()){
+                    MainScene::getInstance()->replaceMain(Randomizer::create());
+                }
             }
                 break;
             default:
@@ -198,9 +200,9 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     coins_bar->setPosition(Vec2(_visibleSize.width - coins_bar->getBoundingBox().size.width / 2 - 15.f,
                                 _visibleSize.height - coins_bar->getBoundingBox().size.height / 2 - 15.f));
 
-    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
 
-    auto coins = def->getIntegerForKey("COINS", 0);
+
+
     _coinsCount = cocos2d::Label::createWithTTF(StringUtils::toString(coins), Variables::FONT_NAME,
                                                     Variables::FONT_SIZE(), Size(3 * coins_bar->getContentSize().width / 5, Variables::FONT_SIZE()));
     _coinsCount->setHorizontalAlignment(TextHAlignment::RIGHT);
@@ -212,7 +214,7 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
 
     this->addChild(coins_bar);
 
-    auto wheelButton = RichWheelButton::create();
+    auto wheelButton = RichWheelButtonCoins::create();
     wheelButton->setScale(0.9f);
     wheelButton->setPosition(Vec2(wheelButton->getBoundingBox().width / 2 + 20.f,
                             _visibleSize.height - wheelButton->getBoundingBox().height / 2 - 20.f));
@@ -487,18 +489,13 @@ void MainMenu::onMenuClick(int id) {
 }
 
 void MainMenu::showErrorPopUp() {
-    if (this->getChildByName("PopUp") == nullptr) {
-        _removeHint();
-        auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("SERVER ERROR"),
-                                                   Variables::FONT_NAME,
-                                                   Variables::FONT_SIZE());
-        label->setColor(cocos2d::Color3B::BLACK);
-        auto popUp = MainMenuPopUp::create("",
-                                           label);
-        auto _visibleSize = Director::getInstance()->getVisibleSize();
-        popUp->setPosition(_visibleSize.width / 2, - _visibleSize.height);
-        this->addChild(popUp, 0, "PopUp");
-    }
+    auto label = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("SERVER ERROR"),
+                                               Variables::FONT_NAME,
+                                               Variables::FONT_SIZE());
+    label->setColor(cocos2d::Color3B::BLACK);
+    auto popUp = MainMenuPopUp::create("",
+                                       label);
+    showPopUp(popUp);
 }
 
 void MainMenu::_showHint() {
@@ -532,8 +529,10 @@ void MainMenu::_showHint() {
 
 void MainMenu::_removeHint() {
     auto hint = this->getChildByName("hint");
-    hint->stopAllActions();
-    hint->removeFromParent();
+    if(hint != nullptr){
+        hint->stopAllActions();
+        hint->removeFromParent();
+    }
 }
 
 bool MainMenu::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
@@ -542,4 +541,14 @@ bool MainMenu::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *e
         MainScene::getInstance()->popMain();
     }
     return true;
+}
+
+void MainMenu::showPopUp(Node* popUp) {
+    if (this->getChildByName("PopUp") == nullptr) {
+        _removeHint();
+        auto size = Director::getInstance()->getVisibleSize();
+
+        popUp->setPosition(size.width / 2, -size.height);
+        this->addChild(popUp, 0, "PopUp");
+    }
 }
