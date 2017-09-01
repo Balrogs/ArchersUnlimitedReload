@@ -33,7 +33,7 @@ public:
 
     cocos2d::Layer *getMain();
 
-    void resumeEquipment();
+    bool resumeEquipment();
 
 private:
 

@@ -19,9 +19,10 @@ bool RichEventButton::init() {
                 } else {
                     // TODO show ads that increases try count
                 }
-                default:
-                    break;
+                break;
             }
+            default:
+                break;
         }
     });
 

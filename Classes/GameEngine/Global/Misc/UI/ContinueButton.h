@@ -3,6 +3,7 @@
 
 #include <ui/UIButton.h>
 #include "cocos2d.h"
+#include "ButtonWithPrice.h"
 
 USING_NS_CC;
 
@@ -23,7 +24,7 @@ public:
 protected:
     bool _enabled;
     ui::Button* _button;
-    Sprite* _ad;
+    Node* _price;
     Sprite* _loading;
 };
 

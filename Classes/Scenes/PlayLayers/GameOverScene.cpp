@@ -149,14 +149,14 @@ bool GameOverScene::init(Statistics *stats) {
     this->addChild(backButton, 3);
 
     auto stats_size = Size(
-            bg->getContentSize().width / 2,
-            _title1->getPosition().y - repeatButton->getPosition().y + repeatButton->getBoundingBox().size.height / 2
+            bg->getContentSize().width,
+            _title1->getBoundingBox().getMinY() - repeatButton->getBoundingBox().getMaxY()
     );
     auto stats_view = stats->getView(stats_size);
 
     stats_view->setPosition(Vec2(
-            bg->getBoundingBox().getMinX() +  stats_size.width,
-            repeatButton->getPosition().y + repeatButton->getBoundingBox().size.height
+            bg->getBoundingBox().getMinX() +  stats_size.width / 2,
+            bg->getPositionY() - stats_size.height / 2
     ));
     this->addChild(stats_view, 2);
 
@@ -164,7 +164,7 @@ bool GameOverScene::init(Statistics *stats) {
     auto coins_bar = cocos2d::ui::Button::create();
     coins_bar->loadTextureNormal(Variables::COIN_BAR, cocos2d::ui::Widget::TextureResType::PLIST);
 
-    coins_bar->addTouchEventListener([&, stats](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
+    coins_bar->addTouchEventListener([&, stats, coins](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 if(coins >= Variables::wheelCost()){

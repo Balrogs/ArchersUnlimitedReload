@@ -78,7 +78,7 @@ cocos2d::Layer *MainScene::getMain() {
     return _main;
 }
 
-void MainScene::resumeEquipment() {
+bool MainScene::resumeEquipment() {
     _equipmentScene->resumeEquipment();
 }
 
@@ -536,8 +536,7 @@ void MainMenu::_removeHint() {
 }
 
 bool MainMenu::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
-    if(_equipmentScene->checkTouch(touch->getLocation())){
-        _equipmentScene->resumeEquipment();
+    if(_equipmentScene->checkTouch(touch->getLocation()) && _equipmentScene->resumeEquipment()){
         MainScene::getInstance()->popMain();
     }
     return true;

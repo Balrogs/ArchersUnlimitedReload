@@ -1,5 +1,6 @@
 #include <GameEngine/Global/Variables.h>
 #include "ContinueButton.h"
+#include "ButtonWithPrice.h"
 
 bool ContinueButton::init() {
     if(!Node::init()){
@@ -35,14 +36,29 @@ void ContinueButton::enable() {
 
     _button->setEnabled(_enabled);
 
-    _ad = Sprite::createWithSpriteFrameName(Variables::WHEEL);
-    _ad->setPosition(Vec2(
-            _button->getBoundingBox().getMaxX() + _ad->getContentSize().width / 2,
-            _button->getBoundingBox().getMinY() + _ad->getContentSize().height / 2
-    ));
-    _button->addChild(_ad, 2);
+    _price = Node::create();
 
-    _button->runAction(RepeatForever::create(
+    auto coins = Label::createWithTTF(
+            StringUtils::format("%d", Variables::continueCost()),
+            Variables::FONT_NAME,
+            Variables::FONT_SIZE());
+    coins->setColor(Color3B::WHITE);
+    _price->addChild(coins);
+
+    auto coin = Sprite::createWithSpriteFrameName(Variables::COIN);
+    coin->setPosition(Vec2(
+            coins->getBoundingBox().getMaxX() + coin->getBoundingBox().size.width,
+            coins->getPosition().y
+    ));
+    _price->addChild(coin);
+
+    _price->setPosition(Vec2(
+            _button->getBoundingBox().getMaxX() + coins->getContentSize().width / 2,
+            _button->getPosition().y
+    ));
+    _button->addChild(_price, 2);
+
+    _price->runAction(RepeatForever::create(
                     Sequence::create(
                             ScaleTo::create(1.f, 1.f),
                             ScaleTo::create(1.f, 1.3f),
