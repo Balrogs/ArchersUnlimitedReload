@@ -1,7 +1,3 @@
-//
-// Created by igor on 08.09.16.
-//
-
 #include <Scenes/PlayLayers/Battle.h>
 
 USING_NS_CC;
@@ -95,6 +91,28 @@ void Brain::remove() {
     _body->kill();
 }
 
+float Brain::getFactor() {
+    auto bh = BattleHistory::getInstance();
+    auto rounds = bh->getAllRounds();
+    float factor = 0;
+
+    for(auto r : rounds) {
+        if(r->getPlayerId() == _body->getPlayer()->getId()){
+            factor += r->getHitInfo();
+        } else {
+            factor -= r->getHitInfo();
+        }
+    }
+
+    if(factor > 0.f){
+        factor -= 0.5f;
+    } else if(factor < 0.f){
+        factor += 0.5f;
+    }
+
+    return factor;
+}
+
 
 PassiveBrain::PassiveBrain(Body *body) : Brain(body, 0.f, 0.f, 0.f) {
 }
@@ -174,14 +192,16 @@ bool HeroBrain::isTargetNear() {
 }
 
 void HeroBrain::aim() {
-    _body->aim();
+    int factor = 1;
+    _body->aim(factor);
 }
 
 void HeroBrain::attack() {
     _body->attack();
 }
 
-HeroBrainDuel::HeroBrainDuel(Hero *body, float upd) : Brain(body, 20.f, 2.f, upd) {
+HeroBrainDuel::HeroBrainDuel(Hero *body, float upd, int opponentId) : Brain(body, 20.f, 2.f, upd) {
+    _oppId = opponentId;
 }
 
 bool HeroBrainDuel::isTargetNear() {
@@ -196,18 +216,12 @@ void HeroBrainDuel::update() {
     auto state = _body->getState();
     switch (state) {
         case IDLE: {
-            _body->setState(ATTACKING);
             _body->runAction(Sequence::create(
-                    CallFunc::create([&]() {
-                        _body->aim();
-                    }),
-                    DelayTime::create(1.f),
-                    CallFunc::create([&]() {
-                        _body->attack();
-                    }),
-                    NULL)
-
-            );
+                    move(),
+                    aim(),
+                    attack(),
+                    NULL
+            ));
             break;
         }
         default:
@@ -217,10 +231,46 @@ void HeroBrainDuel::update() {
 
 }
 
-void HeroBrainDuel::attack() {
-    _body->attack();
+FiniteTimeAction* HeroBrainDuel::attack() {
+    return Sequence::create(
+            DelayTime::create(1.f),
+            CallFunc::create([&]() {
+                _body->attack();
+            }),
+            NULL);
 }
 
-void HeroBrainDuel::aim() {
-    _body->aim();
+FiniteTimeAction* HeroBrainDuel::aim() {
+    return CallFunc::create(
+            [&]() {
+                float factor = getFactor();
+                _body->aim(factor);
+            }
+    );
+}
+
+FiniteTimeAction* HeroBrainDuel::move() {
+    auto bh = BattleHistory::getInstance();
+    auto prevRoundId = bh->getRoundId() - 1;
+    auto prevRound = bh->getRoundInfo(prevRoundId, _body->getPlayer()->getId());
+
+    if(prevRound != nullptr){
+        if(prevRound->getHitInfo() >= 1){
+            return Sequence::create(
+                    CallFunc::create([&]() {
+                        _body->move(-1);
+                    }),
+                    DelayTime::create(2.f),
+                    NULL);
+        } else if(prevRound->getHitInfo() < 0.75) {
+            return Sequence::create(
+                    CallFunc::create([&]() {
+                        _body->move(1);
+                    }),
+                    DelayTime::create(2.f),
+                    NULL);
+        }
+    }
+
+    return DelayTime::create(0.f);
 }

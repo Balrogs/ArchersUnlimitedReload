@@ -37,7 +37,6 @@ protected:
 
     UIControls* _controls;
     HeroPreview* _hero;
-    Node* _stand;
 
     Label* _hatsCount;
     Label* _arrowsCount;

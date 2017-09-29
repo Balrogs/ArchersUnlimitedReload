@@ -46,9 +46,6 @@ bool EquipmentScene::init() {
 
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
 
-    _stand = Sprite::createWithSpriteFrameName(Variables::STAND);
-    _stand->setPosition(Vec2(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2));
-    this->addChild(_stand, 1);
 
     auto color = Color3B(51, 51, 51);
 
@@ -81,8 +78,10 @@ bool EquipmentScene::init() {
 
     _hero = new HeroPreview();
     _hero->setScale(1.5f);
-    _hero->setPosition(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2);
-    _stand->addChild(_hero, 2);
+    _hero->setPosition(_visibleSize.width / 4, _visibleSize.height / 10);
+
+    this->addChild(_hero, 2);
+
     _heroBox = Rect(_hero->getPosition().x * 0.5f, _hero->getPosition().y, _hero->getPosition().x,  _hero->getGlobalHeight("head"));
 
     this->pause();
@@ -103,14 +102,14 @@ bool EquipmentScene::resumeEquipment() {
 
     _readAssets();
 
-    _stand->runAction(Sequence::createWithTwoActions(
-            Spawn::createWithTwoActions(
-                    ScaleTo::create(.8f, 1.3f),
-                    MoveTo::create(.8f, Vec2(
-                            _visibleSize.width / 2 - _stand->getContentSize().width / 2,
-                            _stand->getContentSize().height / 2)
-                    )
-            ),
+    this->runAction(Sequence::create(
+//            Spawn::createWithTwoActions(
+//                    ScaleTo::create(.8f, 1.3f),
+//                    MoveTo::create(.8f, Vec2(
+//                            _visibleSize.width / 2 - _stand->getContentSize().width / 2,
+//                            _stand->getContentSize().height / 2)
+//                    )
+//            ),
             CallFunc::create([&]() {
                 _controls = UIControls::create(_hero);
                 _controls->setPosition(Vec2(0, 0));
@@ -120,7 +119,8 @@ bool EquipmentScene::resumeEquipment() {
                 _hatsCount->setVisible(true);
                 _arrowsCount->setVisible(true);
                 _busy = false;
-            })));
+            }),
+            NULL));
     return true;
 }
 
@@ -134,7 +134,7 @@ void EquipmentScene::onQuit() {
 
     this->pause();
 
-    _stand->runAction(Sequence::create(
+    _hero->runAction(Sequence::create(
             CallFunc::create([&]() {
                 if(_controls != nullptr) {
                     _controls->removeFromParent();
@@ -144,14 +144,14 @@ void EquipmentScene::onQuit() {
                     _hero->getShoulders()->getAnimation().fadeIn("equipment_idle", -1.f, 1);
                 }
             }),
-            Spawn::createWithTwoActions(
-                    ScaleTo::create(.7f, 1.f),
-                    MoveTo::create(.7f, Vec2(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2))
-            ),
+//            Spawn::createWithTwoActions(
+//                    ScaleTo::create(.7f, 1.f),
+//                    MoveTo::create(.7f, Vec2(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2))
+//            ),
             CallFunc::create([&]() {
                 _busy = false;
             }),
-    NULL));
+            NULL));
     MainScene::getInstance()->popAndReplace();
 }
 

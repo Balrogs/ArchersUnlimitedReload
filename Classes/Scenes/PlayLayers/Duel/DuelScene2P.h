@@ -11,8 +11,6 @@ public:
 
     void makeTurn(int id) override;
 
-    Hero* getHero(int id);
-
 protected:
 
     void initWorld() override;

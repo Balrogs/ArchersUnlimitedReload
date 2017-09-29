@@ -89,11 +89,11 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Misc/EventInfo.cpp \
                                  ../../Classes/GameEngine/Global/Misc/EventScore.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/Reward.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/UI/RichWheelButton.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/ContinueButton.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/HitInfo.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.cpp \
-                                 ../../Classes/GameEngine/Global/Misc/UI/UIControls.cpp
+                                 ../../Classes/GameEngine/Global/Misc/UI/UIControls.cpp \
+                                 ../../Classes/GameEngine/Global/BattleHistory.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

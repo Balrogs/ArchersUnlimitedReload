@@ -85,21 +85,12 @@ public:
     static const std::string EFFECTS_ON_BUTTON;
     static const std::string EFFECTS_OFF_BUTTON;
 
-    static const std::string REMOVE_ADS_BUTTON;
-    static const std::string REMOVE_ADS_PRESSED_BUTTON;
-
-    static const std::string CUSTOMIZE_BUTTON;
-
     static const std::string COIN_BAR;
     static const std::string COIN;
-
-    static const std::string VIDEO_BUTTON;
 
     static const std::string EVENT_BUTTON;
     static const std::string EVENT_PRESSED_BUTTON;
 
-
-    static const std::string STAND;
 
     static const std::string YELLOW_BUTTON;
     static const std::string YELLOW_PRESSED_BUTTON;
@@ -128,17 +119,8 @@ public:
 
     static const std::string WAITING_LAYER;
 
-    static const std::string CHEST_BUTTON;
-    static const std::string CHEST_PRESSED_BUTTON;
-
     static const std::string GRAY_BUTTON;
 
-    static const std::string RATE_ICON;
-    static const std::string SINGLE_ICON;
-    static const std::string TWO_PLAYERS_ICON;
-    static const std::string MULTIPLAYER_ICON;
-    static const std::string APPLE_ICON;
-    static const std::string BLOCK_ICON;
 
     static const std::string YES_DISABLED_PATH;
     static const std::string DISABLED_BUTTON;
@@ -155,11 +137,13 @@ public:
     static const std::string CLOUD_1;
     static const std::string CLOUD_2;
     static const std::string CLOUD_3;
+    static const std::string ALERT_ON;
+    static const std::string ALERT_OFF;
+    static const std::string BOARD;
 
 
     static const std::string UI_ARROW;
     static const std::string HAND;
-    static const std::string WHEEL;
 
     static float getBoneFactor(std::string name);
     static int wheelCost();

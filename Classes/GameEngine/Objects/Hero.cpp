@@ -125,7 +125,7 @@ void Hero::attack() {
         attack((180 * dragonBones::ANGLE_TO_RADIAN) - _aim->get_aimRadian(), _aim->get_aimPower());
 }
 
-void Hero::aim() {
+void Hero::aim(float factor) {
     _aim->set_aiming(true);
     _aimPowerState = _shoulders->getAnimation().fadeIn(
             Variables::AIM_ANIMATION, 0.f, 1,
@@ -139,13 +139,13 @@ void Hero::aim() {
             cocos2d::Vec3(firePointBone->global.x, -firePointBone->global.y, 0.f),
             _shouldersDisplay).y);
 
-    while (!_aimRandomly(globalPoint, hero_pos)) {}
+    while (!_aimRandomly(globalPoint, hero_pos, factor)) {}
 
     _updateAim();
 }
 
-bool Hero::_aimRandomly(Vec2 start, Vec2 destination) {
-    auto power = RandomHelper::random_real(BattleParent::MAX_ARROW_POWER - 5.f, BattleParent::MAX_ARROW_POWER);
+bool Hero::_aimRandomly(Vec2 start, Vec2 destination, float factor) {
+    auto power = RandomHelper::random_real(BattleParent::MAX_ARROW_POWER - factor, BattleParent::MAX_ARROW_POWER + factor);
     auto x = destination.x - start.x + destination.y - BattleParent::getInstance()->GROUND;
     auto radian = (x + 20.f * power) / 90.f;
     if (radian < 0) {
@@ -381,7 +381,7 @@ void Hero::_saveAim() {
 
 void Hero::setFaceDir() {
     int facedir = 1;
-    if (DuelScene2P *scene = dynamic_cast<DuelScene2P *>(BattleParent::getInstance())) {
+    if (DuelScene *scene = dynamic_cast<DuelScene *>(BattleParent::getInstance())) {
         if (scene->getHeroPos(scene->getHero(getPlayer()->getId())).x < getPosition().x) {
             facedir = -1;
         }
@@ -467,6 +467,10 @@ void DuelMPHero::dealDamage(float d, cocos2d::Node* bone) {
     auto name = bone->getPhysicsBody()->getName();
     float factor = Variables::getBoneFactor(name);
     _player->setHp((int)(d * factor));
+
+    auto round = new Round(getPlayer()->getId());
+    round->setHitInfo(factor);
+    BattleHistory::getInstance()->addRound(round);
 }
 
 Player *DuelMPHero::getPlayer() {
@@ -487,10 +491,9 @@ void DuelHero::switchWeapon(int i) {
 
 void DuelHero::move(int dir) {
     setState(MOVING);
-    auto movedir = dir * _faceDir;
-    changeFacedir(movedir);
-    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + movedir * 150.f, this->getPosition().y, 0.f);
-
+    auto moveDir = dir;
+    changeFacedir(moveDir);
+    cocos2d::Vec3 pos = cocos2d::Vec3(this->getPosition().x + moveDir * 150.f, this->getPosition().y, 0.f);
     this->runAction(cocos2d::Sequence::create(
             cocos2d::CallFunc::create([&]() {
                 if (_prevAim != nullptr)
@@ -525,6 +528,9 @@ void DuelHero::dealDamage(float d, cocos2d::Node* bone) {
     float factor = Variables::getBoneFactor(name);
     _player->setHp((int)(d * factor));
 
+    auto round = new Round(getPlayer()->getId());
+    round->setHitInfo(factor);
+    BattleHistory::getInstance()->addRound(round);
 }
 
 Player *DuelHero::getPlayer() {
@@ -559,6 +565,10 @@ void AppleHero::dealDamage(float d, cocos2d::Node* bone) {
     auto name = bone->getPhysicsBody()->getName();
     float factor = Variables::getBoneFactor(name);
     _player->setHp((int)(d * factor));
+
+    auto round = new Round(getPlayer()->getId());
+    round->setHitInfo(factor);
+    BattleHistory::getInstance()->addRound(round);
 }
 
 Player *AppleHero::getPlayer() {
@@ -594,6 +604,10 @@ void MPHero::dealDamage(float d, cocos2d::Node* bone) {
     auto name = bone->getPhysicsBody()->getName();
     float factor = Variables::getBoneFactor(name);
     _player->setHp((int)(d * factor));
+
+    auto round = new Round(getPlayer()->getId());
+    round->setHitInfo(factor);
+    BattleHistory::getInstance()->addRound(round);
 }
 
 Player *MPHero::getPlayer() {

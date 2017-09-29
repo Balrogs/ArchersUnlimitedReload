@@ -28,14 +28,16 @@ void DuelScene::initWorld() {
     auto player2 =  PlayerDuel::create(-2, LocalizedStrings::getInstance()->getString("BOT"));
     player2->setHAlignment(cocos2d::TextHAlignment::RIGHT);
 
-    _player = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
+    _hero1 = new DuelHero(visibleSize.width / 2, DuelScene::GROUND, player1);
     _hero2 = new DuelHero(visibleSize.width * 3 - 150.f, DuelScene::GROUND, player2);
     _hero2->changeFacedir(-1);
+
+    _player = _hero1;
 
     _player1 = _player->getPlayer();
     _player2 = _hero2->getPlayer();
 
-    _brain = new HeroBrainDuel(_hero2, 0.f);
+    _brain = new HeroBrainDuel(_hero2, 0.f, _player1->getId());
 
     _createEnvForStickman(_player, _stats->getPlayerEnvType());
     _createEnvForStickman(_hero2, _stats->getTargetEnvType());
@@ -68,6 +70,8 @@ void DuelScene::makeTurn(int id) {
     if (this->_turnId != id) {
         float delay = 2.f;
         if (id == _player1->getId()) {
+            BattleHistory::getInstance()->nextRound();
+
             if (this->getPosition().x - _hero2->getPosition().x <= visibleSize.width / 2) {
                 delay = 0.5f;
             }
@@ -168,6 +172,16 @@ void DuelScene::_setTurnId(int id) {
         ((PlayerDuel *)_player2)->markTurn(true);
         ((PlayerDuel *)_player1)->markTurn(false);
     }
+}
+
+
+Hero *DuelScene::getHero(int id) {
+    if (_hero1->getPlayer()->getId() == id) {
+        return _hero2;
+    } else if (_hero2->getPlayer()->getId() == id) {
+        return _hero1;
+    }
+    return nullptr;
 }
 
 

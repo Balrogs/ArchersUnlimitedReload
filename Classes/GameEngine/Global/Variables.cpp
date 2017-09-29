@@ -88,22 +88,12 @@ const std::string Variables::EFFECTS_ON_BUTTON = "soundeffects_on.png";
 const std::string Variables::EFFECTS_OFF_BUTTON = "soundeffects_off.png";
 
 
-const std::string Variables::REMOVE_ADS_BUTTON = "removeAds.png";
-const std::string Variables::REMOVE_ADS_PRESSED_BUTTON = "removeAds_pressed.png";
-
-
-const std::string Variables::CUSTOMIZE_BUTTON = "customize.png";
-
-
 const std::string Variables::COIN_BAR = "coin_bar.png";
 const std::string Variables::COIN = "coin.png";
 
-const std::string Variables::VIDEO_BUTTON = "video.png";
 
 const std::string Variables::EVENT_BUTTON = "events.png";
 const std::string Variables::EVENT_PRESSED_BUTTON = "events_pressed.png";
-
-const std::string Variables::STAND = "stand.png";
 
 const std::string Variables::YELLOW_BUTTON = "yellow_normal.png";
 const std::string Variables::YELLOW_PRESSED_BUTTON = "yellow_pressed.png";
@@ -134,13 +124,7 @@ const std::string Variables::BG3 = "bg3.png";
 
 const std::string Variables::WAITING_LAYER = "main-waiting.png";
 
-const std::string Variables::CHEST_BUTTON = "chest.png";
-const std::string Variables::CHEST_PRESSED_BUTTON = "chest_pressed.png";
-
 const std::string Variables::GRAY_BUTTON = "grey_button06.png";
-
-
-const std::string Variables::RATE_ICON = "rate.png";
 
 //Lobby ui
 
@@ -158,9 +142,12 @@ const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
 const std::string Variables::CLOUD_3 = "cloud3.png";
 
+const std::string Variables::ALERT_ON = "alert_on.png";
+const std::string Variables::ALERT_OFF = "alert_off.png";
+const std::string Variables::BOARD = "board.png";
+
 const std::string Variables::UI_ARROW = "selector_arrow.png";
 const std::string Variables::HAND = "hand.png";
-const std::string Variables::WHEEL = "wheel.png";
 
 
 void Variables::setResolution(Resolution resolution) {

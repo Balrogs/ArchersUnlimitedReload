@@ -4,7 +4,6 @@
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
-#include <GameEngine/Global/Misc/UI/RichWheelButton.h>
 #include "MainMenu.h"
 #include "Settings.h"
 #include "Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h"
@@ -213,13 +212,6 @@ bool MainMenu::init(EquipmentScene *equipmentLayer) {
     coins_bar->addChild(_coinsCount, 5);
 
     this->addChild(coins_bar);
-
-    auto wheelButton = RichWheelButtonCoins::create();
-    wheelButton->setScale(0.9f);
-    wheelButton->setPosition(Vec2(wheelButton->getBoundingBox().width / 2 + 20.f,
-                            _visibleSize.height - wheelButton->getBoundingBox().height / 2 - 20.f));
-
-    this->addChild(wheelButton);
 
     this->runAction(RepeatForever::create(
             Sequence::create(

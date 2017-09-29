@@ -2,6 +2,7 @@
 #include <Scenes/PlayLayers/Battle.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Objects/Environment/HitInfo.h>
+#include <Scenes/PlayLayers/Duel/DuelScene2P.h>
 
 USING_NS_CC;
 
@@ -90,7 +91,8 @@ void Stickman::attack() {
     _armature->getAnimation().fadeIn(animationName);
 }
 
-void Stickman::aim() {
+void Stickman::aim(float factor) {
+
 }
 
 void Stickman::_updateAnimation() {
@@ -140,6 +142,10 @@ void Stickman::dealDamage(float d, Node* bone) {
     auto name = bone->getPhysicsBody()->getName();
     float factor = Variables::getBoneFactor(name);
     _bot->setHp((int)(d * factor));
+
+    auto round = new Round(getPlayer()->getId());
+    round->setHitInfo(factor);
+    BattleHistory::getInstance()->addRound(round);
 }
 
 Player *Stickman::getPlayer() {
@@ -198,11 +204,13 @@ void Body::move(int dir) {
 }
 
 void Body::changeFacedir(int facedir) {
-    _faceDir = facedir;
-    if(getScaleX() > 0)
-        this->setScaleX(facedir * this->getScaleX());
-    else
-        this->setScaleX(-facedir * this->getScaleX());
+    if(_faceDir != facedir) {
+        _faceDir = facedir;
+        if(getScaleX() > 0)
+            this->setScaleX(facedir * this->getScaleX());
+        else
+            this->setScaleX(-facedir * this->getScaleX());
+    }
 }
 
 void Body::_updatePosition() {

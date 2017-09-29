@@ -14,7 +14,7 @@ bool ContinueButton::init() {
 
     this->addChild(_button, 1);
 
-    _loading = Sprite::createWithSpriteFrameName(Variables::WHEEL);
+    _loading = Sprite::createWithSpriteFrameName(Variables::COIN);
     _loading->setPosition(Vec2(
             _button->getBoundingBox().getMaxX() + _loading->getContentSize().width / 2,
             _button->getBoundingBox().getMinY() + _loading->getContentSize().height / 2

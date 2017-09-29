@@ -53,7 +53,7 @@ public:
 
     virtual void attack() = 0;
 
-    virtual void aim() = 0;
+    virtual void aim(float factor) = 0;
 
     State getState();
 
@@ -85,7 +85,7 @@ public:
 
     void attack() override;
 
-    void aim() override;
+    void aim(float factor) override;
 
     void update() override;
 

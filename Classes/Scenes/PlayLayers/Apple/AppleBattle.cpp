@@ -60,7 +60,7 @@ bool AppleBattle::isGameOver() {
 
     if (_isAppleHitted) {
         _isAppleHitted = false;
-        _stats->increaseLevel(_stats->getLevel() + 1);
+        _stats->increaseLevel(11);
         _nextLevelAction();
         return false;
     }
@@ -110,62 +110,62 @@ void AppleBattle::_nextLevelAction() {
             break;
         }
         case 4: {
-            _GLOBAL_SCALE = 0.8f;
+            //
             break;
         }
         case 5: {
-            _GLOBAL_SCALE = 0.75f;
+            //
             break;
         }
         case 6: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(4);
+            auto box = Box::create(BoxType::WOODEN_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
-            auto box2 = Box::create(4);
+            auto box2 = Box::create(BoxType::WOODEN_BOX);
             box2->setPosition(Vec2(visibleSize.width / 2, GROUND + box->getBoundingBox().size.height));
             _env->addChild(box2);
             break;
         }
         case 7: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(4);
+            auto box = Box::create(BoxType::WOODEN_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
-            auto box2 = Box::create(4);
+            auto box2 = Box::create(BoxType::WOODEN_BOX);
             box2->setPosition(Vec2(visibleSize.width / 2, GROUND + box->getBoundingBox().size.height));
             _env->addChild(box2);
-            auto box3 = Box::create(4);
+            auto box3 = Box::create(BoxType::WOODEN_BOX);
             box3->setPosition(Vec2(visibleSize.width / 2, GROUND + box2->getBoundingBox().size.height));
             _env->addChild(box3);
             break;
         }
         case 8: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(3);
+            auto box = Box::create(BoxType::STONE_LARGE_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 9: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
-            auto box2 = Box::create(2);
+            auto box2 = Box::create(BoxType::STONE_MEDIUM_BOX);
             box2->setPosition(Vec2(visibleSize.width / 2 - box->getBoundingBox().size.width, GROUND));
             _env->addChild(box2);
             break;
         }
         case 10: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
-            auto box2 = Box::create(2);
+            auto box2 = Box::create(BoxType::STONE_MEDIUM_BOX);
             box2->setPosition(Vec2(visibleSize.width / 2 - box->getBoundingBox().size.width, GROUND));
             _env->addChild(box2);
-            auto box3 = Box::create(4);
+            auto box3 = Box::create(BoxType::WOODEN_BOX);
             box3->setPosition(Vec2(visibleSize.width / 2 - box2->getBoundingBox().size.width / 2,
                                    GROUND + box2->getBoundingBox().size.height));
             _env->addChild(box3);
@@ -173,105 +173,283 @@ void AppleBattle::_nextLevelAction() {
         }
         case 11: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_LARGE_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
+            auto box2 = Box::create(BoxType::WOODEN_BOX);
+            box2->setPosition(Vec2(visibleSize.width / 2, GROUND + box->getBoundingBox().size.height));
+            _env->addChild(box2);
             break;
         }
         case 12: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 13: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 14: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 15: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 16: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 17: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 18: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 19: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 20: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 21: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 22: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 23: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 24: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;
         }
         case 25: {
             _GLOBAL_SCALE = 1.f;
-            auto box = Box::create(2);
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 26: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 27: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 28: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 29: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 30: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 31: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 32: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 33: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 34: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 35: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 36: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 37: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 38: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 39: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 40: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 41: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 42: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 43: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 44: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 45: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 46: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 47: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 48: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 49: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
+            box->setPosition(Vec2(visibleSize.width / 2, GROUND));
+            _env->addChild(box);
+            break;
+        }
+        case 50: {
+            _GLOBAL_SCALE = 1.f;
+            auto box = Box::create(BoxType::STONE_MEDIUM_BOX);
             box->setPosition(Vec2(visibleSize.width / 2, GROUND));
             _env->addChild(box);
             break;

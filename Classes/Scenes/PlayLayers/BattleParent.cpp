@@ -152,12 +152,15 @@ bool BattleParent::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Even
 
     if (_isPaused)
         return false;
+
     const auto start = touch->getStartLocation();
     if (this->_ui->checkTouch(start)) {
         _touch = -1;
         return false;
     }
+
     _player->startAim();
+
     return true;
 }
 
@@ -199,6 +202,7 @@ bool BattleParent::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event 
     power = (power < MIN_ARROW_POWER) ? MIN_ARROW_POWER : power;
     auto angle = std::atan2(y, x);
     _player->attack(-angle, power);
+
     return true;
 }
 

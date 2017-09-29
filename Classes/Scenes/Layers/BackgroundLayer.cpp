@@ -233,7 +233,7 @@ void InfiniteParallaxNode::createGreenfield() {
     unsigned int cloudsQuantity = 25;
     for (unsigned int i = 0; i < cloudsQuantity; i++) {
         auto cloud = Sprite::createWithSpriteFrameName(
-                "cloud" + StringUtils::toString(RandomHelper::random_int(1, 3)) + ".png");
+                "Cloud" + StringUtils::toString(RandomHelper::random_int(1, 3)) + ".png");
         cloud->setAnchorPoint(Point::ZERO);
         cloud->setTag(1000 + i);
         float randomRatio = RandomHelper::random_int(2, 4) / 10.f;
@@ -365,12 +365,12 @@ bool BackgroundLayer::init() {
     mainClip->setPosition(
             0.23f * bg->getBoundingBox().size.width,
             bg->getBoundingBox().getMinY() + mainClip->getBoundingBox().size.height / 2);
-    this->addChild(mainClip, 0, "clip");
+    this->addChild(mainClip, 2, "clip");
 
     _waiting = Sprite::createWithSpriteFrameName(Variables::WAITING_LAYER);
     _waiting->setScale(scale);
     _waiting->setPosition(visibleSize.width / 2, visibleSize.height - _waiting->getBoundingBox().size.height / 2);
-    this->addChild(_waiting, 2);
+    this->addChild(_waiting, 3);
 
     _id = 0;
     _parallax = nullptr;
