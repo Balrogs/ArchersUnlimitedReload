@@ -120,9 +120,6 @@ const std::string Variables::CONTINUE_PRESSED_BUTTON = "continue_pressed.png";
 
 const std::string Variables::BG1 = "bg1.png";
 const std::string Variables::BG2 = "bg2.png";
-const std::string Variables::BG3 = "bg3.png";
-
-const std::string Variables::WAITING_LAYER = "main-waiting.png";
 
 const std::string Variables::GRAY_BUTTON = "grey_button06.png";
 
@@ -136,8 +133,9 @@ const std::string Variables::BUTTON_2 = "button2.png";
 const std::string Variables::BUTTON_3 = "button3.png";
 
 //Main background
-
-const std::string Variables::MAIN_BACKGROUND = "background.png";
+const std::string Variables::MAIN = "main.png";
+const std::string Variables::WAITING_LAYER = "dark.png";
+const std::string Variables::CLIP = "background.png";
 const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
 const std::string Variables::CLOUD_3 = "cloud3.png";
@@ -145,6 +143,8 @@ const std::string Variables::CLOUD_3 = "cloud3.png";
 const std::string Variables::ALERT_ON = "alert_on.png";
 const std::string Variables::ALERT_OFF = "alert_off.png";
 const std::string Variables::BOARD = "board.png";
+const std::string Variables::SOON = "soon.png";
+const std::string Variables::POINT = "b_2.png";
 
 const std::string Variables::UI_ARROW = "selector_arrow.png";
 const std::string Variables::HAND = "hand.png";

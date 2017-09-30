@@ -354,6 +354,12 @@ void MainMenu::onMenuClick(int id) {
                 multiP->addChild(multiP_label, 4);
                 multiP->setEnabled(false);
 
+                auto soon = Sprite::createWithSpriteFrameName(Variables::SOON);
+                soon->setPosition(Vec2(
+                        multiP->getBoundingBox().size.width - soon->getContentSize().width / 2,
+                         soon->getContentSize().height / 2
+                ));
+                multiP->addChild(soon);
                 _menu->addChild(multiP);
 
                 break;

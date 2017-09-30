@@ -353,7 +353,7 @@ bool BackgroundLayer::init() {
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    auto bg = Sprite::createWithSpriteFrameName(Variables::BG3);
+    auto bg = Sprite::createWithSpriteFrameName(Variables::MAIN);
     auto scale = visibleSize.width / bg->getContentSize().width;
     bg->setScale(scale);
     bg->setPosition(visibleSize.width / 2, visibleSize.height - bg->getBoundingBox().size.height / 2);
@@ -364,8 +364,9 @@ bool BackgroundLayer::init() {
     mainClip->setScale(scale);
     mainClip->setPosition(
             0.23f * bg->getBoundingBox().size.width,
-            bg->getBoundingBox().getMinY() + mainClip->getBoundingBox().size.height / 2);
-    this->addChild(mainClip, 2, "clip");
+            bg->getBoundingBox().getMaxY() - 7.8f * mainClip->getBoundingBox().size.height / 2);
+
+    this->addChild(mainClip, 0, "clip");
 
     _waiting = Sprite::createWithSpriteFrameName(Variables::WAITING_LAYER);
     _waiting->setScale(scale);

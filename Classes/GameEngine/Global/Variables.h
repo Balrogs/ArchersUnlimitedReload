@@ -115,7 +115,6 @@ public:
 
     static const std::string BG1;
     static const std::string BG2;
-    static const std::string BG3;
 
     static const std::string WAITING_LAYER;
 
@@ -133,13 +132,16 @@ public:
     static const std::string BUTTON_3;
 
 
-    static const std::string MAIN_BACKGROUND;
+    static const std::string MAIN;
+    static const std::string CLIP;
     static const std::string CLOUD_1;
     static const std::string CLOUD_2;
     static const std::string CLOUD_3;
     static const std::string ALERT_ON;
     static const std::string ALERT_OFF;
     static const std::string BOARD;
+    static const std::string SOON;
+    static const std::string POINT;
 
 
     static const std::string UI_ARROW;
