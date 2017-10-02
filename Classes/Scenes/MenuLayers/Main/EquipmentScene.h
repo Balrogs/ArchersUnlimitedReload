@@ -4,6 +4,7 @@
 #include <GameEngine/Objects/Hero.h>
 #include <ui/UIButton.h>
 #include <GameEngine/Global/Misc/UI/UIControls.h>
+#include <GameEngine/Global/Misc/UI/GiftAlert.h>
 #include "cocos2d.h"
 
 USING_NS_CC;
@@ -37,6 +38,8 @@ protected:
 
     UIControls* _controls;
     HeroPreview* _hero;
+
+    GiftAlert* _alert;
 
     Label* _hatsCount;
     Label* _arrowsCount;

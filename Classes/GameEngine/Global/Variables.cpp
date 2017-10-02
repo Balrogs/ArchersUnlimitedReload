@@ -32,6 +32,9 @@ cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node 
 const int Variables::RESET_INTERVAL = 10 * 1000;
 const int Variables::MAX_TRY_COUNT = 5;
 
+const int Variables::GIFT_INTERVAL = 5 * 1000;
+const int Variables::GIFT_COST = 5 * 1000;
+
 
 const std::string Variables::FONT_NAME = "FSEX300.ttf";
 const cocos2d::Color3B Variables::FONT_COLOR = cocos2d::Color3B::BLACK;
@@ -133,8 +136,8 @@ const std::string Variables::BUTTON_2 = "button2.png";
 const std::string Variables::BUTTON_3 = "button3.png";
 
 //Main background
-const std::string Variables::MAIN = "bg3.png";
-const std::string Variables::WAITING_LAYER = "main-waiting.png";
+const std::string Variables::MAIN = "main.png";
+const std::string Variables::WAITING_LAYER = "dark.png";
 const std::string Variables::CLIP = "background.png";
 const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
@@ -148,6 +151,9 @@ const std::string Variables::POINT = "b_2.png";
 
 const std::string Variables::UI_ARROW = "selector_arrow.png";
 const std::string Variables::HAND = "hand.png";
+
+
+const std::string Variables::ASSETS_PATH = "assets.json";
 
 
 void Variables::setResolution(Resolution resolution) {

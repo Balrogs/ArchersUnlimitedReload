@@ -93,7 +93,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Objects/Environment/HitInfo.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/UIControls.cpp \
-                                 ../../Classes/GameEngine/Global/BattleHistory.cpp
+                                 ../../Classes/GameEngine/Global/BattleHistory.cpp \
+                                 ../../Classes/GameEngine/Global/Misc/UI/GiftAlert.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

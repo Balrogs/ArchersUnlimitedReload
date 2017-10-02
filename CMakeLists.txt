@@ -332,7 +332,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.cpp
         Classes/GameEngine/Global/Misc/UI/UIControls.cpp
         Classes/GameEngine/Global/BattleHistory.cpp
-
+        Classes/GameEngine/Global/Misc/UI/GiftAlert.cpp
 
 
         Classes/GameEngine/Objects/Environment/Ground.h
@@ -369,7 +369,9 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Environment/HitInfo.h
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.h
         Classes/GameEngine/Global/Misc/UI/UIControls.h
-        Classes/GameEngine/Global/BattleHistory.h)
+        Classes/GameEngine/Global/BattleHistory.h
+        Classes/GameEngine/Global/Misc/UI/GiftAlert.h
+        )
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

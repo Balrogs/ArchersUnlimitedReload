@@ -3,6 +3,7 @@
 #include <Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h>
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/UI/PopUp.h>
+#include <GameEngine/Global/Misc/UI/GiftAlert.h>
 #include <Localization/LocalizedStrings.h>
 #include "MainMenu.h"
 #include "Settings.h"

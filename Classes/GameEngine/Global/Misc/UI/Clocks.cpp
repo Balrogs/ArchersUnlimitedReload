@@ -2,21 +2,19 @@
 #include "Clocks.h"
 
 Clocks *Clocks::create(std::function<void()> callback) {
-    Clocks *ret = new(std::nothrow) Clocks();
-
-    long end = Variables::getCurrentTime() + Variables::RESET_INTERVAL;
-
-    if (ret && ret->init(end, callback)) {
-        ret->autorelease();
-    } else {
-        CC_SAFE_DELETE(ret);
-    }
-    return ret;
+    return create(callback, 3);
 }
 
 Clocks *Clocks::create(long end, std::function<void()> callback) {
+    return create(end, callback, 3);
+}
+
+
+Clocks *Clocks::create(std::function<void()> callback, int dim) {
+    long end = Variables::getCurrentTime() + Variables::RESET_INTERVAL;
+
     Clocks *ret = new(std::nothrow) Clocks();
-    if (ret && ret->init(end, callback)) {
+    if (ret && ret->init(end, callback, dim)) {
         ret->autorelease();
     } else {
         CC_SAFE_DELETE(ret);
@@ -24,10 +22,23 @@ Clocks *Clocks::create(long end, std::function<void()> callback) {
     return ret;
 }
 
-bool Clocks::init(long end, std::function<void()> callback) {
+Clocks *Clocks::create(long end, std::function<void()> callback, int dim) {
+    Clocks *ret = new(std::nothrow) Clocks();
+    if (ret && ret->init(end, callback, dim)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+
+
+bool Clocks::init(long end, std::function<void()> callback, int dim) {
     if(!Node::init()){
         return false;
     }
+    _dim = dim;
 
     _callback = callback;
 
@@ -56,10 +67,22 @@ void Clocks::update(float dt) {
 }
 
 std::string Clocks::_convertTimestamp(long timestamp) {
-    int seconds = (int) (timestamp / 1000) % 60 ;
-    int minutes = (int) ((timestamp / (1000*60)) % 60);
-    int hours   = (int) ((timestamp / (1000*60*60)) % 24);
-    return StringUtils::format("%02d:%02d:%02d", hours, minutes, seconds);
+    switch(_dim){
+        case 2:{
+            int seconds = (int) (timestamp / 1000) % 60 ;
+            int minutes = (int) ((timestamp / (1000*60)) % 60);
+            return StringUtils::format("%02d:%02d", minutes, seconds);
+        }
+        case 3:{
+            int seconds = (int) (timestamp / 1000) % 60 ;
+            int minutes = (int) ((timestamp / (1000*60)) % 60);
+            int hours   = (int) ((timestamp / (1000*60*60)) % 24);
+            return StringUtils::format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
+        default:
+            return "";
+    }
+
 }
 
 Size Clocks::getContentSize() {
@@ -73,7 +96,6 @@ long Clocks::getCurrent() {
 long Clocks::timeLeft() {
     return _endTime - _current;
 }
-
 
 
 

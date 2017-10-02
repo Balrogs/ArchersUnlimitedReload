@@ -40,6 +40,9 @@ public:
     static const int RESET_INTERVAL;
     static const int MAX_TRY_COUNT;
 
+    static const int GIFT_INTERVAL;
+    static const int GIFT_COST;
+
     static const std::string FONT_NAME;
     static float FONT_SIZE();
     static float FONT_SIZE_2();
@@ -146,6 +149,9 @@ public:
 
     static const std::string UI_ARROW;
     static const std::string HAND;
+
+
+    static const std::string ASSETS_PATH;
 
     static float getBoneFactor(std::string name);
     static int wheelCost();

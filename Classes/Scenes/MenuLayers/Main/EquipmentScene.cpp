@@ -1,6 +1,7 @@
 #include <GameEngine/Global/Variables.h>
 #include <GameEngine/Global/Misc/JSONParser.h>
 #include <Localization/LocalizedStrings.h>
+#include <GameEngine/Global/Misc/UI/GiftAlert.h>
 #include "EquipmentScene.h"
 #include "MainMenu.h"
 
@@ -83,6 +84,25 @@ bool EquipmentScene::init() {
     this->addChild(_hero, 2);
 
     _heroBox = Rect(_hero->getPosition().x * 0.5f, _hero->getPosition().y, _hero->getPosition().x,  _hero->getGlobalHeight("head"));
+
+    _alert = GiftAlert::create();
+    _alert->setPosition(Vec2(
+            _visibleSize.width / 2,
+            0.8f * _visibleSize.height / 2
+    ));
+    this->addChild(_alert);
+
+    auto drawNode = DrawNode::create();
+    drawNode->drawRect(Vec2(
+            _alert->getBoundingBox().getMinX(),
+            _alert->getBoundingBox().getMinY()
+    ),
+    Vec2(
+            _alert->getBoundingBox().getMaxX(),
+            _alert->getBoundingBox().getMaxY()
+    ),
+    Color4F::RED);
+    this->addChild(drawNode);
 
     this->pause();
 
@@ -206,5 +226,9 @@ void EquipmentScene::_enterFrameHandler(float passedTime) {
 }
 
 bool EquipmentScene::checkTouch(Vec2 pos) {
+    if(_alert->getBoundingBox().containsPoint(pos)){
+        _alert->touch();
+    };
     return _heroBox.containsPoint(pos);
 }
+

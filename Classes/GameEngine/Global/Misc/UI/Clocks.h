@@ -10,10 +10,12 @@ class Clocks : public Node {
 public:
 
     static Clocks* create(std::function<void()> callback);
+    static Clocks* create(std::function<void()> callback, int dim);
 
     static Clocks* create(long end, std::function<void()> callback);
+    static Clocks* create(long end, std::function<void()> callback, int dim);
 
-    bool init(long end, std::function<void()> callback);
+    bool init(long end, std::function<void()> callback, int dim);
 
     void update(float dt);
 
@@ -23,6 +25,7 @@ public:
     Size getContentSize();
 
 private:
+    int _dim;
     Label* _clock;
     std::function<void()> _callback;
     long _startTime;

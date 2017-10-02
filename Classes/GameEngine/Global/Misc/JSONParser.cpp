@@ -2,6 +2,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
 #include <GameEngine/Global/Misc/UI/Views.h>
+#include <GameEngine/Global/Variables.h>
 #include "JSONParser.h"
 
 string JSONParser::parse(string message, string key) {
@@ -86,7 +87,7 @@ bool JSONParser::isValid(string message) {
 }
 
 std::vector<AssetInfo *> JSONParser::parseAsset(string key) {
-    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets.json");
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile(Variables::ASSETS_PATH);
     Document document;
     document.Parse(content.c_str());
     std::vector<AssetInfo*> assets;
@@ -114,7 +115,7 @@ AssetInfo *JSONParser::parseAsset(string key, int id) {
 }
 
 void JSONParser::setAssetAvailable(string key, int id) {
-    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets.json");
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile(Variables::ASSETS_PATH);
     Document document;
     document.Parse(content.c_str());
 
@@ -125,7 +126,7 @@ void JSONParser::setAssetAvailable(string key, int id) {
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
     document.Accept(writer);
-    auto fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets.json");
+    auto fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(Variables::ASSETS_PATH);
     cocos2d::FileUtils::getInstance()->writeStringToFile(buffer.GetString(), fullPath);
 
 }
