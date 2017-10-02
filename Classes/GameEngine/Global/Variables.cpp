@@ -133,8 +133,8 @@ const std::string Variables::BUTTON_2 = "button2.png";
 const std::string Variables::BUTTON_3 = "button3.png";
 
 //Main background
-const std::string Variables::MAIN = "main.png";
-const std::string Variables::WAITING_LAYER = "dark.png";
+const std::string Variables::MAIN = "bg3.png";
+const std::string Variables::WAITING_LAYER = "main-waiting.png";
 const std::string Variables::CLIP = "background.png";
 const std::string Variables::CLOUD_1 = "cloud1.png";
 const std::string Variables::CLOUD_2 = "cloud2.png";
