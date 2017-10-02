@@ -3,10 +3,22 @@
 #define ARCUNLIM_BRAIN_H
 
 #include <GameEngine/Objects/Hero.h>
+#include <GameEngine/Global/BattleHistory.h>
 #include "cocos2d.h"
 
 
 class Brain : public cocos2d::Node {
+public:
+    Brain(Body *body);
+
+    Brain(Body *body, float jump_speed, float move_speed, float upd);
+
+    virtual void update();
+
+    void update(float dt);
+
+    ~Brain();
+
 protected:
 
     float _jump_speed;
@@ -21,16 +33,9 @@ protected:
 
     void remove();
 
-public:
-    Brain(Body *body);
+    float _prevFactor;
 
-    Brain(Body *body, float jump_speed, float move_speed, float upd);
-
-    virtual void update();
-
-    void update(float dt);
-
-    ~Brain();
+    float getFactor();
 };
 
 class PassiveBrain : public Brain {
@@ -71,16 +76,21 @@ protected:
 
 class HeroBrainDuel : public Brain {
 public:
-    HeroBrainDuel(Hero *body, float upd);
+    HeroBrainDuel(Hero *body, float upd, int opponentId);
 
     bool isTargetNear() override;
 
     void update() override;
 
 protected:
-    void attack();
 
-    void aim();
+    int _oppId;
+
+    FiniteTimeAction* attack();
+
+    FiniteTimeAction* aim();
+
+    FiniteTimeAction* move();
 };
 
 

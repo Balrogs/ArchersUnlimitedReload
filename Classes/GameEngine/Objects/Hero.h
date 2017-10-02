@@ -29,6 +29,8 @@ public:
 
     virtual void switchWeapon(int dest);
 
+    virtual void dealDamage(float d, cocos2d::Node* bone) = 0;
+
     void setWeapon(int index);
 
     void update() override;
@@ -37,7 +39,7 @@ public:
 
     void attack() override;
 
-    void aim() override;
+    void aim(float factor) override;
 
     virtual void setPlayer(Player *player) = 0;
 
@@ -74,7 +76,7 @@ protected:
 
     void setFaceDir();
 
-    bool _aimRandomly(cocos2d::Vec2 start, cocos2d::Vec2 destination);
+    bool _aimRandomly(cocos2d::Vec2 start, cocos2d::Vec2 destination, float factor);
 
     void _changeArrow();
 

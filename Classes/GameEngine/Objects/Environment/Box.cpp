@@ -1,12 +1,8 @@
-//
-// Created by igor on 16.12.16.
-//
-
 #include "Box.h"
 
 USING_NS_CC;
 
-Box *Box::create(int type) {
+Box *Box::create(BoxType type) {
     Box *ret = new(std::nothrow) Box();
     if (ret && ret->init(type)) {
         ret->autorelease();
@@ -17,46 +13,48 @@ Box *Box::create(int type) {
 
 }
 
-bool Box::init(int type) {
+bool Box::init(BoxType type) {
     if (!Node::init()) {
         return false;
     }
 
-    float stoneMass = 10.f;
-    float woodMass = 10.f;
+    float stoneMass = 20.f;
+    float woodMass = 15.f;
+
+    _hp = 3;
 
     switch (type) {
-        case 1: {
+        case STONE_SMALL_BOX: {
             _box = Sprite::createWithSpriteFrameName("elementStone014.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
             physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
-            _isStatic = true;
+            _isStatic = false;
             break;
         }
-        case 2: {
+        case STONE_MEDIUM_BOX: {
             _box = Sprite::createWithSpriteFrameName("elementStone025.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
             physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
-            _isStatic = true;
+            _isStatic = false;
             break;
         }
-        case 3: {
+        case STONE_LARGE_BOX: {
             _box = Sprite::createWithSpriteFrameName("elementStone026.png");
             auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
             physicsBody->setMass(stoneMass);
             this->setPhysicsBody(physicsBody);
             _isBreakble = false;
             _isBroken = false;
-            _isStatic = true;
+            _isStatic = false;
             break;
         }
-        case 4: {
+        case WOODEN_BOX: {
             _box = Sprite::createWithSpriteFrameName("elementWood017.png");
             _brokenBox = Sprite::createWithSpriteFrameName("elementWood049.png");
             _brokenBox->retain();
@@ -68,7 +66,7 @@ bool Box::init(int type) {
             _isStatic = false;
             break;
         }
-        case 5: {
+        case WOODEN_TRIANGLE: {
             _box = Sprite::createWithSpriteFrameName("elementWood053.png");
             _brokenBox = Sprite::createWithSpriteFrameName("elementWood042.png");
             _brokenBox->retain();
@@ -83,20 +81,48 @@ bool Box::init(int type) {
             _isBreakble = true;
             _isBroken = false;
             _isStatic = false;
+            _hp = 2;
+            break;
+        }
+        case TNT: {
+            _box = Sprite::createWithSpriteFrameName("TNT.png");
+            _brokenBox = Sprite::createWithSpriteFrameName("TNT.png");
+            _brokenBox->retain();
+            auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(woodMass);
+            this->setPhysicsBody(physicsBody);
+            _isBreakble = true;
+            _isBroken = false;
+            _isStatic = false;
+            _hp = 1;
+            break;
+        }
+        case GIFT: {
+            _box = Sprite::createWithSpriteFrameName("gift.png");
+            _brokenBox = Sprite::createWithSpriteFrameName("gift.png");
+            _brokenBox->retain();
+            auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
+            physicsBody->setMass(woodMass);
+            this->setPhysicsBody(physicsBody);
+            _isBreakble = true;
+            _isBroken = false;
+            _isStatic = false;
+            _hp = 1;
             break;
         }
         default: {
             return false;
         }
     }
-    _hp = 3;
+
+
+
     this->setContentSize(_box->getContentSize());
     auto physicsBody = this->getPhysicsBody();
     physicsBody->setTag(2);
     physicsBody->setContactTestBitmask(true);
 
     this->addChild(_box, 1);
-
 
     return true;
 }

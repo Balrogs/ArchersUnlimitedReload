@@ -86,7 +86,7 @@ bool JSONParser::isValid(string message) {
 }
 
 std::vector<AssetInfo *> JSONParser::parseAsset(string key) {
-    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets/assets.json");
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets.json");
     Document document;
     document.Parse(content.c_str());
     std::vector<AssetInfo*> assets;
@@ -114,7 +114,7 @@ AssetInfo *JSONParser::parseAsset(string key, int id) {
 }
 
 void JSONParser::setAssetAvailable(string key, int id) {
-    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets/assets.json");
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile("assets.json");
     Document document;
     document.Parse(content.c_str());
 
@@ -125,7 +125,7 @@ void JSONParser::setAssetAvailable(string key, int id) {
     StringBuffer buffer;
     Writer<StringBuffer> writer(buffer);
     document.Accept(writer);
-    auto fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets/assets.json");
+    auto fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename("assets.json");
     cocos2d::FileUtils::getInstance()->writeStringToFile(buffer.GetString(), fullPath);
 
 }

@@ -35,6 +35,7 @@ bool SplashScene::init() {
 
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("ui.plist");
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("env.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("main_background.plist");
 
 
     LanguageType currentLanguageType = Application::getInstance()->getCurrentLanguage();

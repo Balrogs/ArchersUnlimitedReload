@@ -95,6 +95,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
     searchPaths.push_back("fonts");
     searchPaths.push_back("localization");
+    searchPaths.push_back("item-assets");
     fileUtils->setSearchPaths(searchPaths);
     register_all_packages();
 

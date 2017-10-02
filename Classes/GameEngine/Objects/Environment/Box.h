@@ -9,10 +9,20 @@
 
 USING_NS_CC;
 
+enum BoxType {
+    WOODEN_BOX,
+    WOODEN_TRIANGLE,
+    STONE_LARGE_BOX,
+    STONE_MEDIUM_BOX,
+    STONE_SMALL_BOX,
+    TNT,
+    GIFT
+};
+
 class Box : public Node {
 public:
-    static Box* create(int type);
-    bool init(int type);
+    static Box* create(BoxType type);
+    bool init(BoxType type);
     void breakBox();
 private:
     int _hp;

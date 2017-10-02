@@ -19,6 +19,8 @@ public:
 
     int getGainedCoinsByActionType(int type) override;
 
+    Hero* getHero(int id);
+
 protected:
 
     int _turnId;

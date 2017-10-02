@@ -327,11 +327,14 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/EventInfo.cpp
         Classes/GameEngine/Global/Misc/EventScore.cpp
         Classes/GameEngine/Global/Misc/UI/Reward.cpp
-        Classes/GameEngine/Global/Misc/UI/RichWheelButton.cpp
         Classes/GameEngine/Global/Misc/UI/ContinueButton.cpp
         Classes/GameEngine/Objects/Environment/HitInfo.cpp
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.cpp
         Classes/GameEngine/Global/Misc/UI/UIControls.cpp
+        Classes/GameEngine/Global/BattleHistory.cpp
+
+
+
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
         Classes/Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h
@@ -362,11 +365,11 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/EventInfo.h
         Classes/GameEngine/Global/Misc/EventScore.h
         Classes/GameEngine/Global/Misc/UI/Reward.h
-        Classes/GameEngine/Global/Misc/UI/RichWheelButton.h
         Classes/GameEngine/Global/Misc/UI/ContinueButton.h
         Classes/GameEngine/Objects/Environment/HitInfo.h
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.h
-        Classes/GameEngine/Global/Misc/UI/UIControls.h)
+        Classes/GameEngine/Global/Misc/UI/UIControls.h
+        Classes/GameEngine/Global/BattleHistory.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

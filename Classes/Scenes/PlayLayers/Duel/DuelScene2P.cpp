@@ -57,6 +57,10 @@ void DuelScene2P::makeTurn(int id) {
     }
 
     if (this->_turnId != id) {
+        if(id == _player1->getId()){
+            BattleHistory::getInstance()->nextRound();
+        }
+
         float delay = 2.f;
         if (this->getPosition().x >= visibleSize.width / 2) {
             delay = 0.5f;
@@ -83,13 +87,4 @@ void DuelScene2P::makeTurn(int id) {
         );
         this->runAction(action);
     }
-}
-
-Hero *DuelScene2P::getHero(int id) {
-    if (_hero1->getPlayer()->getId() == id) {
-        return _hero2;
-    } else if (_hero2->getPlayer()->getId() == id) {
-        return _hero1;
-    }
-    return nullptr;
 }

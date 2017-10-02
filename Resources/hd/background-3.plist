@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>cloud1.png</key>
+            <key>Cloud1.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1178,2},{237,133}}</string>
@@ -17,7 +17,7 @@
                 <key>sourceSize</key>
                 <string>{237,133}</string>
             </dict>
-            <key>cloud2.png</key>
+            <key>Cloud2.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1303,286},{179,93}}</string>
@@ -30,7 +30,7 @@
                 <key>sourceSize</key>
                 <string>{179,93}</string>
             </dict>
-            <key>cloud3.png</key>
+            <key>Cloud3.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{1117,272},{184,126}}</string>
@@ -144,7 +144,7 @@
             <key>size</key>
             <string>{1488,426}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3fa45d63cd8132a1491bcee6a266dbbb:24405187b92f7cdb92384a4aaa61ecf9:979ef0730dd9ac0672b6068e9edd0d1a$</string>
+            <string>$TexturePacker:SmartUpdate:73ed997808be1784af940bedca7c5cd2:24405187b92f7cdb92384a4aaa61ecf9:979ef0730dd9ac0672b6068e9edd0d1a$</string>
             <key>textureFileName</key>
             <string>background-3-hd.png</string>
         </dict>

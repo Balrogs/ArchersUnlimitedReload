@@ -15,7 +15,7 @@ MainClip *MainClip::create() {
 }
 
 bool MainClip::init() {
-    if (!Sprite::initWithSpriteFrameName(Variables::MAIN_BACKGROUND))
+    if (!Sprite::initWithSpriteFrameName(Variables::CLIP))
         return false;
     _totalWay = this->getContentSize().width;
     _endPos = this->getContentSize().width + 50.f;

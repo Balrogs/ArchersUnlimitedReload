@@ -41,6 +41,10 @@ void DuelSceneMultiplayer::makeTurn(int id) {
         return;
     }
     if (this->_turnId != id) {
+        if(id == _player1->getId()){
+            BattleHistory::getInstance()->nextRound();
+        }
+
         float delay = 2.f;
         if (this->getPosition().x >= visibleSize.width / 2) {
             delay = 0.5f;

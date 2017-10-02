@@ -581,17 +581,15 @@ bool SelectorTrigger::init() {
     }
     _isStopped = false;
 
-    //TODO replace with dot sprite
-
-    auto dot = Sprite::createWithSpriteFrameName(Variables::COIN);
+    auto dot = Sprite::createWithSpriteFrameName(Variables::POINT);
     this->addChild(dot);
 
     _rectangle = Rect(dot->getBoundingBox());
 
     dot->runAction(RepeatForever::create(
             Sequence::create(
-                    ScaleTo::create(1.f, 0.5),
-                    ScaleTo::create(1.f, 1),
+                    ScaleTo::create(1.f, 0.4f),
+                    ScaleTo::create(1.f, 0.8f),
                     NULL
             )
     ));
