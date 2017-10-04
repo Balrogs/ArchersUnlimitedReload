@@ -364,7 +364,7 @@ bool BackgroundLayer::init() {
     mainClip->setScale(scale);
     mainClip->setPosition(
             0.23f * bg->getBoundingBox().size.width,
-            bg->getBoundingBox().getMaxY() - 7.8f * mainClip->getBoundingBox().size.height / 2);
+            bg->getBoundingBox().getMaxY() - 7.7f * mainClip->getBoundingBox().size.height / 2);
 
     this->addChild(mainClip, 0, "clip");
 

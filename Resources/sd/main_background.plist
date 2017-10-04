@@ -7,20 +7,20 @@
             <key>background.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,966},{118,49}}</string>
+                <string>{{2,966},{117,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{118,49}}</string>
+                <string>{{0,0},{117,50}}</string>
                 <key>sourceSize</key>
-                <string>{118,49}</string>
+                <string>{117,50}</string>
             </dict>
             <key>cloud1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{122,966},{18,10}}</string>
+                <string>{{121,966},{18,10}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>cloud2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{122,1003},{14,7}}</string>
+                <string>{{121,1003},{14,7}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -46,7 +46,7 @@
             <key>cloud3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{122,986},{15,10}}</string>
+                <string>{{121,986},{15,10}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -90,9 +90,9 @@
             <key>realTextureFileName</key>
             <string>main_background.png</string>
             <key>size</key>
-            <string>{274,1017}</string>
+            <string>{274,1018}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:49cc5c53e609c32558eef789010fa189:9919f96cfcf81d8bcf182d56f2f8cacc:d7cf24222e59dce22a54a36a91a32f48$</string>
+            <string>$TexturePacker:SmartUpdate:6e8286fa98099bc03d1bd5ad9565a68e:2c1c69a7a96e25a9207f58988a3f4bc4:d7cf24222e59dce22a54a36a91a32f48$</string>
             <key>textureFileName</key>
             <string>main_background.png</string>
         </dict>

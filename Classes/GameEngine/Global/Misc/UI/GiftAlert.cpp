@@ -96,9 +96,7 @@ void GiftAlert::_switchState(GiftAlert::State state) {
                             NULL
                     )
             ));
-            if (_clocks != nullptr) {
-                _clocks->removeFromParent();
-            }
+            _board->removeAllChildren();
             auto tapMessage = Label::createWithTTF(LocalizedStrings::getInstance()->getString("GIFT"), Variables::FONT_NAME, Variables::FONT_SIZE());
             tapMessage->setPosition(Vec2(
                     _board->getContentSize().width / 2,
@@ -117,6 +115,8 @@ void GiftAlert::_switchState(GiftAlert::State state) {
 }
 
 void GiftAlert::_reset() {
+    _board->removeAllChildren();
+
     _alertOn->stopAllActions();
     _alertOn->setVisible(false);
 

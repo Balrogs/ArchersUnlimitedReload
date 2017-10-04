@@ -46,7 +46,7 @@ bool Clocks::init(long end, std::function<void()> callback, int dim) {
 
     _current = Variables::getCurrentTime();
 
-    _clock = cocos2d::Label::createWithTTF(_convertTimestamp(_endTime - _current), Variables::FONT_NAME, Variables::FONT_SIZE());
+    _clock = cocos2d::Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     this->addChild(_clock);
 
     this->schedule(SEL_SCHEDULE(&Clocks::update), 1.f);

@@ -92,18 +92,6 @@ bool EquipmentScene::init() {
     ));
     this->addChild(_alert);
 
-    auto drawNode = DrawNode::create();
-    drawNode->drawRect(Vec2(
-            _alert->getBoundingBox().getMinX(),
-            _alert->getBoundingBox().getMinY()
-    ),
-    Vec2(
-            _alert->getBoundingBox().getMaxX(),
-            _alert->getBoundingBox().getMaxY()
-    ),
-    Color4F::RED);
-    this->addChild(drawNode);
-
     this->pause();
 
     return true;
@@ -121,15 +109,16 @@ bool EquipmentScene::resumeEquipment() {
     Layer::resume();
 
     _readAssets();
+    MainScene::getInstance()->runAction(
+            Spawn::create(
+                    ScaleTo::create(.8f, 1.2f),
+                    MoveTo::create(.8f, Vec2(0, _visibleSize.height * .1f)),
+                    NULL
+            )
+    );
 
     this->runAction(Sequence::create(
-//            Spawn::createWithTwoActions(
-//                    ScaleTo::create(.8f, 1.3f),
-//                    MoveTo::create(.8f, Vec2(
-//                            _visibleSize.width / 2 - _stand->getContentSize().width / 2,
-//                            _stand->getContentSize().height / 2)
-//                    )
-//            ),
+            DelayTime::create(.8f),
             CallFunc::create([&]() {
                 _controls = UIControls::create(_hero);
                 _controls->setPosition(Vec2(0, 0));
@@ -154,6 +143,14 @@ void EquipmentScene::onQuit() {
 
     this->pause();
 
+    MainScene::getInstance()->runAction(
+            Spawn::create(
+                    ScaleTo::create(.6f, 1.f),
+                    MoveTo::create(.6f, Vec2::ZERO),
+                    NULL
+            )
+    );
+
     _hero->runAction(Sequence::create(
             CallFunc::create([&]() {
                 if(_controls != nullptr) {
@@ -164,10 +161,6 @@ void EquipmentScene::onQuit() {
                     _hero->getShoulders()->getAnimation().fadeIn("equipment_idle", -1.f, 1);
                 }
             }),
-//            Spawn::createWithTwoActions(
-//                    ScaleTo::create(.7f, 1.f),
-//                    MoveTo::create(.7f, Vec2(_stand->getContentSize().width / 2, _stand->getContentSize().height / 2))
-//            ),
             CallFunc::create([&]() {
                 _busy = false;
             }),
