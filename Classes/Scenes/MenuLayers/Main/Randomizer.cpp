@@ -1,3 +1,4 @@
+#include <GameEngine/Objects/Environment/Gift.h>
 #include "Randomizer.h"
 #include "MainMenu.h"
 
@@ -8,50 +9,35 @@ bool Randomizer::init() {
 
     _visibleSize = Director::getInstance()->getVisibleSize();
 
-
-    _keyboardListener = cocos2d::EventListenerKeyboard::create();
-    _keyboardListener->onKeyReleased = [&](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event) {
-        switch (keyCode) {
-            case EventKeyboard::KeyCode::KEY_BREAK:
-            case EventKeyboard::KeyCode::KEY_ESCAPE:
-            case EventKeyboard::KeyCode::KEY_BACKSPACE: {
-                onQuit();
-            }
-                break;
-            default:
-                break;
-        }
-    };
-
-
-    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_keyboardListener, this);
-
     this->pause();
 
-    this->setPosition(-_visibleSize.width, 0);
+    const auto touchListener = cocos2d::EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(Randomizer::_touchHandlerBegin, this);
+    touchListener->onTouchEnded = CC_CALLBACK_2(Randomizer::_touchHandlerEnd, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, this);
+
+    _gift = Gift::create();
+    this->setPosition(_visibleSize.width / 2, _visibleSize.width / 2);
+    this->addChild(_gift, 1, "gift");
+
+    _gift->enable();
 
     return true;
 }
 
 void Randomizer::onEnter() {
     Node::onEnter();
-    this->runAction(Sequence::create(
-            CallFunc::create([](){
-                MainScene::getInstance()->wait(true);
-            }),
-            MoveTo::create(0.5f, Vec2::ZERO)
-            , NULL)
-    );
+    MainScene::getInstance()->wait(true);
 }
 
-void Randomizer::onQuit() {
-    this->runAction(Sequence::create(
-            CallFunc::create([](){
-                MainScene::getInstance()->wait(false);
-            }),
-            MoveTo::create(0.5f, Vec2(-_visibleSize.width, 0)),
-            CallFunc::create([](){
-                MainScene::getInstance()->popAndReplace();
-            }), NULL)
-    );
+
+bool Randomizer::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    return _gift->checkTouch(touch->getLocation());
+}
+
+bool Randomizer::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event) {
+    if(_gift->checkTouch(touch->getLocation())){
+        _gift->breakBox();
+    }
+    return true;
 }

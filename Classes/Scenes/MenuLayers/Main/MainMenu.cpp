@@ -32,7 +32,7 @@ MainScene *MainScene::create() {
 }
 
 bool MainScene::init() {
-    if (!Scene::init()) {
+    if (!Scene::initWithPhysics()) {
         return false;
     }
 

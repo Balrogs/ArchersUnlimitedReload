@@ -1,3 +1,5 @@
+#include <Scenes/MenuLayers/Main/MainMenu.h>
+#include <GameEngine/Global/Variables.h>
 #include "Box.h"
 
 USING_NS_CC;
@@ -97,19 +99,6 @@ bool Box::init(BoxType type) {
             _hp = 1;
             break;
         }
-        case GIFT: {
-            _box = Sprite::createWithSpriteFrameName("gift.png");
-            _brokenBox = Sprite::createWithSpriteFrameName("gift.png");
-            _brokenBox->retain();
-            auto physicsBody = cocos2d::PhysicsBody::createBox(_box->getBoundingBox().size);
-            physicsBody->setMass(woodMass);
-            this->setPhysicsBody(physicsBody);
-            _isBreakble = true;
-            _isBroken = false;
-            _isStatic = false;
-            _hp = 1;
-            break;
-        }
         default: {
             return false;
         }
@@ -138,7 +127,6 @@ void Box::breakBox() {
         _brokenBox->release();
         _isBroken = true;
     }
-
     _hp--;
     if (_hp == 0) {
         this->removeFromParent();

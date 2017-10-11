@@ -2,6 +2,7 @@
 #define ARCUNLIM_RANDOMIZER_H
 
 #include "cocos2d.h"
+#include "GameEngine/Objects/Environment/Gift.h"
 USING_NS_CC;
 
 class Randomizer : public Layer {
@@ -11,6 +12,12 @@ public:
     bool init();
 
 protected:
+
+    bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event);
+
+    bool _touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *event);
+
+    Gift* _gift;
 
     Size _visibleSize;
 

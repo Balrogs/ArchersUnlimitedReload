@@ -333,7 +333,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/UIControls.cpp
         Classes/GameEngine/Global/BattleHistory.cpp
         Classes/GameEngine/Global/Misc/UI/GiftAlert.cpp
-
+        Classes/GameEngine/Objects/Environment/Gift.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -371,7 +371,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/UIControls.h
         Classes/GameEngine/Global/BattleHistory.h
         Classes/GameEngine/Global/Misc/UI/GiftAlert.h
-        )
+        Classes/GameEngine/Objects/Environment/Gift.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

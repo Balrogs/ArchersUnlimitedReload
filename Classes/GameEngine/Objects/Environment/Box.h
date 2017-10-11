@@ -15,15 +15,14 @@ enum BoxType {
     STONE_LARGE_BOX,
     STONE_MEDIUM_BOX,
     STONE_SMALL_BOX,
-    TNT,
-    GIFT
+    TNT
 };
 
 class Box : public Node {
 public:
     static Box* create(BoxType type);
-    bool init(BoxType type);
-    void breakBox();
+    virtual bool init(BoxType type);
+    virtual void breakBox();
 private:
     int _hp;
     bool _isBreakble;
