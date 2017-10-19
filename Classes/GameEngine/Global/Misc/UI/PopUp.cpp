@@ -207,7 +207,7 @@ bool PausePopUp::init(std::string title) {
 
     goToMenu->addTouchEventListener(CC_CALLBACK_0(PausePopUp::yesAction, this));
 
-    auto goToMenuTitle = cocos2d::Label::createWithTTF("GO TO MENU", Variables::FONT_NAME,
+    auto goToMenuTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("GO TO MENU"), Variables::FONT_NAME,
                                                        Variables::FONT_SIZE());
     goToMenuTitle->setPosition(goToMenu->getContentSize().width / 2,
                                goToMenu->getContentSize().height / 2);
@@ -219,7 +219,7 @@ bool PausePopUp::init(std::string title) {
     play->setPosition(Vec2(0.f, goToMenu->getPosition().y - 3 * goToMenu->getBoundingBox().size.height / 2));
     play->addTouchEventListener(CC_CALLBACK_0(PausePopUp::noAction, this));
 
-    auto playTitle = cocos2d::Label::createWithTTF("CONTINUE", Variables::FONT_NAME,
+    auto playTitle = cocos2d::Label::createWithTTF(LocalizedStrings::getInstance()->getString("CONTINUE"), Variables::FONT_NAME,
                                                    Variables::FONT_SIZE());
     playTitle->setPosition(play->getContentSize().width / 2,
                            play->getContentSize().height / 2);

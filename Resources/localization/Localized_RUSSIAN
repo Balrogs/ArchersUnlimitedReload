@@ -1,0 +1,35 @@
+{
+  "SINGLE PLAYER": "ОДИНОЧНАЯ",
+  "DUEL 2 PLAYERS": "НА ДВОИХ",
+  "MULTIPLAYER": "ПО СЕТИ",
+  "CUSTOMIZE": "НАСТРОИТЬ",
+  "WAVES": "ВОЛНЫ",
+  "DUEL": "ДУЭЛЬ",
+  "APPLE": "ЯБЛОКО",
+
+  "ARE YOU SURE?": "ВЫ УВЕРЕНЫ?",
+  "EXIT THE GAME?": "ВЫЙТИ ИЗ ИГРЫ?",
+
+  "SETTINGS": "НАСТРОЙКИ",
+  "LANGUAGE": "ЯЗЫК",
+  "RATE US" : "ОЦЕНИТЕ ИГРУ",
+  "REMOVE ADS" : "УБРАТЬ РЕКЛАМУ",
+  "MUSIC" : "МУЗЫКА",
+  "SOUNDS" : "ЗВУКИ",
+
+  "PLAYER" : "ИГРОК",
+  "BOT" : "КОМПЬЮТЕР",
+  "GAME OVER" : "ИГРА ОКОНЧЕНА",
+  "OPEN NOW" : "ОТКРЫТЬ",
+  "PAUSE": "ПАУЗА",
+  "GO TO MENU": "НАЗАД В МЕНЮ",
+  "CONTINUE" : "ПРОДОЛЖИТЬ",
+
+  "CONNECTION ERROR" : "ОШИБКА ПОДКЛЮЧЕНИЯ",
+
+  "HATS" :   "ШЛЯПЫ",
+  "BOWS" :  "ЛУКИ",
+  "ARROWS" :  "СТРЕЛЫ",
+  "GIFT" :  "ЖМИ"
+
+}
