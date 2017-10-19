@@ -95,7 +95,13 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/UIControls.cpp \
                                  ../../Classes/GameEngine/Global/BattleHistory.cpp \
                                  ../../Classes/GameEngine/Global/Misc/UI/GiftAlert.cpp \
-                                 ../../Classes/GameEngine/Objects/Environment/Gift.cpp
+                                 ../../Classes/GameEngine/Objects/Environment/Gift.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/PowerArrow.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/FrozenArrow.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/FireArrow.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/BombArrow.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/MineArrow.cpp \
+                                 ../../Classes/GameEngine/Objects/Arrows/DuelArrow.cpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes

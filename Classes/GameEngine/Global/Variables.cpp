@@ -225,6 +225,28 @@ int Variables::continueCost() {
     return 1000;
 }
 
+float Variables::MAX_ARROW_POWER() {
+    switch(Variables::_resolution){
+        case SD:
+            return 15.f;
+        case HD:
+            return 25.f;
+        case IPAD:
+            return 35.f;
+    }
+}
+
+float Variables::MIN_ARROW_POWER() {
+    switch(Variables::_resolution){
+        case SD:
+            return 1.f;
+        case HD:
+            return 1.f;
+        case IPAD:
+            return 1.f;
+    }
+}
+
 
 
 

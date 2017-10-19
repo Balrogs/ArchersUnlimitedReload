@@ -30,6 +30,10 @@ public:
     static const std::string STICKMAN_SIT_ANIMATION;
     static const std::string STICKMAN_EQUIP_IDLE_ANIMATION;
 
+    static float MAX_ARROW_POWER();
+    static float MIN_ARROW_POWER();
+
+
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node1,  cocos2d::Node *node2);
     static cocos2d::Vec2 translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node);
 

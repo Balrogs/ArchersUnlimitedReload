@@ -31,7 +31,7 @@ public:
 
     virtual void dealDamage(float d, cocos2d::Node* bone) = 0;
 
-    void setWeapon(int index);
+    void setWeapon(unsigned int index);
 
     void update() override;
 

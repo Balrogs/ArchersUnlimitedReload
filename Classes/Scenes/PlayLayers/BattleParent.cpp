@@ -3,6 +3,7 @@
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/PlayLayers/Apple/AppleMultiplayer.h>
 #include <GameEngine/Objects/Environment/HitInfo.h>
+#include <GameEngine/Global/Variables.h>
 #include "Battle.h"
 #include "Scenes/PlayLayers/Apple/AppleBattle.h"
 #include "Scenes/PlayLayers/Duel/DuelScene.h"
@@ -14,8 +15,9 @@ USING_NS_CC;
 
 
 
-const float  BattleParent::MAX_ARROW_POWER = 25.f;
-const float  BattleParent::MIN_ARROW_POWER = 1.f;
+const float  BattleParent::MAX_ARROW_POWER = Variables::MAX_ARROW_POWER();
+const float  BattleParent::MIN_ARROW_POWER = Variables::MIN_ARROW_POWER();
+
 float  BattleParent::GROUND = 0.f;
 const float  BattleParent::G = -0.15f;
 

@@ -334,6 +334,13 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/BattleHistory.cpp
         Classes/GameEngine/Global/Misc/UI/GiftAlert.cpp
         Classes/GameEngine/Objects/Environment/Gift.cpp
+        Classes/GameEngine/Objects/Arrows/PowerArrow.cpp
+        Classes/GameEngine/Objects/Arrows/FrozenArrow.cpp
+        Classes/GameEngine/Objects/Arrows/FireArrow.cpp
+        Classes/GameEngine/Objects/Arrows/BombArrow.cpp
+        Classes/GameEngine/Objects/Arrows/MineArrow.cpp
+        Classes/GameEngine/Objects/Arrows/DuelArrow.cpp
+
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -371,7 +378,14 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/UIControls.h
         Classes/GameEngine/Global/BattleHistory.h
         Classes/GameEngine/Global/Misc/UI/GiftAlert.h
-        Classes/GameEngine/Objects/Environment/Gift.h)
+        Classes/GameEngine/Objects/Environment/Gift.h
+        Classes/GameEngine/Objects/Arrows/PowerArrow.h
+        Classes/GameEngine/Objects/Arrows/FrozenArrow.h
+        Classes/GameEngine/Objects/Arrows/FireArrow.h
+        Classes/GameEngine/Objects/Arrows/BombArrow.h
+        Classes/GameEngine/Objects/Arrows/MineArrow.h
+        Classes/GameEngine/Objects/Arrows/DuelArrow.h
+        )
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

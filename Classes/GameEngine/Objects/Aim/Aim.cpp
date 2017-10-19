@@ -59,7 +59,7 @@ void Aim::set_aiming(bool _aiming) {
         }
     } else {
         for (int i = 0; i < _aimPreviewCount; i++) {
-            _addAimPreview(setScale(i), setPosition(i), Color4F::BLACK);
+            _addAimPreview(setScale(i), setPosition(i), Color4F::WHITE);
         }
 
     }
@@ -72,12 +72,12 @@ void Aim::set_aimRadian(float _aimRadian) {
 }
 
 void Aim::set_aimPower(float _aimPower) {
-    Aim::_aimPower = _aimPower;
+    Aim::_aimPower = _aimPower * 1.5f;
     _update();
 }
 
 float Aim::get_aimPower() const {
-    return _aimPower;
+    return _aimPower / 1.5f;
 }
 
 float Aim::setScale(int i) {
@@ -112,5 +112,15 @@ void Aim::disable() {
         _addAimPreview(child->getScale(), child->getPosition(), Color4F::GRAY);
         child->removeFromParent();
     }
+
+    for (auto child : this->getChildren()) {
+        child->runAction(Sequence::create(
+                FadeOut::create(15.f),
+                RemoveSelf::create(),
+                NULL
+        ));
+    }
+
+
 }
 

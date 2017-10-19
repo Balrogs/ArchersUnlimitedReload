@@ -6,6 +6,18 @@
 #include "cocos2d.h"
 
 class Arrow : public DragonObject {
+public:
+    Arrow(const std::string &armatureName, float radian, float power, const cocos2d::Vec2 &position,
+              int player_id);
+
+    virtual bool processContact(cocos2d::Node *bone);
+
+    virtual void addToNode(cocos2d::Node *bone);
+
+    virtual void update(float dt);
+
+    ~Arrow();
+
 protected:
     float _speedX;
     float _damage;
@@ -14,112 +26,20 @@ protected:
     bool _isActive;
     int _player_id;
     float _x_limit;
+
     cocos2d::Vec2 _head;
     cocos2d::Vec2 _tail;
 
-    void _updateAnimation() override ;
-    void update() override ;
+    void _updateAnimation() override;
+    void update() override;
 
-public:
-    Arrow(const std::string &armatureName, float radian, float power, const cocos2d::Vec2 &position,
-              int player_id);
-    virtual bool processContact(cocos2d::Node *bone);
-    virtual void addToNode(cocos2d::Node *bone);
-    ~Arrow();
-    virtual void update(float dt);
-
-protected:
     virtual void _disableArrow();
     virtual void afterAction();
 
     void addToBox(cocos2d::Node *bone);
-};
-
-
-class PowerArrow : public Arrow {
-
-public:
-
-    PowerArrow(const std::string &armatureName, float radian, float power,
-               const cocos2d::Vec2 &position, int player_id);
-
-    bool processContact(cocos2d::Node *bone) override;
-
-    ~PowerArrow();
-};
-
-class FrozenArrow : public Arrow {
-
-public:
-
-    FrozenArrow(const std::string &armatureName, float radian, float power,
-               const cocos2d::Vec2 &position, int player_id);
-
-    void update(float dt) override ;
-
-    bool processContact(cocos2d::Node *bone) override;
-
-    ~FrozenArrow();
 
 };
 
-class FireArrow : public Arrow {
-
-public:
-
-    FireArrow(const std::string &armatureName, float radian, float power,
-               const cocos2d::Vec2 &position, int player_id);
-
-    void update(float dt) override ;
-
-    bool processContact(cocos2d::Node *bone) override;
-
-    ~FireArrow();
-};
-
-class BombArrow : public Arrow {
-
-public:
-
-    BombArrow(const std::string &armatureName, float radian, float power,
-              const cocos2d::Vec2 &position, int player_id);
-
-    bool processContact(cocos2d::Node *bone) override;
-
-protected:
-    void afterAction() override ;
-    void _disableArrow() override;
-};
-
-class MineArrow : public Arrow {
-
-public:
-
-    void update(float dt) override ;
-
-    MineArrow(const std::string &armatureName, float radian, float power,
-              const cocos2d::Vec2 &position, int player_id);
-
-    bool processContact(cocos2d::Node *bone) override;
-
-    ~MineArrow();
-};
-
-class DuelArrow : public Arrow {
-
-public:
-
-    void update(float dt) override ;
-
-    DuelArrow(const std::string &armatureName, float radian, float power,
-              const cocos2d::Vec2 &position, int player_id);
-
-    bool processContact(cocos2d::Node *bone) override;
-
-    ~DuelArrow();
-
-    int lifePeriod;
-};
 
 
 #endif //DRAGONBONES_ARROW_H

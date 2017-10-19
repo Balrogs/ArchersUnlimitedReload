@@ -2,6 +2,12 @@
 #include <GameEngine/Global/Variables.h>
 #include <Scenes/PlayLayers/BattleParent.h>
 #include <Scenes/PlayLayers/Duel/DuelScene2P.h>
+#include <GameEngine/Objects/Arrows/PowerArrow.h>
+#include <GameEngine/Objects/Arrows/FrozenArrow.h>
+#include <GameEngine/Objects/Arrows/FireArrow.h>
+#include <GameEngine/Objects/Arrows/BombArrow.h>
+#include <GameEngine/Objects/Arrows/MineArrow.h>
+#include <GameEngine/Objects/Arrows/DuelArrow.h>
 #include "Hero.h"
 #include "Stickman.h"
 
@@ -230,7 +236,7 @@ void Hero::switchWeapon(int dest) {
 }
 
 
-void Hero::setWeapon(int index) {
+void Hero::setWeapon(unsigned int index) {
 
     _weaponIndex = index;
 
