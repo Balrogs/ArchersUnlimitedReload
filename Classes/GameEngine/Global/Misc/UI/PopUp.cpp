@@ -581,3 +581,25 @@ void WaitingPopUp::update(float dt) {
         _message->setString(StringUtils::toString(_waitingTime - _counter) + " s");
     }
 }
+
+bool RateUsPopUp::init() {
+    auto title = LocalizedStrings::getInstance()->getString("RATE US");
+    Node* message = Node::create();
+    return PopUp::init(title, message, true);
+}
+
+void RateUsPopUp::noAction() {
+    this->getParent()->getEventDispatcher()->resumeEventListenersForTarget(this->getParent(), true);
+    this->removeFromParent();
+}
+
+void RateUsPopUp::yesAction() {
+    this->getParent()->getEventDispatcher()->resumeEventListenersForTarget(this->getParent(), true);
+    this->removeFromParent();
+    //TODO redirect to store to rate app
+}
+
+void RateUsPopUp::okAction() {
+    this->getParent()->getEventDispatcher()->resumeEventListenersForTarget(this->getParent(), true);
+    this->removeFromParent();
+}

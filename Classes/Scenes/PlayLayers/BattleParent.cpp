@@ -2,12 +2,8 @@
 #include <GameEngine/Global/Misc/UI/PopUp.h>
 #include <Localization/LocalizedStrings.h>
 #include <Scenes/PlayLayers/Apple/AppleMultiplayer.h>
-#include <GameEngine/Objects/Environment/HitInfo.h>
 #include <GameEngine/Global/Variables.h>
 #include "Battle.h"
-#include "Scenes/PlayLayers/Apple/AppleBattle.h"
-#include "Scenes/PlayLayers/Duel/DuelScene.h"
-#include "Scenes/PlayLayers/Duel/DuelScene2P.h"
 #include "Scenes/PlayLayers/Duel/DuelSceneMultiplayer.h"
 #include "GameOverScene.h"
 

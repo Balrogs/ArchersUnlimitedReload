@@ -223,8 +223,6 @@ bool Selector::init(Rect rect, Vec2 center, float rotation, int index, Item::Typ
         _items.push_back(item);
     }
 
-    //TODO add arrows
-
     return true;
 }
 
@@ -275,6 +273,9 @@ void Selector::_setItem(int index, float mainScale, float mainDuration, float sc
             } else {
                 pos = _end - delta;
             }
+
+            CCLOG("Delta %f, %f", delta.x, delta.y);
+            CCLOG("Pos %f, %f", pos.x, pos.y);
 
             action = CallFunc::create([&]() {
 
@@ -334,6 +335,7 @@ void Selector::onFocused(bool focused) {
 
         FiniteTimeAction *setItems = CallFunc::create([&]() {
             _setItem(_index, 1.f, 0.f, 1.f, .6f);
+            _addArrows();
         });
 
         this->runAction(Sequence::create(
@@ -346,12 +348,21 @@ void Selector::onFocused(bool focused) {
     } else {
         _setItem(_index, 0.f, 0.f, 0.f, .6f);
         shoulders->getAnimation().fadeIn("equipment_idle", -1.f, 1);
+        _removeArrows();
     }
 }
 
 void Selector::_changeAction(Selector::Action action) {
     if (_action != action) {
         _action = action;
+    }
+}
+
+void Selector::_removeArrows() {
+    for(auto child : this->getChildren()){
+        if(child->getTag() == 1){
+            child->removeFromParent();
+        }
     }
 }
 
@@ -502,7 +513,30 @@ void SelectorHorizontal::scroll(int x, int y) {
 Rect SelectorHorizontal::_getFocusedRect() {
     return Rect(Vec2(_center.x - _rect.size.width / 2, _center.y - _rect.size.height / 2),
                 Size(_rect.size.width,
-                     _rect.size.height));;
+                     _rect.size.height));
+}
+
+void SelectorHorizontal::_addArrows() {
+    auto up = Sprite::createWithSpriteFrameName(Variables::UI_ARROW);
+    auto down = Sprite::createWithSpriteFrameName(Variables::UI_ARROW);
+
+    up->setScale(0.5f);
+    down->setScale(0.5f);
+
+    up->setPosition(Vec2(
+            _rect.getMaxX() - up->getContentSize().width / 3,
+            _rect.getMaxY()
+    ));
+    down->setPosition(Vec2(
+            _rect.getMinX() + down->getContentSize().width / 3,
+            _rect.getMaxY()
+    ));
+
+    up->setRotation(180);
+    down->setRotation(0);
+
+    this->addChild(up, 0, 1);
+    this->addChild(down, 0, 1);
 }
 
 
@@ -530,7 +564,7 @@ Vec2 SelectorVertical::_getBegin(Rect rect) {
 Vec2 SelectorVertical::_getEnd(Rect rect) {
     return Vec2(
             _center.x,
-            2 * _center.y - rect.getMinY());
+            rect.getMaxY());
 }
 
 void SelectorVertical::scroll(int x, int y) {
@@ -560,9 +594,48 @@ void SelectorVertical::scroll(int x, int y) {
 }
 
 Rect SelectorVertical::_getFocusedRect() {
-    return Rect(Vec2(_center.x - _rect.size.width, _center.y - _rect.size.height),
+    return Rect(Vec2(_center.x - _rect.size.width / 2, _center.y - _rect.size.height / 2),
                 Size(_rect.size.width,
-                     2 *_rect.size.height));;
+                     _rect.size.height));
+}
+
+void SelectorVertical::_addArrows() {
+    auto up = Sprite::createWithSpriteFrameName(Variables::UI_ARROW);
+    auto down = Sprite::createWithSpriteFrameName(Variables::UI_ARROW);
+
+    up->setScale(0.5f);
+    down->setScale(0.5f);
+
+    auto xPos = 0.f;
+    switch(_type){
+        case  Item::Type::Arrow : {
+            xPos = _rect.getMinX();
+            break;
+        }
+        case  Item::Type::Bow : {
+            xPos = _rect.getMaxX();
+            break;
+        }
+        default : {
+            xPos = _center.x;
+            break;
+        }
+    }
+
+    up->setPosition(Vec2(
+            xPos,
+            _rect.getMaxY() - up->getContentSize().height / 3
+    ));
+    down->setPosition(Vec2(
+            xPos,
+            _rect.getMinY() + down->getContentSize().height / 3
+    ));
+
+    up->setRotation(90);
+    down->setRotation(-90);
+
+    this->addChild(up, 0, 1);
+    this->addChild(down, 0, 1);
 }
 
 SelectorTrigger *SelectorTrigger::create(Selector *selector) {

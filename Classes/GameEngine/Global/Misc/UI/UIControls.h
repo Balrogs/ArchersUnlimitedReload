@@ -65,6 +65,8 @@ protected:
     virtual Vec2 _getBegin(Rect rect) = 0;
     virtual Vec2 _getEnd(Rect rect) = 0;
     virtual Rect _getFocusedRect() = 0;
+    virtual void _addArrows() = 0;
+    virtual void _removeArrows();
 
     void _setItem(int index, float mainScale, float mainDuration, float scale, float duration);
 
@@ -82,6 +84,7 @@ protected:
     virtual Vec2 _getBegin(Rect rect);
     virtual Vec2 _getEnd(Rect rect);
     virtual Rect _getFocusedRect();
+    virtual void _addArrows();
 };
 
 class SelectorVertical : public Selector {
@@ -96,6 +99,7 @@ protected:
     virtual Vec2 _getBegin(Rect rect);
     virtual Vec2 _getEnd(Rect rect);
     virtual Rect _getFocusedRect();
+    virtual void _addArrows();
 };
 
 class SelectorTrigger : public Node {

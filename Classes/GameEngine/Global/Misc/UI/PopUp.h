@@ -132,5 +132,19 @@ protected:
     cocos2d::ui::Button *_ok;
 };
 
+class RateUsPopUp : public PopUp {
+public:
+    CREATE_FUNC(RateUsPopUp);
+    bool init() override;
+
+protected:
+
+    void noAction() override ;
+
+    void yesAction() override;
+
+    void okAction() override;
+};
+
 
 #endif //ARCHERSUNLIMITED_POPUP_H
