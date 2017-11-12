@@ -16,20 +16,21 @@ LocalizedStrings *LocalizedStrings::getInstance() {
 void LocalizedStrings::setLanguage(string language) {
     _language = language;
     string filepath = "Localized_" + language;
-    _document = cocos2d::FileUtils::getInstance()->getStringFromFile(filepath);
+    auto str = cocos2d::FileUtils::getInstance()->getStringFromFile(filepath);
+    _document = nullptr;
+    _document.Parse(str.c_str());
+
+    if(_document.HasParseError()){
+        setLanguage("ENGLISH");
+    }
 }
 
 const char *LocalizedStrings::getString(const char *message) {
-    Document document;
-    document.Parse(_document.c_str());
 
-    if(document.HasParseError()){
-        setLanguage("ENGLISH");
-    }
-    if (document.HasMember(message) && document[message].IsString()) {
-        return document[message].GetString();
+    if (_document.HasMember(message) && _document[message].IsString()) {
+        return _document[message].GetString();
     } else {
-        CCLOG(message);
+        //CCLOG(message);
 
         return message;
     }

@@ -101,7 +101,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                                  ../../../Classes/GameEngine/Objects/Arrows/FireArrow.cpp \
                                  ../../../Classes/GameEngine/Objects/Arrows/BombArrow.cpp \
                                  ../../../Classes/GameEngine/Objects/Arrows/MineArrow.cpp \
-                                 ../../../Classes/GameEngine/Objects/Arrows/DuelArrow.cpp
+                                 ../../../Classes/GameEngine/Objects/Arrows/DuelArrow.cpp \
+                                 ../../../Classes/Scenes/MenuLayers/Main/DailyGiftScene.сpp
 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes

@@ -340,7 +340,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Arrows/BombArrow.cpp
         Classes/GameEngine/Objects/Arrows/MineArrow.cpp
         Classes/GameEngine/Objects/Arrows/DuelArrow.cpp
-
+	    Classes/Scenes/MenuLayers/Main/DailyGiftScene.cpp
 
         Classes/GameEngine/Objects/Environment/Ground.h
         Classes/Scenes/PlayLayers/Duel/DuelScene2P.h
@@ -385,6 +385,8 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Arrows/BombArrow.h
         Classes/GameEngine/Objects/Arrows/MineArrow.h
         Classes/GameEngine/Objects/Arrows/DuelArrow.h
+        Classes/GameEngine/Objects/Arrows/DuelArrow.h
+	    Classes/Scenes/MenuLayers/Main/DailyGiftScene.h
         )
 
 if( ANDROID )

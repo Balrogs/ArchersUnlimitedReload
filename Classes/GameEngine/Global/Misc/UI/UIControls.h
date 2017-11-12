@@ -135,6 +135,7 @@ protected:
     HeroPreview* _hero;
     std::vector<SelectorTrigger*> _triggers;
     int _touch;
+    bool _busy;
 
     SelectorTrigger* _focusedTrigger;
 

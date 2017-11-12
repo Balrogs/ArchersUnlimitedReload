@@ -32,7 +32,6 @@ Stickman::Stickman(float x_pos, float y_pos, float scale, int hp): Body(x_pos, y
         physicsBody->setName(bone->name);
         physicsBody->setContactTestBitmask(true);
     }
-    _armature->removeSlot(_armature->getSlot("Apple"));
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
     this->setPosition(_x_pos, _y_pos);

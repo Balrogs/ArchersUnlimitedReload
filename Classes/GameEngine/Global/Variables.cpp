@@ -3,18 +3,19 @@
 
 Resolution Variables::_resolution = Resolution::HD;
 
-const std::string  Variables::HERO_IDLE_ANIMATION = "idle_1";
 const std::string  Variables::SHOT_ANIMATION = "shot";
 const std::string  Variables::AIM_ANIMATION = "aim";
 const std::string  Variables::AIM_IDLE_ANIMATION = "idle";
 
+
+const std::string Variables::EQUIPMENT_ARROW_ANIMATION = "equipment_arrow";
+const std::string Variables::EQUIPMENT_BOW_ANIMATION = "equipment_bow";
+
 const std::string Variables::STICKMAN_SETUP_ANIMATION = "setup";
-const std::string Variables::STICKMAN_IDLE_ANIMATION = "idle_1";
-const std::string Variables::STICKMAN_RUN_ANIMATION = "run_1";
+const std::string Variables::STICKMAN_IDLE_ANIMATION = "idle";
 const std::string Variables::STICKMAN_WALK_ANIMATION = "walk";
 const std::string Variables::STICKMAN_SIT_ANIMATION = "sit";
 const std::string Variables::STICKMAN_UP_ANIMATION = "up";
-const std::string Variables::STICKMAN_EQUIP_IDLE_ANIMATION = "equipment1";
 
 cocos2d::Vec2 Variables::translatePoint(cocos2d::Vec3 localPoint, cocos2d::Node *node1,
                                         cocos2d::Node *node2) {
@@ -223,6 +224,14 @@ int Variables::wheelCost() {
 
 int Variables::continueCost() {
     return 1000;
+}
+
+bool Variables::hasEnding (std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
 }
 
 float Variables::MAX_ARROW_POWER() {

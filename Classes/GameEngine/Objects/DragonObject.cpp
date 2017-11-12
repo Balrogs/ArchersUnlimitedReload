@@ -96,8 +96,6 @@ HeroPreview::HeroPreview() {
 
     _armature->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION);
 
-    _armature->removeSlot(_armature->getSlot("Apple"));
-
      _shoulders = _armature->getSlot("Hands")->getChildArmature();
      _shouldersDisplay = (dragonBones::CCArmatureDisplay *) _shoulders->getDisplay();
 

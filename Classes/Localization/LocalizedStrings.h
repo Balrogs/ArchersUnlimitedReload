@@ -16,7 +16,7 @@ public:
 
 private:
     string _language;
-    string _document;
+    Document _document;
 };
 
 #endif //ARCHERSUNLIMITED_LOCALIZEDSTRINGS_H

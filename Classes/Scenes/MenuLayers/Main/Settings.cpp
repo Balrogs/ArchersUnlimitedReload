@@ -126,37 +126,6 @@ bool Settings::init() {
 
     this->addChild(language, 2);
 
-//    auto rate = cocos2d::ui::Button::create();
-//    rate->loadTextures(Variables::GREEN_BUTTON, Variables::GREEN_PRESSED_BUTTON,
-//                       Variables::GREEN_BUTTON, cocos2d::ui::Widget::TextureResType::PLIST);
-//
-//    rate->addTouchEventListener([&](cocos2d::Ref *sender, cocos2d::ui::Widget::TouchEventType type) {
-//        switch (type) {
-//            case cocos2d::ui::Widget::TouchEventType::ENDED: {
-//                //TODO add action here
-//            }
-//                break;
-//            default:
-//                break;
-//        }
-//    });
-//
-//    rate->setPosition(Vec2(_languageBox->getPosition().x,
-//                           _languageBox->getPosition().y - rate->getBoundingBox().size.height - 15.f));
-//
-//    auto rate_icon = Sprite::createWithSpriteFrameName(Variables::RATE_ICON);
-//    rate_icon->setPosition(rate->getContentSize().width - rate_icon->getBoundingBox().size.width / 2 - 15.f,
-//                           rate->getContentSize().height / 2);
-//    rate->addChild(rate_icon, 5);
-//
-//    auto rate_title = cocos2d::Label::createWithTTF(  LocalizedStrings::getInstance()->getString("RATE US"), Variables::FONT_NAME,
-//                                                    Variables::FONT_SIZE());
-//    rate_title->setPosition((rate->getContentSize().width / 2 - rate_title->getContentSize().width / 2),
-//                            rate->getContentSize().height / 2);
-//    rate->addChild(rate_title, 4);
-//
-//    this->addChild(rate, 3);
-
     this->setPosition(_visibleSize.width, 0);
 
     return true;
@@ -222,7 +191,7 @@ void Settings::_reloadButtons() {
         }
     });
     _musicButton->setPosition(
-            Vec2(_bg->getBoundingBox().getMaxX() - _musicButton->getBoundingBox().size.width / 2 - 1.5f * _musicButton->getBoundingBox().size.width,
+            Vec2(_bg->getBoundingBox().getMaxX() - 3.f * _musicButton->getBoundingBox().size.width,
                  _bg->getPositionY() - _musicButton->getBoundingBox().size.height));
     this->addChild(_musicButton, 3);
 
@@ -242,7 +211,7 @@ void Settings::_reloadButtons() {
         }
     });
     _effectsButton->setPosition(
-            Vec2(_bg->getBoundingBox().getMaxX() - _effectsButton->getBoundingBox().size.width / 2 - 1.5f * _effectsButton->getBoundingBox().size.width,
+            Vec2(_musicButton->getPositionX(),
                  _bg->getPositionY() + _effectsButton->getBoundingBox().size.height));
     this->addChild(_effectsButton, 3);
 }
@@ -286,6 +255,7 @@ void Settings::_showScrollView() {
                         case cocos2d::ui::Widget::TouchEventType::ENDED: {
                             cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
                             def->setStringForKey("LANGUAGE", language);
+                            LocalizedStrings::getInstance()->setLanguage(language);
                             onQuit();
                             break;
                         }

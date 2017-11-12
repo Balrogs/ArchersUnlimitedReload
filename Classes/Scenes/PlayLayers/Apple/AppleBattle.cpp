@@ -1,6 +1,7 @@
 #include <GameEngine/Objects/Environment/Apple.h>
 #include <GameEngine/Objects/Environment/Box.h>
 #include <GameEngine/Brains/Brain.h>
+#include <Localization/LocalizedStrings.h>
 #include "AppleBattle.h"
 
 USING_NS_CC;
@@ -91,7 +92,7 @@ void AppleBattle::_nextLevelAction() {
 
     _env->removeAllChildren();
 
-    _ui->setWarning("SHOOT APPLE", Color3B::BLACK);
+    _ui->setWarning(LocalizedStrings::getInstance()->getString("SHOOT APPLE"), Color3B::BLACK);
 
     switch (_stats->getLevel()) {
         case 0: {
@@ -508,10 +509,10 @@ void AppleBattle::completeShot() {
 
     auto shotsLeft = _shotsLimit - _completedShots;
     if (shotsLeft == 1) {
-        _ui->setWarning(StringUtils::format("%d SHOT LEFT", shotsLeft).c_str(), Color3B::RED);
+        _ui->setWarning(StringUtils::format("%d %s", shotsLeft, LocalizedStrings::getInstance()->getString("SHOT LEFT")).c_str(), Color3B::RED);
     } else if (shotsLeft <= 2) {
-        _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::RED);
+        _ui->setWarning(StringUtils::format("%d %s", shotsLeft, LocalizedStrings::getInstance()->getString("SHOTS LEFT")).c_str(), Color3B::RED);
     } else {
-        _ui->setWarning(StringUtils::format("%d SHOTS LEFT", shotsLeft).c_str(), Color3B::BLACK);
+        _ui->setWarning(StringUtils::format("%d %s", shotsLeft, LocalizedStrings::getInstance()->getString("SHOTS LEFT")).c_str(), Color3B::BLACK);
     }
 }

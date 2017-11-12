@@ -89,7 +89,7 @@ bool SplashScene::init() {
     if(def->getStringForKey("LANGUAGE", "").length() == 0){
         def->setStringForKey("LANGUAGE", language.c_str());
     } else {
-        language = def->getStringForKey("LANGUAGE", "");
+        language = def->getStringForKey("LANGUAGE", "ENGLISH");
     }
 
     LocalizedStrings::getInstance()->setLanguage(language);

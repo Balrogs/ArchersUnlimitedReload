@@ -18,11 +18,11 @@ std::string Item::boneName(Item::Type v) {
 std::string Item::animationName(Item::Type v) {
     switch (v) {
         case Arrow:
-            return "equipment_arrow";
+            return Variables::EQUIPMENT_ARROW_ANIMATION;
         case Bow:
-            return "equipment_bow";
+            return Variables::EQUIPMENT_BOW_ANIMATION;
         case Hat:
-            return "equipment_idle";
+            return Variables::STICKMAN_IDLE_ANIMATION;
     }
 }
 
@@ -145,19 +145,44 @@ bool UIControls::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event 
     } else {
         return false;
     }
+    if(!_busy){
+        for(auto t : _triggers){
+            if(t->isTouched(touch->getLocation())){
+                _busy = true;
 
-    for(auto t : _triggers){
-        if(t->isTouched(touch->getLocation())){
-            if(_focusedTrigger != nullptr){
-                _focusedTrigger->resume();
+                auto hidePrevSelector = CallFunc::create([&](){
+                    if(_focusedTrigger != nullptr){
+                        _focusedTrigger->resume();
+                    }
+                });
+
+                auto delay = 0.f;
+                if(_focusedTrigger != nullptr){
+                    delay = .7f;
+                }
+
+                auto showNewSelector = CallFunc::create([&, t](){
+                    _focusedTrigger = t;
+                    t->stop();
+                });
+
+                auto setFree = CallFunc::create([&](){
+                    _busy = false;
+                });
+
+                this->runAction(Sequence::create(
+                        hidePrevSelector,
+                        DelayTime::create(delay),
+                        showNewSelector,
+                        DelayTime::create(1.4f),
+                        setFree,
+                        NULL
+                ));
             }
-
-            t->stop();
-            _focusedTrigger = t;
         }
     }
-
     return true;
+
 }
 
 bool UIControls::_touchHandlerMove(const cocos2d::Touch *touch, cocos2d::Event *event) {
@@ -274,9 +299,6 @@ void Selector::_setItem(int index, float mainScale, float mainDuration, float sc
                 pos = _end - delta;
             }
 
-            CCLOG("Delta %f, %f", delta.x, delta.y);
-            CCLOG("Pos %f, %f", pos.x, pos.y);
-
             action = CallFunc::create([&]() {
 
             });
@@ -347,7 +369,10 @@ void Selector::onFocused(bool focused) {
 
     } else {
         _setItem(_index, 0.f, 0.f, 0.f, .6f);
-        shoulders->getAnimation().fadeIn("equipment_idle", -1.f, 1);
+        auto lastAnimation = shoulders->getAnimation().getLastAnimationName();
+        if(lastAnimation != Variables::STICKMAN_IDLE_ANIMATION){
+            shoulders->getAnimation().fadeIn(lastAnimation + "_reverse", -1.f, 1);
+        }
         _removeArrows();
     }
 }

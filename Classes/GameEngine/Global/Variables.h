@@ -17,18 +17,18 @@ enum Resolution {
 class Variables {
 
 public:
-    static const std::string HERO_IDLE_ANIMATION;
     static const std::string SHOT_ANIMATION;
     static const std::string AIM_ANIMATION;
     static const std::string AIM_IDLE_ANIMATION;
 
+    static const std::string EQUIPMENT_ARROW_ANIMATION;
+    static const std::string EQUIPMENT_BOW_ANIMATION;
+
     static const std::string STICKMAN_IDLE_ANIMATION;
     static const std::string STICKMAN_SETUP_ANIMATION;
-    static const std::string STICKMAN_RUN_ANIMATION;
     static const std::string STICKMAN_WALK_ANIMATION;
     static const std::string STICKMAN_UP_ANIMATION;
     static const std::string STICKMAN_SIT_ANIMATION;
-    static const std::string STICKMAN_EQUIP_IDLE_ANIMATION;
 
     static float MAX_ARROW_POWER();
     static float MIN_ARROW_POWER();
@@ -160,6 +160,8 @@ public:
     static float getBoneFactor(std::string name);
     static int wheelCost();
     static int continueCost();
+
+    static bool hasEnding(const std::string &fullString, const std::string &ending);
 
 private:
     static Resolution _resolution;

@@ -30,6 +30,8 @@
   "HATS" :   "HATS",
   "BOWS" :  "BOWS",
   "ARROWS" :  "ARROWS",
-  "GIFT" :  "GIFT"
-
+  "GIFT" :  "GIFT",
+  "SHOOT APPLE" :  "SHOOT APPLE",
+  "SHOTS LEFT" :  "SHOTS LEFT",
+  "SHOT LEFT" :  "SHOT LEFT"
 }

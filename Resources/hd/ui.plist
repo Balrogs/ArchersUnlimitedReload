@@ -59,7 +59,7 @@
             <key>b_2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{3028,663},{60,60}}</string>
+                <string>{{3095,663},{60,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -306,7 +306,7 @@
             <key>coin.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{3406,660},{54,54}}</string>
+                <string>{{1782,630},{54,54}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -615,6 +615,19 @@
                 <key>sourceSize</key>
                 <string>{96,97}</string>
             </dict>
+            <key>rate_star.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{3028,663},{65,58}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{65,58}}</string>
+                <key>sourceSize</key>
+                <string>{65,58}</string>
+            </dict>
             <key>red_normal.png</key>
             <dict>
                 <key>frame</key>
@@ -748,7 +761,7 @@
             <key>t_1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{3090,663},{60,60}}</string>
+                <string>{{3406,660},{60,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -846,7 +859,7 @@
             <key>size</key>
             <string>{3671,734}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:2ac0f5b6922f72577bc4783cd54c2cca:c9d6b423e3e234725b802002e6b7cf0b:9f701a4fdec30af6d42d93fbb115b143$</string>
+            <string>$TexturePacker:SmartUpdate:1335f974cd9a2804f9ce7b0210c5c4a0:97ea3a5f904ac9fe156a1a88559cd46b:9f701a4fdec30af6d42d93fbb115b143$</string>
             <key>textureFileName</key>
             <string>ui.png</string>
         </dict>

@@ -77,8 +77,6 @@ Hero::Hero(float x_pos, float y_pos) : Body(x_pos, y_pos, 0.3f, 1, PlayerView::r
     _shouldersDisplay->setPosition(globalPoint);
     _shouldersDisplay->setAnchorPoint(globalPoint);
 
-    _armature->removeSlot(_armature->getSlot("Apple"));
-
     _armature->removeBone(_armature->getBone("shoulders"));
 
     _aimPowerState =  _shoulders->getAnimation().fadeIn(Variables::STICKMAN_SETUP_ANIMATION);

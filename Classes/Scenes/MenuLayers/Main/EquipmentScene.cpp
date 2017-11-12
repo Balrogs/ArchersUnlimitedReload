@@ -23,8 +23,8 @@ bool EquipmentScene::init() {
     _paused = true;
     _instance = this;
 
-    factory.loadDragonBonesData("ArcUnlimArmature.json");
-    factory.loadTextureAtlasData("texture.json");
+    factory.loadDragonBonesData("ArcUnlimArmature_ske.json");
+    factory.loadTextureAtlasData("ArcUnlimArmature_tex.json");
 
     _visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -52,8 +52,8 @@ bool EquipmentScene::init() {
 
     _hatsCount = Label::createWithTTF("", Variables::FONT_NAME, Variables::FONT_SIZE());
     _hatsCount->setPosition(Vec2(
-            _visibleSize.width * 0.8f,
-            _visibleSize.height * 0.68f)
+            _visibleSize.width * 0.7f,
+            _visibleSize.height * 0.55f)
     );
     _hatsCount->setColor(color);
     _hatsCount->setVisible(false);
@@ -112,7 +112,7 @@ bool EquipmentScene::resumeEquipment() {
     MainScene::getInstance()->runAction(
             Spawn::create(
                     ScaleTo::create(.8f, 1.2f),
-                    MoveTo::create(.8f, Vec2(0, _visibleSize.height * .1f)),
+                    MoveTo::create(.8f, Vec2(_visibleSize.width * .1f, _visibleSize.height * .1f)),
                     NULL
             )
     );
@@ -158,7 +158,7 @@ void EquipmentScene::onQuit() {
                     _bowsCount->setVisible(false);
                     _hatsCount->setVisible(false);
                     _arrowsCount->setVisible(false);
-                    _hero->getShoulders()->getAnimation().fadeIn("equipment_idle", -1.f, 1);
+                    _hero->getShoulders()->getAnimation().fadeIn(Variables::STICKMAN_IDLE_ANIMATION, -1.f, 1);
                 }
             }),
             CallFunc::create([&]() {
