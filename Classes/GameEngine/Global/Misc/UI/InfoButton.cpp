@@ -37,7 +37,7 @@ bool InfoButton::init(std::string text, std::string buttonPath) {
     );
 
 
-    _cloud = cocos2d::Sprite::createWithSpriteFrameName(Variables::GREEN_BUTTON);
+    _cloud = cocos2d::Sprite::createWithSpriteFrameName(Variables::GRAY_BUTTON);
     _cloud->setPosition(cocos2d::Vec2(
             button->getPosition().x,
             button->getBoundingBox().getMaxY()
@@ -100,6 +100,55 @@ InfoButtonTime *InfoButtonTime::create() {
     InfoButtonTime *ret = new(std::nothrow) InfoButtonTime();
 
     if (ret && ret->init("TIME LIMIT 50 SEC", Variables::FIND_BUTTON)) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool RewardInfo::init(std::string text, std::string path) {
+    return InfoButton::init(text, path);
+}
+
+
+RewardInfoCoin *RewardInfoCoin::create(int coins) {
+    RewardInfoCoin *ret = new(std::nothrow) RewardInfoCoin();
+    if (ret && ret->init("", "")) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+bool RewardInfoCoin::init(std::string text, std::string path) {
+    return RewardInfo::init(text, path);
+}
+
+RewardInfoHat *RewardInfoHat::create() {
+    RewardInfoHat *ret = new(std::nothrow) RewardInfoHat();
+    if (ret && ret->init("", "")) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+RewardInfoArrow *RewardInfoArrow::create() {
+    RewardInfoArrow *ret = new(std::nothrow) RewardInfoArrow();
+    if (ret && ret->init("", "")) {
+        ret->autorelease();
+    } else {
+        CC_SAFE_DELETE(ret);
+    }
+    return ret;
+}
+
+RewardInfoBow *RewardInfoBow::create() {
+    RewardInfoBow *ret = new(std::nothrow) RewardInfoBow();
+    if (ret && ret->init("", "")) {
         ret->autorelease();
     } else {
         CC_SAFE_DELETE(ret);

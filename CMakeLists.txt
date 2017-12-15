@@ -326,7 +326,6 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/InfoButton.cpp
         Classes/GameEngine/Global/Misc/EventInfo.cpp
         Classes/GameEngine/Global/Misc/EventScore.cpp
-        Classes/GameEngine/Global/Misc/UI/Reward.cpp
         Classes/GameEngine/Global/Misc/UI/ContinueButton.cpp
         Classes/GameEngine/Objects/Environment/HitInfo.cpp
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.cpp
@@ -371,7 +370,6 @@ set(GAME_HEADERS
         Classes/GameEngine/Global/Misc/UI/InfoButton.h
         Classes/GameEngine/Global/Misc/EventInfo.h
         Classes/GameEngine/Global/Misc/EventScore.h
-        Classes/GameEngine/Global/Misc/UI/Reward.h
         Classes/GameEngine/Global/Misc/UI/ContinueButton.h
         Classes/GameEngine/Objects/Environment/HitInfo.h
         Classes/GameEngine/Global/Misc/UI/ButtonWithPrice.h
@@ -387,7 +385,7 @@ set(GAME_HEADERS
         Classes/GameEngine/Objects/Arrows/DuelArrow.h
         Classes/GameEngine/Objects/Arrows/DuelArrow.h
 	    Classes/Scenes/MenuLayers/Main/DailyGiftScene.h
-        )
+        Classes/GameEngine/Global/Misc/UI/RewardButton.cpp Classes/GameEngine/Global/Misc/UI/RewardButton.h)
 
 if( ANDROID )
     add_library(${APP_NAME} SHARED ${GAME_SRC} ${GAME_HEADERS})

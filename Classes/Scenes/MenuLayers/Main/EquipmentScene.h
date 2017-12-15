@@ -21,6 +21,7 @@ public:
     cocos2d::Vec2 getButtonPosition();
 
     bool resumeEquipment();
+    bool resumeEquipment(int selectorId, int assetId);
 
     dragonBones::CCFactory factory;
 

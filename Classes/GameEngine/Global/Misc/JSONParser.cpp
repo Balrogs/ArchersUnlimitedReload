@@ -3,6 +3,8 @@
 #include <rapidjson/writer.h>
 #include <GameEngine/Global/Misc/UI/Views.h>
 #include <GameEngine/Global/Variables.h>
+#include <GameEngine/Global/Misc/UI/RewardButton.h>
+#include <GameEngine/Global/Misc/UI/InfoButton.h>
 #include "JSONParser.h"
 
 string JSONParser::parse(string message, string key) {
@@ -176,8 +178,8 @@ std::vector<InfoButton *> JSONParser::parseInfo(string message) {
     return infos;
 }
 
-std::vector<Reward *> JSONParser::parseRewards(string message) {
-    std::vector<Reward*> rewards;
+std::vector<RewardInfo *> JSONParser::parseRewards(string message) {
+    std::vector<RewardInfo*> rewards;
     Document document;
     document.Parse(message.c_str());
     Value& b = document["description"]["rewards"];
@@ -187,28 +189,28 @@ std::vector<Reward *> JSONParser::parseRewards(string message) {
         const Value& c = b[i];
         switch(c.GetInt()){
             case 1:
-                rewards.push_back(RewardArrow::create());
+                rewards.push_back(RewardInfoArrow::create());
                 break;
             case 2:
-                rewards.push_back(RewardBow::create());
+                rewards.push_back(RewardInfoBow::create());
                 break;
             case 3:
-                rewards.push_back(RewardHat::create());
+                rewards.push_back(RewardInfoHat::create());
                 break;
             case 4:
-                rewards.push_back(RewardCoin::create(100));
+                rewards.push_back(RewardInfoCoin::create(100));
                 break;
             case 5:
-                rewards.push_back(RewardCoin::create(250));
+                rewards.push_back(RewardInfoCoin::create(250));
                 break;
             case 6:
-                rewards.push_back(RewardCoin::create(500));
+                rewards.push_back(RewardInfoCoin::create(500));
                 break;
             case 7:
-                rewards.push_back(RewardCoin::create(750));
+                rewards.push_back(RewardInfoCoin::create(750));
                 break;
             case 8:
-                rewards.push_back(RewardCoin::create(1000));
+                rewards.push_back(RewardInfoCoin::create(1000));
                 break;
             default:
                 break;
@@ -275,4 +277,22 @@ int JSONParser::getListSize(string message) {
 //TODO
 PlayerView *JSONParser::parsePlayerView(string message) {
     return new PlayerView(2, 2, 2);
+}
+
+RewardButton* JSONParser::parseLocalRewards(int id) {
+    auto content = cocos2d::FileUtils::getInstance()->getStringFromFile(Variables::GIFT_PATH);
+    Document document;
+    document.Parse(content.c_str());
+
+    const Value& d = document["gifts"];
+
+    for (rapidjson::SizeType i = 0; i < d.Size(); i++)
+    {
+        const Value& value = d[i];
+
+        if(value["id"].GetInt() == id){
+            return RewardButton::create(value["item"].GetString(), value["value"].GetInt(), value["button"].GetString(), value["button_pressed"].GetString());
+        }
+    }
+    return RewardButtonDisabled::create();
 }

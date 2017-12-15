@@ -1,0 +1,60 @@
+{
+  "gifts": [
+    {
+      "id" : 0,
+      "item" : "GOLD",
+      "value" : 1000,
+      "button" : "gift_coin.png",
+      "button_pressed" : "gift_coin_pressed.png"
+    },
+    {
+      "id" : 1,
+      "item" : "GOLD",
+      "value" : 5000,
+      "button" : "gift_coin.png",
+      "button_pressed" : "gift_coin_pressed.png"
+    },
+    {
+      "id" : 2,
+      "item" : "GOLD",
+      "value" : 7500,
+      "button" : "gift_coin.png",
+      "button_pressed" : "gift_coin_pressed.png"
+    },
+    {
+      "id" : 3,
+      "item" : "ARROW",
+      "value" : 6,
+      "button" : "gift_arrow.png",
+      "button_pressed" : "gift_arrow_pressed.png"
+    },
+    {
+      "id" : 4,
+      "item" : "BOW",
+      "value" : 3,
+      "button" : "gift_bow.png",
+      "button_pressed" : "gift_bow_pressed.png"
+    },
+    {
+      "id" : 5,
+      "item" : "HAT",
+      "value" : 29,
+      "button" : "gift_hat_1.png",
+      "button_pressed" : "gift_hat_1_pressed.png"
+    },
+    {
+      "id" : 6,
+      "item" : "HAT",
+      "value" : 19,
+      "button" : "gift_hat_2.png",
+      "button_pressed" : "gift_hat_2_pressed.png"
+    },
+    {
+      "id" : 7,
+      "item" : "HAT",
+      "value" : 9,
+      "button" : "gift_hat_3.png",
+      "button_pressed" : "gift_hat_3_pressed.png"
+    }
+  ]
+}

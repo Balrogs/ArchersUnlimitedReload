@@ -148,36 +148,7 @@ bool UIControls::_touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event 
     if(!_busy){
         for(auto t : _triggers){
             if(t->isTouched(touch->getLocation())){
-                _busy = true;
-
-                auto hidePrevSelector = CallFunc::create([&](){
-                    if(_focusedTrigger != nullptr){
-                        _focusedTrigger->resume();
-                    }
-                });
-
-                auto delay = 0.f;
-                if(_focusedTrigger != nullptr){
-                    delay = .7f;
-                }
-
-                auto showNewSelector = CallFunc::create([&, t](){
-                    _focusedTrigger = t;
-                    t->stop();
-                });
-
-                auto setFree = CallFunc::create([&](){
-                    _busy = false;
-                });
-
-                this->runAction(Sequence::create(
-                        hidePrevSelector,
-                        DelayTime::create(delay),
-                        showNewSelector,
-                        DelayTime::create(1.4f),
-                        setFree,
-                        NULL
-                ));
+                _setSelector(t);
             }
         }
     }
@@ -207,6 +178,44 @@ bool UIControls::_touchHandlerEnd(const cocos2d::Touch *touch, cocos2d::Event *e
     _focusedTrigger->getSelector()->scroll(x, y);
 
     return true;
+}
+
+void UIControls::triggerSelector(int id, int assetId) {
+    _triggers[id]->getSelector()->setIndex(assetId);
+    _setSelector(_triggers[id]);
+}
+
+void UIControls::_setSelector(SelectorTrigger *trigger) {
+    _busy = true;
+
+    auto hidePrevSelector = CallFunc::create([&](){
+        if(_focusedTrigger != nullptr){
+            _focusedTrigger->resume();
+        }
+    });
+
+    auto delay = 0.f;
+    if(_focusedTrigger != nullptr){
+        delay = .7f;
+    }
+
+    auto showNewSelector = CallFunc::create([&, trigger](){
+        _focusedTrigger = trigger;
+        trigger->stop();
+    });
+
+    auto setFree = CallFunc::create([&](){
+        _busy = false;
+    });
+
+    this->runAction(Sequence::create(
+            hidePrevSelector,
+            DelayTime::create(delay),
+            showNewSelector,
+            DelayTime::create(1.4f),
+            setFree,
+            NULL
+    ));
 }
 
 bool Selector::init(Rect rect, Vec2 center, float rotation, int index, Item::Type type) {
@@ -389,6 +398,10 @@ void Selector::_removeArrows() {
             child->removeFromParent();
         }
     }
+}
+
+void Selector::setIndex(int index) {
+    _index = index;
 }
 
 Item *Item::create(Node *view, int ind, Type type, bool isAvailable = true) {

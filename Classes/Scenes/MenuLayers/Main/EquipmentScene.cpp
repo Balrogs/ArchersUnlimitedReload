@@ -133,6 +133,22 @@ bool EquipmentScene::resumeEquipment() {
     return true;
 }
 
+bool EquipmentScene::resumeEquipment(int selectorId, int assetId) {
+    if(!resumeEquipment()){
+        return false;
+    }
+
+
+    this->runAction(Sequence::create(
+            DelayTime::create(.85f),
+            CallFunc::create([&, selectorId, assetId]() {
+                _controls->triggerSelector(selectorId, assetId);
+            }),
+            NULL));
+
+    return true;
+}
+
 void EquipmentScene::onQuit() {
     if(_busy){
         return;

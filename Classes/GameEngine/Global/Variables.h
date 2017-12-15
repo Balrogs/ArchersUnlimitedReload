@@ -48,6 +48,7 @@ public:
     static const int GIFT_COST;
 
     static const std::string FONT_NAME;
+    static float FONT_SIZE_S();
     static float FONT_SIZE();
     static float FONT_SIZE_2();
     static float H_FONT_SIZE();
@@ -156,6 +157,10 @@ public:
 
 
     static const std::string ASSETS_PATH;
+
+    static const std::string GIFT_HIGHTLIGHT;
+    static const std::string GIFT_DISABLED;
+    static const std::string GIFT_PATH;
 
     static float getBoneFactor(std::string name);
     static int wheelCost();

@@ -6,6 +6,8 @@
 #include "GameEngine/Global/Misc/UI/Asset.h"
 #include "EventInfo.h"
 #include <GameEngine/Global/Misc/UI/Views.h>
+#include <GameEngine/Global/Misc/UI/RewardButton.h>
+#include <GameEngine/Global/Misc/UI/InfoButton.h>
 
 using namespace rapidjson;
 using namespace std;
@@ -34,10 +36,11 @@ public:
     static EventInfo* parseEvent(string message);
 
     static PlayerView *parsePlayerView(string message);
+    static RewardButton* parseLocalRewards(int id);
 
 private:
     static std::vector<InfoButton*> parseInfo(string message);
-    static std::vector<Reward*> parseRewards(string message);
+    static std::vector<RewardInfo*> parseRewards(string message);
     static std::vector<EventScore*> parseEventScore(string message);
 
 };

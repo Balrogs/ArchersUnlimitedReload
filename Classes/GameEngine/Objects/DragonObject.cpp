@@ -123,8 +123,6 @@ HeroPreview::HeroPreview() {
 }
 
 void HeroPreview::changeHat(int id) {
-
-    CCLOG("HAT ID %d",id);
     if(id == -1){
         _changeHat("Hat");
     } else {

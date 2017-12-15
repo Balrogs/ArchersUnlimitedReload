@@ -50,6 +50,8 @@ public:
 
     Item::Type getType();
 
+    void setIndex(int index);
+
 protected:
     int _index;
     Vec2 _center;
@@ -131,6 +133,8 @@ public:
 
     HeroPreview* getHero();
 
+    void triggerSelector(int id, int assetId);
+
 protected:
     HeroPreview* _hero;
     std::vector<SelectorTrigger*> _triggers;
@@ -138,6 +142,8 @@ protected:
     bool _busy;
 
     SelectorTrigger* _focusedTrigger;
+
+    void _setSelector(SelectorTrigger* trigger);
 
     bool _touchHandlerBegin(const cocos2d::Touch *touch, cocos2d::Event *event);
 

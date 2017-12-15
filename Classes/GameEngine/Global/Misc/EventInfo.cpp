@@ -1,6 +1,6 @@
 #include "EventInfo.h"
 
-EventInfo::EventInfo(int id, int type, long endTime, std::vector<InfoButton*> infos, std::vector<Reward*> rewards, std::vector<EventScore*> scores) :
+EventInfo::EventInfo(int id, int type, long endTime, std::vector<InfoButton*> infos, std::vector<RewardInfo*> rewards, std::vector<EventScore*> scores) :
         _id(id),
         _type(type),
         _endTime(endTime),
@@ -22,7 +22,7 @@ std::vector<InfoButton *> EventInfo::getInfo() {
     return _description;
 }
 
-std::vector<Reward *> EventInfo::getRewards() {
+std::vector<RewardInfo *> EventInfo::getRewards() {
     return _rewards;
 }
 

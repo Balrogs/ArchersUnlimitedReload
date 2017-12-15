@@ -10,6 +10,7 @@
 #include "Scenes/MenuLayers/Multiplayer/MultiplayerMenu.h"
 #include "Scenes/MenuLayers/Loading.h"
 #include "Randomizer.h"
+#include "DailyGiftScene.h"
 
 USING_NS_CC;
 
@@ -48,6 +49,10 @@ bool MainScene::init() {
 
     pushMain(_main);
     _backgroundLayer->wait(false);
+
+    if(DailyGiftScene::checkDate()) {
+        replaceMain(DailyGiftScene::create());
+    }
 
     return true;
 }

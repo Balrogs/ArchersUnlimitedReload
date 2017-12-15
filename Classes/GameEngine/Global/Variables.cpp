@@ -156,9 +156,23 @@ const std::string Variables::HAND = "hand.png";
 
 const std::string Variables::ASSETS_PATH = "assets.json";
 
+const std::string Variables::GIFT_HIGHTLIGHT = "gift_highlight.png";
+const std::string Variables::GIFT_DISABLED = "disabled.png";
+const std::string Variables::GIFT_PATH = "dailyGifts.json";
 
 void Variables::setResolution(Resolution resolution) {
     Variables::_resolution = resolution;
+}
+
+float Variables::FONT_SIZE_S() {
+    switch(Variables::_resolution){
+        case SD:
+            return 10.f;
+        case HD:
+            return 21.f;
+        case IPAD:
+            return 34.f;
+    }
 }
 
 float Variables::FONT_SIZE() {
