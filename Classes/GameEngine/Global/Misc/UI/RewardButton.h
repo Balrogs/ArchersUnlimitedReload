@@ -15,6 +15,8 @@ protected:
     virtual bool init(std::string buttonPath, std::string buttonPressedPath);
     cocos2d::ui::Button* _button;
     cocos2d::FiniteTimeAction* _action;
+    void _setDate();
+    void _onQuit();
 };
 
 class RewardButtonArrow : public RewardButton {

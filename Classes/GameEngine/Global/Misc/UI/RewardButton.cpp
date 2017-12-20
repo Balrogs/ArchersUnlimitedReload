@@ -83,11 +83,11 @@ bool RewardButtonCoin::init(int value, std::string buttonPath, std::string butto
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 this->runAction(
-                        CallFunc::create([value](){
+                        CallFunc::create([this, value](){
                             cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
                             auto coins = def->getIntegerForKey("COINS", 0);
                             def->setIntegerForKey("COINS", coins + value);
-                            MainScene::getInstance()->popAndReplace();
+                            _onQuit();
                         }));
             }
                 break;
@@ -108,8 +108,8 @@ bool RewardButtonArrow::init(int value, std::string buttonPath, std::string butt
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 this->runAction(
-                        CallFunc::create([value](){
-                            MainScene::getInstance()->popAndReplace();
+                        CallFunc::create([this, value](){
+                            _onQuit();
                             if(EquipmentScene::getInstance()->resumeEquipment(1, value)){
                                 MainScene::getInstance()->popMain();
                             }
@@ -133,8 +133,8 @@ bool RewardButtonBow::init(int value, std::string buttonPath, std::string button
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 this->runAction(
-                        CallFunc::create([value](){
-                            MainScene::getInstance()->popAndReplace();
+                        CallFunc::create([this, value](){
+                            _onQuit();
                             if(EquipmentScene::getInstance()->resumeEquipment(2, value)){
                                 MainScene::getInstance()->popMain();
                             }
@@ -159,8 +159,8 @@ bool RewardButtonHat::init(int value, std::string buttonPath, std::string button
         switch (type) {
             case cocos2d::ui::Widget::TouchEventType::ENDED: {
                 this->runAction(
-                        CallFunc::create([value](){
-                            MainScene::getInstance()->popAndReplace();
+                        CallFunc::create([this, value](){
+                            _onQuit();
                             if(EquipmentScene::getInstance()->resumeEquipment(0, value)){
                                 MainScene::getInstance()->popMain();
                             }
@@ -177,4 +177,17 @@ bool RewardButtonHat::init(int value, std::string buttonPath, std::string button
 
 bool RewardButtonDisabled::init() {
     return RewardButton::init(Variables::GIFT_DISABLED, Variables::GIFT_DISABLED);
+}
+
+
+void RewardButton::_setDate() {
+    cocos2d::UserDefault *def = cocos2d::UserDefault::getInstance();
+    auto day = cocos2d::UserDefault::getInstance()->getIntegerForKey("DailyGiftDaysCounter", 1);
+    def->setStringForKey("DailyGiftLastDate", StringUtils::toString(Variables::getCurrentTime()));
+    def->setIntegerForKey("DailyGiftDaysCounter", day + 1);
+}
+
+void RewardButton::_onQuit() {
+    _setDate();
+    MainScene::getInstance()->popAndReplace();
 }

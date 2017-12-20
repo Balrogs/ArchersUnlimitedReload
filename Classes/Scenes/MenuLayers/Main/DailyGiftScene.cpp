@@ -182,12 +182,7 @@ bool DailyGiftScene::checkDate() {
 }
 
 int DailyGiftScene::_getDay() {
-    return cocos2d::UserDefault::getInstance()->getIntegerForKey("DailyGiftDaysCounter", 0);
+    return cocos2d::UserDefault::getInstance()->getIntegerForKey("DailyGiftDaysCounter", 1);
 }
 
-
-void DailyGiftScene::_setDate() {
-    _def->setStringForKey("DailyGiftLastDate", StringUtils::toString(Variables::getCurrentTime()));
-    _def->setIntegerForKey("DailyGiftDaysCounter", _getDay() + 1);
-}
 

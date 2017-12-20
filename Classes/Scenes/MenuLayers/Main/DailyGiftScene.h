@@ -27,8 +27,6 @@ protected:
 
     int  _getDay();
 
-    void _setDate();
-
     void onEnter() override;
 
     void onQuit();
